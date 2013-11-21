@@ -1,6 +1,7 @@
 $(document).ready(function() {	
-	// initialise les clicks sur les noms de catégories
+	// initialise les clicks sur les noms de catégories et sur les images
 	initCat();
+	initImg();
 	
 	// Gestion de l'upload du drag'N drop
 	$(document).on('dragenter', '#dropfile', function() {
@@ -130,12 +131,78 @@ function initCat() {
 		});
 	});
 }
+// initialise les clicks sur les images
+function initImg() {
+	$("#listeImg li").click(function () {
+		// code HTML affiché dans la colonne de droite (Reglages)
+		var html = 'Nom de la Catégorie: \
+				  <div class="input-group"> \
+					 <input id="txtCatUpdate" type="text" class="form-control" value="'+$(this).text().substr(0,$(this).text().length-$(this).find("span").text().length)+'"> \
+					 <input id="idCatUpdate" type="hidden" value="'+$(this).find("span").text()+'"> \
+					 <span class="input-group-btn"> \
+						<button id="btnCatUpdate" class="btn btn-default" type="button">Modifier</button> \
+					 </span> \
+				  </div> \
+				  <button id="btnCatDelete" class="btn btn-danger btn-xs delete" type="button">Supprimer</button>';
+		$("#reglage").html(html);
+		//envoye de la requette AJAX de modification de la catégorie
+		$("#btnCatUpdate").click(function() {
+			loadOn();
+			var requete = $.ajax({
+				url: "ajax.php?do=updateCat",
+				type: "post",
+				data: {
+					id: $("#idCatUpdate").val(),
+					name: $("#txtCatUpdate").val()
+				},
+				success: function(){
+					var json = JSON.parse(requete.responseText);
+					showCat(json);
+					$("#reglage").html("");
+					initCat();
+					loadOff();
+				}
+			});
+		});
+		
+		$("#txtCatUpdate").keydown(function(e) {
+			if(e.keyCode == 13) {
+				$("#btnCatUpdate").click();
+			}
+		});
+		
+		// envoye de la requette AJAX de suppression de la catégorie
+		$("#btnCatDelete").click(function() {
+			loadOn();
+			var requete = $.ajax({
+				url: "ajax.php?do=deleteCat",
+				type: "post",
+				data: {
+					id: $("#idCatUpdate").val()
+				},
+				success: function(){
+					var json = JSON.parse(requete.responseText);
+					showCat(json);
+					$("#reglage").html("");
+					initCat();
+					loadOff();
+				}
+			});
+		});
+	});
+}
 
 // Affiche les catégories dans la colonne de gauche grace au JSON retourné par le serveur
 function showCat(json) {
 	$("#listeCat").html("<ul></ul>");
 	for (var i in a = json[1]) {
 		$("#listeCat ul").append("<li>"+a[i]['name']+"<span class=\"id\">"+a[i]['id']+"</class></li>");
+	}
+}
+function showImg(json) {
+	$("#listeImg").html("<ul></ul>");
+	for (var i in a = json[1]) {
+		$("#listeImg ul").append("<li><img src=\""+a[i]['url_min']+"\">"+((a[i]['title']!=null)?a[i]['title']:"")+"<span class=\"id\">"+a[i]['id']+"</class></li>");
 	}
 }
 
@@ -167,7 +234,7 @@ function handleReaderLoad(evt) {
 		url: 'ajax.php?do=addImage',
 		data: str,
 		success: function(data) {
-			console.log(data) ;
+			showImg(JSON.parse(data));
 			loadOff();
 		}
 	});
