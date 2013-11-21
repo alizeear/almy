@@ -1,16 +1,15 @@
-<?php session_start(); ?>
 <?php
 	if (empty($_POST['login']) || empty($_POST['password'])) {
 		$error = "Login ou mot de passe non remplis";
-		echo $error;
 	}else{
 		
+		$tmp = $db->traitementConnexion($_POST['login'], $_POST['password']);
 
-		$_login = $data['login'];
-		$_SESSION['login'] = $_login;
+		$_SESSION['id'] = $tmp['id'];
 
-		if (!empty($_SESSION['login'])) {
-			header("location:../home.php"); 
+
+		if (!empty($_SESSION['id'])) {
+			header("location: index.php"); 
 		}
 	}
  ?>

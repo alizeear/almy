@@ -146,7 +146,7 @@
 
       public function traitementConnexion($login, $mdp) {
 
-         $req  =  'SELECT login, mdp FROM users WHERE login="'.$login.'" AND pass=MD5("'.$mdp.'")';
+         $req  =  'SELECT * FROM user WHERE login="'.$login.'" AND pass=MD5("'.$mdp.'")';
 
          $query = almyDb::$PDO->query($req);
          if($query->rowCount() == 1) {
