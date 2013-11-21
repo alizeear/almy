@@ -1,0 +1,4 @@
+<?php
+   $listeCat = $db->getListeCategorie();
+   
+?>

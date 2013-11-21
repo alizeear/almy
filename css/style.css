@@ -1,0 +1,42 @@
+* {
+   font-family: 'Ubuntu', sans-serif!important; 
+}
+
+#load {
+   display: none;
+   position: fixed;
+   top: 0px;
+   right: 0px;
+   bottom: 0px;
+   left: 0px;
+   background: url('img/load.gif') center center no-repeat;
+   background-color: rgba(128, 128, 128, 0.5);
+}
+.navbar-brand {
+	font-size: 30px;
+}
+#formConnex{
+	position: absolute;
+	width: 300px;
+	padding: 20px;
+	height: 300px;
+	top: 50%;
+	margin-top: -150px;
+	left: 50%;
+	margin-left: -150px;
+}
+#backgroundConnex{
+	display: none;
+   position: fixed;
+   top: 0px;
+   right: 0px;
+   bottom: 0px;
+   left: 0px;
+   background-color: rgba(128, 128, 128, 0.5);
+}
+.inputMargeTop{
+	margin-top: 10px;
+}
+.form-signin-heading{
+	text-align: center;
+}

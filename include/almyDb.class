@@ -1,0 +1,130 @@
+<?php
+	class almyDb
+	{
+		private static $serveur='mysql:host=127.0.0.1';
+     	private static $bdd='dbname=almy';   		
+     	private static $user='root';    		
+     	private static $mdp='';
+		private static $PDO;
+		private static $almyDb=null;
+	
+		private function __construct()
+		{
+			almyDb::$PDO = new PDO(almyDb::$serveur.';'.almyDb::$bdd, almyDb::$user, almyDb::$mdp); 
+			almyDb::$PDO->query("SET CHARACTER SET utf8");
+		}
+		
+		public function _destruct()
+		{
+			almyDb::$PDO = null;
+		}
+	
+		public static function getDB()
+		{
+			if(almyDb::$almyDb==null){
+				almyDb::$almyDb= new almyDb();
+			}
+			return almyDb::$almyDb;  
+		}
+	
+		public function execSQL($sql)
+		{
+			return almyDb::$PDO->query($sql);
+		}
+      
+      /* 
+      ** Gestion des catégories
+      */
+      public function getListeCategorie() {
+         $sql = "SELECT * FROM category ORDER BY name ASC";
+         $query = almyDb::$PDO->query($sql);
+         return $query->fetchAll();
+      }
+      public function isCategorie($name) {
+         $sql = "SELECT * FROM category WHERE name='".$name."';";
+         $query = almyDb::$PDO->query($sql);
+         if($query->rowCount() == 0) {
+            return false;
+         }
+         else {
+            return true;
+         }
+      }
+      public function addCategorie($name) {
+         if(!$this->isCategorie($name)) {
+            $sql = "INSERT INTO category (id, name) VALUES (NULL, '".$name."');";
+            almyDb::$PDO->query($sql);
+            return true;
+         }
+         else {
+            return false;
+         }
+      }
+      public function updateCategorie($id, $name) {
+         $sql = "SELECT * FROM category WHERE id='".$id."';";
+         $query = almyDb::$PDO->query($sql);
+         if(($query->rowCount() == 1) && (!$this->isCategorie($name))) {
+            $sql = "UPDATE category SET name = '".$name."' WHERE id =".$id.";";
+            almyDb::$PDO->query($sql);
+            return true;
+         }
+         else {
+            return false;
+         }
+      }
+      public function deleteCategorie($id) {
+         $sql = "DELETE FROM category WHERE id = ".$id.";";
+         $query = almyDb::$PDO->query($sql);
+         if($query->rowCount() == 1) {
+            return true;
+         }
+         else {
+            return false;
+         }
+      }
+  
+     /*
+     ** Gestion des images
+     */
+      public function getListeImage($cat = null) {
+         $sql = "SELECT image.* FROM image ".(($cat == null)?"":"INNER JOIN catimg WHERE catimg.id_cat = ".$cat)." ORDER BY title ASC";
+         $query = almyDb::$PDO->query($sql);
+         return $query->fetchAll();
+      }
+      public function addImage($link, $linkMin = null, $title = null, $descr = null) {
+         $sql = "INSERT INTO image (id, title, descr, url, url_min) VALUES (NULL, ".(($title == null)?"NULL":"'".$title."'").",".(($descr == null)?"NULL":"'".$descr."'")." ,'".$link."' ,".(($linkMin == null)?"NULL":"'".$linkMin."'")." );";
+         $query = almyDb::$PDO->query($sql);
+         if($query->rowCount() == 1) {
+            return true;
+         }
+         else {
+            return false;
+         }
+      }
+      public function checkAllLink() {
+         $list = $this->getListeImage();
+         foreach($list as $image) {
+            if(!file_exists($image['url'])) {
+               if(file_exists($image['url_min']))
+                  unlink($image['url_min']);
+               $this->deleteImage($image['id']);
+            }
+            else {
+               if(!file_exists($image['url_min'])){
+                  $i = 1;
+                  }
+               }
+         }
+      }
+      public function deleteImage($id) {
+         $sql = "DELETE FROM image WHERE id = ".$id.";";
+         $query = almyDb::$PDO->query($sql);
+         if($query->rowCount() == 1) {
+            return true;
+         }
+         else {
+            return false;
+         }
+      }
+	}
+?>
