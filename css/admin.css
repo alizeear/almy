@@ -1,4 +1,6 @@
-li:hover {
+#listeCat li:hover ,
+#listeImg li:hover ,
+#catImgUpdate li:hover {
 	background-color: #eee;
 }
 ul {
