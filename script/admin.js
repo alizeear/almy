@@ -262,6 +262,7 @@ function handleReaderLoad(evt) {
 		data: str,
 		success: function(data) {
 			showImg(JSON.parse(data));
+			initImg();
 			loadOff();
 		}
 	});
