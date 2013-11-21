@@ -40,6 +40,16 @@
          $query = almyDb::$PDO->query($sql);
          return $query->fetchAll();
       }
+      public function getListeCategorieImg($idImg) {
+		 $retour = array();
+         $list = $this->getListeCategorie();
+		 foreach($list as $cat) {
+			 $sql = "SELECT * FROM catimg WHERE id_img=".$idImg." AND id_cat = ".$cat['id'].";";
+			 $query = almyDb::$PDO->query($sql);
+			 $retour[count($retour)] = array("id" => $cat['id'], "name" => $cat['name'], "is" => (($query->rowCount() != 0)?true:false));
+		 }
+         return $retour;
+      }
       public function isCategorie($name) {
          $sql = "SELECT * FROM category WHERE name='".$name."';";
          $query = almyDb::$PDO->query($sql);

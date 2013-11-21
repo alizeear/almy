@@ -135,25 +135,52 @@ function initCat() {
 function initImg() {
 	$("#listeImg li").click(function () {
 		// code HTML affiché dans la colonne de droite (Reglages)
-		var html = 'Nom de la Catégorie: \
+		loadOn();
+		var html = 'Titre de l\'image: \
 				  <div class="input-group"> \
-					 <input id="txtCatUpdate" type="text" class="form-control" value="'+$(this).text().substr(0,$(this).text().length-$(this).find("span").text().length)+'"> \
-					 <input id="idCatUpdate" type="hidden" value="'+$(this).find("span").text()+'"> \
+					 <input id="txtImgUpdate" type="text" class="form-control" value="'+$(this).text().substr(0,$(this).text().length-$(this).find("span").text().length)+'"> \
+					 <input id="idImgUpdate" type="hidden" value="'+$(this).find("span").text()+'"> \
 					 <span class="input-group-btn"> \
-						<button id="btnCatUpdate" class="btn btn-default" type="button">Modifier</button> \
+						<button id="btnImgUpdate" class="btn btn-default" type="button">Modifier</button> \
 					 </span> \
 				  </div> \
-				  <button id="btnCatDelete" class="btn btn-danger btn-xs delete" type="button">Supprimer</button>';
+				  Description de l\'image \
+				  <textarea id="descrImgUpdate" class="form-control" rows="3"></textarea> \
+				  <ul id="catImgUpdate"></ul> \
+				  <button id="btnImgDelete" class="btn btn-danger btn-xs delete" type="button">Supprimer</button>';
 		$("#reglage").html(html);
+		
+		var requete = $.ajax({
+			url: "ajax.php?do=getCatImg",
+			type: "post",
+			data: {
+				id: $("#idImgUpdate").val()
+			},
+			success: function(){
+				var json = JSON.parse(requete.responseText);
+				$("#catImgUpdate").html("");
+				for (var i in a = json) {
+					$("#catImgUpdate").append("<li "+((a[i]['is'])?"class=\"selected\"":"")+">"+a[i]['name']+"<span class=\"id\">"+a[i]['id']+"</class></li>");
+				}
+				$("#catImgUpdate li").click(function() {
+					if($(this).hasClass("selected"))
+						$(this).removeClass("selected");
+					else
+						$(this).addClass("selected");
+				});
+				loadOff();
+			}
+		});
+		
 		//envoye de la requette AJAX de modification de la catégorie
-		$("#btnCatUpdate").click(function() {
+		$("#btnImgUpdate").click(function() {
 			loadOn();
 			var requete = $.ajax({
-				url: "ajax.php?do=updateCat",
+				url: "ajax.php?do=updateImg",
 				type: "post",
 				data: {
-					id: $("#idCatUpdate").val(),
-					name: $("#txtCatUpdate").val()
+					id: $("#idImgUpdate").val(),
+					name: $("#txtImgUpdate").val()
 				},
 				success: function(){
 					var json = JSON.parse(requete.responseText);
@@ -165,9 +192,9 @@ function initImg() {
 			});
 		});
 		
-		$("#txtCatUpdate").keydown(function(e) {
+		$("#txtImgUpdate").keydown(function(e) {
 			if(e.keyCode == 13) {
-				$("#btnCatUpdate").click();
+				$("#btnImgUpdate").click();
 			}
 		});
 		

@@ -5,9 +5,15 @@
 	
 	switch($_GET['do']) {
 		case "addCat":
-			$retour = $db->addCategorie($_POST['name']);
-			$list = $db->getListeCategorie();
-			echo json_encode(array($retour, $list));
+			if($_POST['name'] != "") {
+				$retour = $db->addCategorie($_POST['name']);
+				$list = $db->getListeCategorie();
+				echo json_encode(array($retour, $list));
+			}
+			else {
+				$list = $db->getListeCategorie();
+				echo json_encode(array(false, $list));
+			}
 			break;
 		case "updateCat":
 			$retour = $db->updateCategorie($_POST['id'], $_POST['name']);
@@ -18,6 +24,14 @@
 			$retour = $db->deleteCategorie($_POST['id']);
 			$list = $db->getListeCategorie();
 			echo json_encode(array($retour, $list));
+			break;
+		case "getCat":
+			$list = $db->getListeCategorie();
+			echo json_encode($list);
+			break;
+		case "getCatImg":
+			$list = $db->getListeCategorieImg($_POST['id']);
+			echo json_encode($list);
 			break;
 		case "addImage":
 			/*$error	 = NULL;
