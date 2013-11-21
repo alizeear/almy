@@ -1,5 +1,4 @@
  jQuery(document).ready(function(){
-
  	$("#connexion").click(function(){
       	$("#backgroundConnex").fadeIn("slow");
     });
@@ -22,4 +21,8 @@
     	};
     	return retour;
 	});
+
+    // si il y a une erreur php on simule un clique pour réafficher le formulaire
+    if($("#errorPhp").length != 0)
+        $("#connexion").click();
 });

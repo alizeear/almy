@@ -28,6 +28,7 @@
       <nav class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
         <div class="navbar-header">
 		    <a class="navbar-brand" href="#">Almy</a>
+        <?php if(isset($error)) echo '<p id="errorPhp" class="navbar-text colorRedText">'.$error.'</p>'; ?>
 		</div>
          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	    	<ul class="nav navbar-nav navbar-right">
@@ -42,7 +43,7 @@
        <div id="formConnex">
          <form method="post" action="?do=login" class="form-signin" id="formSignin">
            <h2 class="form-signin-heading">Connexion</h2>
-           <p id="error"></p>
+           <p id="error" class="colorRedText"></p>
            <input type="text" name="login" id="login" class="form-control" placeholder="Login">
            <input type="password" name="password" id="password" class="form-control inputMargeTop" placeholder="Mot de Passe" >
            <button class="btn btn-lg btn-primary btn-block inputMargeTop" type="submit">Valider</button>
