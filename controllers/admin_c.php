@@ -1,4 +1,4 @@
 <?php
-   $listeCat = $db->getListeCategorie();
-   
+	$listeCat = $db->getListeCategorie();
+	$listeImg = $db->getListeImage();
 ?>

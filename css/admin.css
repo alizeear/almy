@@ -1,5 +1,11 @@
+ul {
+	list-style: none;
+}
 #listeCat {
    margin-top: 10px;
+}
+#listeCat li{
+	cursor: pointer;
 }
 .id {
    display: none;
@@ -13,4 +19,30 @@
 }
 #uploadFrame{
    display: none;
+}
+
+#dropfile{
+	width: 100%;
+	line-height:32px;
+	text-align: center;
+	color: #555;
+	vertical-align: middle;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+}
+
+#listeImg {
+	margin-top: 10px;
+}
+#listeImg li{
+	cursor: pointer;
+	margin: 5px 0px 5px 0px;
+}
+#listeImg img{
+	height: 50px;
+	width: auto;
+	margin-right: 10px;
 }

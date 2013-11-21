@@ -101,21 +101,20 @@
             return false;
          }
       }
-      public function checkAllLink() {
-         $list = $this->getListeImage();
-         foreach($list as $image) {
-            if(!file_exists($image['url'])) {
-               if(file_exists($image['url_min']))
-                  unlink($image['url_min']);
-               $this->deleteImage($image['id']);
-            }
-            else {
-               if(!file_exists($image['url_min'])){
-                  $i = 1;
-                  }
-               }
-         }
-      }
+		public function checkAllLink() {
+			$list = $this->getListeImage();
+			foreach($list as $image) {
+				if(!file_exists($image['url'])) {
+					if(file_exists($image['url_min']))
+						unlink($image['url_min']);
+					$this->deleteImage($image['id']);
+				}
+				else {
+					if(!file_exists($image['url_min']))
+						$this->updateImage($image['id'], array("url_min","NULL"));
+				}
+			}
+		}
       public function deleteImage($id) {
          $sql = "DELETE FROM image WHERE id = ".$id.";";
          $query = almyDb::$PDO->query($sql);
@@ -126,5 +125,23 @@
             return false;
          }
       }
+		public function updateImage($id, $arg) {
+			$set = "";
+			$dot = 0;
+			foreach ($arg as $field => $value) {
+				if($dot != 0)
+					$set .= ", ";
+				$set .= " '".$field."' = '".$value."' ";
+			}
+			$sql = "UPDATE image SET ".$set." WHERE id =".$id.";";
+			
+			$query = almyDb::$PDO->query($sql);
+			if($query->rowCount() == 1) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
 	}
 ?>

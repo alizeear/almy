@@ -26,4 +26,14 @@
    	$str = strtolower( trim($str, '-') );
    	return $str;
    }
+	
+	function add_picture($file) {
+		$name = md5(rand().time()."DuSelPourRenforcerMonHash").'.jpg';
+		// Encode it correctly
+		$encodedData = str_replace(' ','+',$file);
+		$decodedData = base64_decode($encodedData);
+		// Finally, save the image
+		file_put_contents('images/'.$name, $decodedData) ;
+		return 'images/'.$name;
+	}
 ?>
