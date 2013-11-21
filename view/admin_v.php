@@ -26,9 +26,14 @@
    </head>
    <body>
       <nav class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
-         <div class="navbar-header">
-          <a class="navbar-brand" href="#">Almy</a>
-        </div>
+        <div class="navbar-header">
+        <a class="navbar-brand" href="#">Almy</a>
+    </div>
+         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="?do=logout" id="deconnexion">Déconnexion</a></li>
+        </ul>
+      </div>
       </nav>
       <div class="container">
            <div class="col-xs-6 col-md-4">

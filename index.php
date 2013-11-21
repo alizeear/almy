@@ -14,7 +14,24 @@
 	}
 	else {
 	
+	if(!isset($_GET['do']) && (isset($_SESSION['id']))) {
 		include "controllers/admin_c.php";
 		include "view/admin_v.php";
+	}else{
+		switch ($_GET['do']) {
+			case 'login':
+				include "controllers/connexion_c.php";
+				break;
+			case 'logout':
+				include "controllers/deconnexion_c.php";
+				break;
+			default:
+				include "controllers/show_c.php";
+				include "view/show_v.php";
+				break;
+		}
+	}
+
+
 	}
 ?>
