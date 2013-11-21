@@ -18,8 +18,22 @@
    	<link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
    	
    	<script type="text/javascript" src="script/jquery-1.10.2.min.js"></script>
-   	<script type="text/javascript" src="script/connexion.js"></script>
-   	<!--<script type="text/javascript" src="script/admin.js"></script>-->
+    <script type="text/javascript" src="script/connexion.js"></script>
+   	<script type="text/javascript" src="script/almy.js"></script>
+
+    <script>
+    $(document).ready(function() {
+
+        $('#divAlmy').almy({
+            text         : 'toto',
+            color        : 'red'
+        });
+
+    });
+    </script>
+
+
+
       <!--[if IE]>
          <script src="script/html5.js"></script>
       <![endif]-->   
@@ -37,6 +51,7 @@
 	    </div>
       </nav>
       <div class="container">
+      <div id="divAlmy"></div>
       </div>
       <div id="load"></div>
       <div id="backgroundConnex">
