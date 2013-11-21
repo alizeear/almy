@@ -11,5 +11,8 @@
 		if (!empty($_SESSION['id'])) {
 			header("location: index.php"); 
 		}
+		$error = "Login ou mot de passe incorrect";
 	}
+	include "controllers/show_c.php";
+	include "view/show_v.php";
  ?>

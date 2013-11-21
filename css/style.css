@@ -40,3 +40,13 @@
 .form-signin-heading{
 	text-align: center;
 }
+.navbar-default .colorRedText{
+  color: red;
+  position: fixed;
+  left: 53%;
+  margin-left: -150px;
+  width: 300px;
+}
+.form-signin .colorRedText{
+   color: red;
+}
