@@ -1,0 +1,42 @@
+.containerAlmy {
+	width: 100%;
+}
+.containerAlmy a img{
+	display: inline-block;
+}
+.background{
+	/*display: none;*/
+   position: fixed;
+   top: 0px;
+   right: 0px;
+   bottom: 0px;
+   left: 0px;
+   background-color: rgba(0, 0, 0, 0.95);
+}
+#categoriesMiddle{
+	position: fixed;
+   text-align: center;
+   width: 100%;
+   top: 15%;
+	height: 70%;
+}
+.background img{
+	width: auto!important;  /*conflit avec le paramètre du plugin */
+	height: 100%;
+}
+#categoriesTop{
+	background-color: rgba(1, 1, 1, 0.95);
+	position: fixed;
+   	top: 0;
+   	height: 15%;
+   	width: 100%;
+   	z-index: 3;
+}
+#mosaiqueBottom{
+	background-color: rgba(1, 1, 1, 0.95);
+	position: fixed;
+  	bottom: 0;
+  	height: 15%;
+  	width: 100%;
+   	z-index: 3;
+}

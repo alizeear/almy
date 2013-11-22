@@ -15,7 +15,8 @@
    	<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
    	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" media="screen" />
    	
-   	<link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
+   	<link rel="stylesheet" type="text/css" href="css/almy.css" media="screen" />
    	
    	<script type="text/javascript" src="script/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="script/connexion.js"></script>
@@ -25,21 +26,19 @@
     $(document).ready(function() {
 
         $('#divAlmy').almy({
-            text         : 'toto',
-            color        : 'red'
+            width        : '100%',
+            widthImage   : '300px'
         });
 
     });
     </script>
-
-
 
       <!--[if IE]>
          <script src="script/html5.js"></script>
       <![endif]-->   
    </head>
    <body>
-      <nav class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
+      <nav style="z-index: 0;" class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
         <div class="navbar-header">
 		    <a class="navbar-brand" href="#">Almy</a>
         <?php if(isset($error)) echo '<p id="errorPhp" class="navbar-text colorRedText">'.$error.'</p>'; ?>
@@ -51,12 +50,21 @@
 	    </div>
       </nav>
       <div class="container">
-      <div id="divAlmy">
+      <div id="divAlmy" class="containerAlmy">
         <?php
             foreach($images as $image) {
-                echo "<img src=\"".$image['url']."\">";
+                echo "<a href=\"".$image['url']."\"><img src=\"".$image['url_min']."\"></a>";
             }
         ?>
+
+        <!-- Ce qui va apparaitre au clique sur une image -->
+        <div class="background">
+            <div id="categoriesTop"></div>
+            <div id="categoriesMiddle"><?php echo "<img src=\"".$image['url_min']."\">"; ?></div>
+            <div id="mosaiqueBottom"></div>
+        </div>
+        <!-- End clic image -->
+
       </div>
       </div>
       <div id="load"></div>
