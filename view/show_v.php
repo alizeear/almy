@@ -51,7 +51,13 @@
 	    </div>
       </nav>
       <div class="container">
-      <div id="divAlmy"></div>
+      <div id="divAlmy">
+        <?php
+            foreach($images as $image) {
+                echo "<img src=\"".$image['url']."\">";
+            }
+        ?>
+      </div>
       </div>
       <div id="load"></div>
       <div id="backgroundConnex">
