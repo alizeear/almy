@@ -1,0 +1,3 @@
+<?php 
+	$images = $db->getListeImage();
+ ?>

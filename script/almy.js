@@ -10,7 +10,7 @@
            		
         return this.each(function(){
 
-        	$(this).text(defauts.text).css(
+        	$(this).html($(this).html()+"<br>"+defauts.text).css(
         		'color', defauts.color,
         		'fontWeight', defauts.fontWeight
         	);
