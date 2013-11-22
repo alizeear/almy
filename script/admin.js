@@ -5,19 +5,13 @@ $(document).ready(function() {
 	
 	// Gestion de l'upload du drag'N drop
 	$(document).on('dragenter', '#dropfile', function() {
-		$(this).css('border', '3px dashed red');
+		$(this).css('border', '1px solid #677EA1');
 		return false;
 	});
 	$(document).on('dragover', '#dropfile', function(e){
 		e.preventDefault();
 		e.stopPropagation();
-		$(this).css('border', '3px dashed red');
-		return false;
-	});
-	$(document).on('dragleave', '#dropfile', function(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		$(this).css('border', '3px dashed #BBBBBB');
+		$(this).css('border-color', '1px solid #677EA1');
 		return false;
 	});
 	$(document).on('drop', '#dropfile', function(e) {
@@ -26,13 +20,13 @@ $(document).ready(function() {
 				// Stop the propagation of the event
 				e.preventDefault();
 				e.stopPropagation();
-				$(this).css('border', '3px dashed green');
+				$(this).css('border', '1px solid #ccc');
 				// Main function to upload
 				upload(e.originalEvent.dataTransfer.files);
 			}  
 		}
 		else {
-			$(this).css('border', '3px dashed #BBBBBB');
+			$(this).css('border', '1px solid #ccc;');
 		}
 		return false;
 	});
