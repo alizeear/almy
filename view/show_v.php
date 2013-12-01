@@ -60,7 +60,15 @@
         <!-- Ce qui va apparaitre au clique sur une image -->
         <div class="background">
             <div id="categoriesTop"></div>
-            <div id="categoriesMiddle"><?php echo "<img src=\"".$image['url_min']."\">"; ?></div>
+            <div id="categoriesMiddle">
+              <?php echo "<img src=\"".$image['url_min']."\">"; ?>
+              <div class="navDirection">
+                <ul>
+                    <li><a class="navPrev"></a></li>
+                    <li><a class="navNext"></a></li>
+                </ul>
+              </div>
+            </div>
             <div id="mosaiqueBottom"></div>
         </div>
         <!-- End clic image -->

@@ -40,3 +40,33 @@
   	width: 100%;
    	z-index: 3;
 }
+.navDirection{
+    position: relative;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.navDirection ul{
+    width: 100%;
+    margin-top: -35px;
+    padding: 0;
+}
+.navDirection ul li{
+    display: inline-block;
+    padding-right: 30px;
+    padding-left: 30px;
+}
+.navDirection ul li a{
+  display: block;
+  width: 30px;
+  height: 30px;
+  background-image: url(../images/fleche.png);
+  text-indent: -9999px;
+  border: 0;
+}
+.navDirection .navPrev{
+
+}
+.navDirection .navNext{
+    background-position: -30px 0;
+}
