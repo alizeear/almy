@@ -61,7 +61,11 @@
         <div class="background">
             <div id="categoriesTop"></div>
             <div id="categoriesMiddle">
-              <?php echo "<img src=\"".$image['url_min']."\">"; ?>
+              <?php
+                  foreach($images as $image) {
+                      echo "<img src=\"".$image['url_min']."\">";
+                  }
+              ?>
               <div class="navDirection">
                 <ul>
                     <li><a class="navPrev"></a></li>
