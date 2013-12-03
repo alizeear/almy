@@ -57,7 +57,7 @@
             }
         ?>
 
-        <!-- Ce qui va apparaitre au clique sur une image ->
+        <!-- Ce qui va apparaitre au clique sur une image -->
         <div class="background">
             <div id="categoriesTop"></div>
             <div id="categoriesMiddle">
