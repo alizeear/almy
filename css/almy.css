@@ -15,7 +15,6 @@
 }
 #categoriesMiddle{
 	position: fixed;
-   text-align: center;
    width: 100%;
    top: 15%;
 	height: 70%;
@@ -23,6 +22,7 @@
 .background img{
 	width: auto!important;  /*conflit avec le paramètre du plugin */
 	height: 100%;
+  display: block;
 }
 #categoriesTop{
 	background-color: rgba(1, 1, 1, 0.95);
@@ -48,7 +48,7 @@
 }
 .navDirection ul{
     width: 100%;
-    margin-top: -35px;
+    /*margin-top: -35px;*/
     padding: 0;
 }
 .navDirection ul li{
@@ -69,4 +69,10 @@
 }
 .navDirection .navNext{
     background-position: -30px 0;
+}
+.imgContainer{
+  position: relative;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
 }

@@ -61,6 +61,7 @@
         <div class="background">
             <div id="categoriesTop"></div>
             <div id="categoriesMiddle">
+              <div class="imgContainer">
               <?php
                   foreach($images as $image) {
                       echo "<img src=\"".$image['url_min']."\">";
@@ -74,6 +75,7 @@
               </div>
             </div>
             <div id="mosaiqueBottom"></div>
+            </div>
         </div>
         <!-- End clic image -->
 
