@@ -16,7 +16,8 @@
 
             var $widthImageNext = $(this).find('#categoriesMiddle img:gt(0)').width(); // stock dans une variable la width de l'image qui arrive
                 $(this).find('.imgContainer').css({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
-                    width: $widthImageNext
+                    width: $widthImageNext,
+                    'text-align': 'center'
                 }, 500);
             
         	$(this).find('img').css({
@@ -38,8 +39,12 @@
                 if($imageSuivante.length<1) $imageSuivante = $("#categoriesMiddle img:first"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
                 var $widthImageNext = $('#categoriesMiddle img:visible').width(); // stock dans une variable la width de l'image qui arrive
                 $('.imgContainer').animate({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
-                    width: $widthImageNext
+                    width: $widthImageNext,
+                    'text-align': 'center'
                 }, 500);
+                $(this).find('.navDirection').animate({
+                    width: $widthImageNext
+                });
                 $("#categoriesMiddle img:visible").stop().fadeOut('slow'); // on cache l'image actuelle
                 $imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
                 return false;
@@ -51,7 +56,8 @@
                if($imagePrecedente.length<1) $imagePrecedente = $("#categoriesMiddle img:last"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
                 var $widthImagePrev = $('#categoriesMiddle img:visible').width(); // stock dans une variable la width de l'image qui arrive
                 $('.imgContainer').animate({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
-                    width: $widthImagePrev
+                    width: $widthImagePrev,
+                    'text-align': 'center'
                 }, 500);
                 $("#categoriesMiddle img:visible").stop().fadeOut('slow'); // on cache l'image actuelle
                 $imagePrecedente.stop().fadeIn('slow'); // on affiche la nouvelle
