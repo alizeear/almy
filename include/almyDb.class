@@ -2,9 +2,9 @@
 	class almyDb
 	{
 		private static $serveur='mysql:host=127.0.0.1';
-     	private static $bdd='dbname=almy';   		
-     	private static $user='almy';    		
-     	private static $mdp='123456';
+                private static $bdd='dbname=almy';   		
+                private static $user='almy';    		
+                private static $mdp='123456';
 		private static $PDO;
 		private static $almyDb=null;
 	
