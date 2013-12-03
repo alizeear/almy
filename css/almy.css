@@ -60,7 +60,7 @@
   display: block;
   width: 30px;
   height: 30px;
-  background-image: url(../images/fleche.png);
+  background-image: url(../images/fleche_v2.png);
   text-indent: -9999px;
   border: 0;
 }
@@ -69,6 +69,9 @@
 }
 .navDirection .navNext{
     background-position: -30px 0;
+}
+.navDirection .navPlay{
+  background-image: url(../images/play.png);
 }
 .imgContainer{
   position: relative;
