@@ -10,9 +10,24 @@
             pauseTime: 3000,
             pauseOnHover: true
         }, params);  
-           		
+        var category = Array();
+        
         return this.each(function(){
-
+                $(this).find("a").each(function() {
+                    if((typeof $(this).attr("almy-cat") !== "undefined")) {
+                        var cat = $(this).attr("almy-cat").split(";");
+                        for (var i in a = cat) {
+                            if(category.indexOf(a[i]) === -1)
+                                category.push(a[i]);
+                        }
+                    }
+                });
+                var uiCat = "";
+                for(var i=0; i<category.length; i++) {
+                    uiCat += '<div>'+category[i]+'</div>';
+                }
+                $(this).html('<div class="almyListCat">'+uiCat+'</div>' + $(this).html());
+                
         	$(this).css({
         		width: defauts.width,
                 position: 'relative'
