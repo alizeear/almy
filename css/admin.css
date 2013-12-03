@@ -14,7 +14,7 @@ ul {
 	cursor: pointer;
 	margin-bottom: 3px;
 }
-.id {
+.id, .descr {
    display: none;
 }
 #errCatAdd{

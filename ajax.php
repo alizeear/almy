@@ -34,24 +34,42 @@
 			echo json_encode($list);
 			break;
 		case "addImage":
-			/*$error	 = NULL;
-			$filename = NULL;
-			$retour = false;
-			
-			if (isset($_FILES['uploadFile']) && $_FILES['uploadFile']['error'] === 0) {
-				$filename = nameFile(to_permalink($_FILES['uploadFile']['name']));
-				$targetpath = 'images/' . $filename; // On stocke le chemin où enregistrer le fichier
-				echo $targetpath;
-				// On déplace le fichier depuis le répertoire temporaire vers $targetpath
-				if (@move_uploaded_file($_FILES['uploadFile']['tmp_name'], $targetpath)) { // Si ça fonctionne
-					$retour = $db->addImage($targetpath, createMin($targetpath));
-				}
-			}*/
-			
 			$targetpath = add_picture($_POST['file']);
 			$retour = $db->addImage($targetpath, createMin($targetpath));
 			$db->checkAllLink();
 	
+			$list = $db->getListeImage();
+			echo json_encode(array($retour, $list));
+			break;
+                case "updateImg":
+                        $retour = $db->updateImage($_POST['id'], array(
+                            'title' => $_POST['title'],
+                            'descr' => $_POST['descr']
+                        ));
+                    
+                        $list = $db->getListeIdCategorieImg($_POST['id']);
+                        if(isset($_POST['cat']) && !empty($_POST['cat'])) {
+                            foreach($list as $temp)  {
+                                if(!in_array($temp, $_POST['cat'])) {
+                                    $retour = (($retour)?$db->removeCatImage($_POST['id'], $temp):$retour);
+                                }
+                            }
+                        }
+                        else {
+                            foreach($list as $temp)  {
+                                    $retour = (($retour)?$db->removeCatImage($_POST['id'], $temp):$retour);
+                            }
+                        }
+                        
+                        $list = $db->getListeIdCategorieImg($_POST['id']);
+                        if(isset($_POST['cat']) && !empty($_POST['cat'])) {
+                            foreach($_POST['cat'] as $temp) {
+                                if(!in_array($temp, $list)) {
+                                    $retour = (($retour)?$db->addCatImage($_POST['id'], $temp):$retour);
+                                }
+                            }
+                        }
+                        
 			$list = $db->getListeImage();
 			echo json_encode(array($retour, $list));
 			break;

@@ -20,8 +20,9 @@
                 }, 500);
             
         	$(this).find('img').css({
-        		width: defauts.widthImage,
-                position: 'absolute'
+        		'width': defauts.widthImage,
+                        'display': 'inline-block',
+                        'vertical-align': 'text-top'
         	})
          //    .click(function(){
         	// 	$(this).animate({

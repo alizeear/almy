@@ -27,7 +27,7 @@
 
         $('#divAlmy').almy({
             width        : '100%',
-            widthImage   : '300px'
+            widthImage   : '150px'
         });
 
     });
@@ -53,7 +53,7 @@
       <div id="divAlmy" class="containerAlmy">
         <?php
             foreach($images as $image) {
-                echo "<a href=\"".$image['url']."\"><img src=\"".$image['url_min']."\"></a>";
+                echo "<a almy-cat=\"".implode(";", $image['cat'])."\" href=\"".$image['url']."\"><img src=\"".$image['url_min']."\"></a>";
             }
         ?>
 
