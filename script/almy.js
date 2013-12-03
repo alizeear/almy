@@ -4,7 +4,11 @@
         //On définit nos paramètres par défaut
         var defauts = $.extend({
         	width        : '400px',
-        	widthImage   : '200px'
+        	widthImage   : '200px',
+            running: true,
+            paused: false,
+            pauseTime: 3000,
+            pauseOnHover: true
         }, params);  
            		
         return this.each(function(){
@@ -16,7 +20,8 @@
 
             var $widthImageNext = $(this).find('#categoriesMiddle img:gt(0)').width(); // stock dans une variable la width de l'image qui arrive
                 $(this).find('.imgContainer').css({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
-                    width: $widthImageNext
+                    width: $widthImageNext,
+                    'text-align': 'center'
                 }, 500);
             
         	$(this).find('img').css({
@@ -33,35 +38,78 @@
             ;
             $(this).find('#categoriesMiddle img:gt(0)').hide();// on cache toutes les images sauf la premiere
 
+// a commenter
+
+            var timer = 0;
+
+            // mise en route auto du slider
+            if(defauts.running && !defauts.paused){
+               timer = setInterval(function() {
+               slideSuivant();
+                }, defauts.pauseTime); 
+            }
+
+
+
+             if(defauts.pauseOnHover){
+                 $(this).find('#categoriesMiddle img').hover(function(){
+                 defauts.paused = true;
+                 clearInterval(timer);
+                timer = '';
+             }, function(){
+                    defauts.paused = false;
+                    if(timer == '' && !defauts.paused){
+                       timer = setInterval(function() {
+                       slideSuivant();
+                        }, defauts.pauseTime); 
+                    }
+                });
+             }        
+
+// end a commenter
+
+
             // au clic sur le bouton next
             $(this).find('.navNext').click(function(){ // au clic sur next
-                var $imageSuivante = $('#categoriesMiddle img:visible').next('img'); // on stock la valeur de l'image suivante dans une variable
-                if($imageSuivante.length<1) $imageSuivante = $("#categoriesMiddle img:first"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
-                var $widthImageNext = $('#categoriesMiddle img:visible').width(); // stock dans une variable la width de l'image qui arrive
-                $('.imgContainer').animate({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
-                    width: $widthImageNext
-                }, 500);
-                $("#categoriesMiddle img:visible").stop().fadeOut('slow'); // on cache l'image actuelle
-                $imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
+                slideSuivant();
                 return false;
             });
 
             // au clic sur le bouton précédent
              $(this).find('.navPrev').click(function(){ // au clic sur next
-               var $imagePrecedente = $('#categoriesMiddle img:visible').prev('img'); // on stock la valeur de l'image précédente dans une variable
-               if($imagePrecedente.length<1) $imagePrecedente = $("#categoriesMiddle img:last"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
-                var $widthImagePrev = $('#categoriesMiddle img:visible').width(); // stock dans une variable la width de l'image qui arrive
-                $('.imgContainer').animate({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
-                    width: $widthImagePrev
-                }, 500);
-                $("#categoriesMiddle img:visible").stop().fadeOut('slow'); // on cache l'image actuelle
-                $imagePrecedente.stop().fadeIn('slow'); // on affiche la nouvelle
+               slidePrecedent();
                 return false;
             });
 
         	$(this).find('a').click(function(){
         		return false;
         	});
-		});						   
+		});	
+
+        function slideSuivant(){
+            var $imageSuivante = $('#categoriesMiddle img:visible').next('img'); // on stock la valeur de l'image suivante dans une variable
+            if($imageSuivante.length<1) $imageSuivante = $("#categoriesMiddle img:first"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
+            var $widthImageNext = $('#categoriesMiddle img:visible').width(); // stock dans une variable la width de l'image qui arrive
+            $('.imgContainer').animate({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
+                width: $widthImageNext,
+                'text-align': 'center'
+            }, 500);
+            $("#categoriesMiddle img:visible").stop().fadeOut('slow'); // on cache l'image actuelle
+            $imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
+            return true;
+        }
+
+        function slidePrecedent(){
+            var $imageSuivante = $('#categoriesMiddle img:visible').next('img'); // on stock la valeur de l'image suivante dans une variable
+            if($imageSuivante.length<1) $imageSuivante = $("#categoriesMiddle img:first"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
+            var $widthImageNext = $('#categoriesMiddle img:visible').width(); // stock dans une variable la width de l'image qui arrive
+            $('.imgContainer').animate({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
+                width: $widthImageNext,
+                'text-align': 'center'
+            }, 500);
+            $("#categoriesMiddle img:visible").stop().fadeOut('slow'); // on cache l'image actuelle
+            $imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
+            return true;
+        }				   
 	};
 })(jQuery);
