@@ -33,24 +33,31 @@
                 position: 'relative'
         	});
 
+            var $widthImageFirst = $(this).find('#categoriesMiddle img:first').width(); // stock dans une variable la width de l'image qui arrive
+                $(this).find('.imgContainer').css({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
+                    width: $widthImageFirst,
+                    'text-align': 'center',
+                }, 500);
+
             var $widthImageNext = $(this).find('#categoriesMiddle img:gt(0)').width(); // stock dans une variable la width de l'image qui arrive
                 $(this).find('.imgContainer').css({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
                     width: $widthImageNext,
                     'text-align': 'center'
                 }, 500);
             
-        	$(this).find('img').css({
+            // gère l'affichage des images zoomée
+        	$(this).find('.imgContainer img').css({
         		'width': defauts.widthImage,
+                        'display': 'block',
+                        position: 'absolute'
+        	});
+
+            // gère l'affichage de la liste des miniatures
+            $(this).find('a img').css({
+                'width': defauts.widthImage,
                         'display': 'inline-block',
                         'vertical-align': 'text-top'
-        	})
-         //    .click(function(){
-        	// 	$(this).animate({
-        	// 		height: '0px',
-        	// 		width: '0px'
-        	// 	}, 500);
-        	// })
-            ;
+            });
             $(this).find('#categoriesMiddle img:gt(0)').hide();// on cache toutes les images sauf la premiere
 
 // a commenter

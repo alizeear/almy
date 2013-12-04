@@ -64,7 +64,7 @@
               <div class="imgContainer">
               <?php
                   foreach($images as $image) {
-                      echo "<img src=\"".$image['url_min']."\">";
+                      echo "<img src=\"".$image['url']."\">";
                   }
               ?>
               <div class="navDirection">
