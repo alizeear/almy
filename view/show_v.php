@@ -70,7 +70,7 @@
               <div class="navDirection">
                 <ul>
                     <li><a class="navPrev"></a></li>
-                    <li><a class="navPlay"></a></li>
+                    <li><a class="navPause"></a></li>
                     <li><a class="navNext"></a></li>
                 </ul>
               </div>

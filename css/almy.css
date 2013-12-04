@@ -70,8 +70,10 @@
 .navDirection .navNext{
     background-position: -30px 0;
 }
-.navDirection .navPlay{
-  background-image: url(../images/play.png);
+.navDirection .navPause{
+  background-image: url(../images/playpause.png);
+  background-position: -30px 0;
+  width: 30px;
 }
 .imgContainer{
   position: relative;

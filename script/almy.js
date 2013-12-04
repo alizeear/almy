@@ -74,7 +74,7 @@
 
 
              if(defauts.pauseOnHover){
-                 $(this).find('#categoriesMiddle img').hover(function(){
+                 $(this).find('#categoriesMiddle img, .navNext, .navPrev').hover(function(){
                  defauts.paused = true;
                  clearInterval(timer);
                 timer = '';
@@ -86,7 +86,26 @@
                         }, defauts.pauseTime); 
                     }
                 });
-             }        
+             } 
+
+             // au clic sur le bouton play/pause
+            $(this).find('.navPause').click(function(){ // au clic sur pause
+               if(!defauts.paused){
+                    defauts.paused = true;
+                    clearInterval(timer);
+                    timer = '';
+                    $(this).css('background-position', '0px 0px');
+               }else{// bouton play
+                    defauts.paused = false;
+                    if(timer == '' && !defauts.paused){
+                       timer = setInterval(function() {
+                       slideSuivant();
+                        }, defauts.pauseTime); 
+                    }
+                    $(this).css('background-position', '-30px 0px');
+               } 
+            });
+                 
 
 // end a commenter
 
