@@ -6,7 +6,7 @@
         	width        : '400px',
         	widthImage   : '200px',
             running: true,
-            paused: false,
+            paused: true,
             pauseTime: 3000,
             pauseOnHover: true
         }, params);  
@@ -33,12 +33,14 @@
                 position: 'relative'
         	});
 
+            // positionnement de la première image du slider
             var $widthImageFirst = $(this).find('#categoriesMiddle img:first').width(); // stock dans une variable la width de l'image qui arrive
                 $(this).find('.imgContainer').css({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
                     width: $widthImageFirst,
                     'text-align': 'center',
                 }, 500);
 
+            // positionnement des autres images du slider
             var $widthImageNext = $(this).find('#categoriesMiddle img:gt(0)').width(); // stock dans une variable la width de l'image qui arrive
                 $(this).find('.imgContainer').css({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
                     width: $widthImageNext,
@@ -69,23 +71,32 @@
                timer = setInterval(function() {
                slideSuivant();
                 }, defauts.pauseTime); 
+            }else if(defauts.paused){
+                defauts.paused = true;
+                 clearInterval(timer);
+                timer = '';
+                $('.navPause').css('background-position', '0px 0px');
             }
 
 
-
-             if(defauts.pauseOnHover){
-                 $(this).find('#categoriesMiddle img, .navNext, .navPrev').hover(function(){
-                 defauts.paused = true;
-                 clearInterval(timer);
-                timer = '';
-             }, function(){
-                    defauts.paused = false;
-                    if(timer == '' && !defauts.paused){
-                       timer = setInterval(function() {
-                       slideSuivant();
-                        }, defauts.pauseTime); 
-                    }
-                });
+            // au survol de la souris
+            if(!defauts.paused){
+                 if(defauts.pauseOnHover){
+                     $(this).find('#categoriesMiddle img, .navNext, .navPrev').hover(function(){
+                     defauts.paused = true;
+                     clearInterval(timer);
+                    timer = '';
+                    $('.navPause').css('background-position', '0px 0px');
+                 }, function(){
+                        defauts.paused = false;
+                        if(timer == '' && !defauts.paused){
+                           timer = setInterval(function() {
+                           slideSuivant();
+                            }, defauts.pauseTime); 
+                        }
+                        $('.navPause').css('background-position', '-30px 0px');
+                    });
+                 }
              } 
 
              // au clic sur le bouton play/pause
