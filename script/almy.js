@@ -27,7 +27,12 @@
                     uiCat += '<div>'+category[i]+'</div>';
                 }
                 $(this).html('<div class="almyListCat">'+uiCat+'</div>' + $(this).html());
-                
+            
+
+            /////////////////////////////////////////////////////////
+            ////// Initialisation du slider /////////////////////////
+            /////////////////////////////////////////////////////////
+
         	$(this).css({
         		width: defauts.width,
                 position: 'relative'
@@ -40,59 +45,57 @@
                     'text-align': 'center',
                 }, 500);
 
-            // positionnement des autres images du slider
+            // positionnement des images suivantes du slider
             var $widthImageNext = $(this).find('#categoriesMiddle img:gt(0)').width(); // stock dans une variable la width de l'image qui arrive
                 $(this).find('.imgContainer').css({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
                     width: $widthImageNext,
                     'text-align': 'center'
                 }, 500);
             
-            // gère l'affichage des images zoomée
+            // Images du slider les unes dérrière les autres
         	$(this).find('.imgContainer img').css({
         		'width': defauts.widthImage,
                         'display': 'block',
                         position: 'absolute'
         	});
+            // on cache toutes les images sauf la premiere
+            $(this).find('#categoriesMiddle img:gt(0)').hide();
 
-            // gère l'affichage de la liste des miniatures
+            // Affichage les unes à coté des autres des miniatures
             $(this).find('a img').css({
                 'width': defauts.widthImage,
                         'display': 'inline-block',
                         'vertical-align': 'text-top'
             });
-            $(this).find('#categoriesMiddle img:gt(0)').hide();// on cache toutes les images sauf la premiere
 
-// a commenter
+            /////////////////////////////////////////////////////////
+            ////// Contrôles du slider //////////////////////////////
+            /////////////////////////////////////////////////////////
 
-            var timer = 0;
+            // initialisation du timer du slider
+            var timer = 0; 
 
             // mise en route auto du slider
             if(defauts.running && !defauts.paused){
-               timer = setInterval(function() {
-               slideSuivant();
-                }, defauts.pauseTime); 
-            }else if(defauts.paused){
+               runSlide();
+            }else if(defauts.paused){ // si la config dit qu'on est en pause, on stop le slider
                 defauts.paused = true;
-                 clearInterval(timer);
+                clearInterval(timer);
                 timer = '';
                 $('.navPause').css('background-position', '0px 0px');
             }
 
 
-            // au survol de la souris
+            // Hover de la souris sur l'image si le slider n'est pas en pause par défaut
             if(!defauts.paused){
                  if(defauts.pauseOnHover){
                      $(this).find('#categoriesMiddle img, .navNext, .navPrev').hover(function(){
-                     defauts.paused = true;
-                     clearInterval(timer);
-                    timer = '';
+                     stopSlide();
                     $('.navPause').css('background-position', '0px 0px');
                  }, function(){
                         defauts.paused = false;
                         if(timer == '' && !defauts.paused){
-                           timer = setInterval(function() {
-                           slideSuivant();
-                            }, defauts.pauseTime); 
+                           runSlide(); 
                         }
                         $('.navPause').css('background-position', '-30px 0px');
                     });
@@ -100,25 +103,18 @@
              } 
 
              // au clic sur le bouton play/pause
-            $(this).find('.navPause').click(function(){ // au clic sur pause
-               if(!defauts.paused){
-                    defauts.paused = true;
-                    clearInterval(timer);
-                    timer = '';
+            $(this).find('.navPause').click(function(){ 
+               if(!defauts.paused){ // au clic sur pause
+                    stopSlide();
                     $(this).css('background-position', '0px 0px');
-               }else{// bouton play
+               }else{ // bouton play
                     defauts.paused = false;
                     if(timer == '' && !defauts.paused){
-                       timer = setInterval(function() {
-                       slideSuivant();
-                        }, defauts.pauseTime); 
+                        runSlide();
                     }
                     $(this).css('background-position', '-30px 0px');
                } 
             });
-                 
-
-// end a commenter
 
 
             // au clic sur le bouton next
@@ -132,11 +128,23 @@
                slidePrecedent();
                 return false;
             });
-
-        	$(this).find('a').click(function(){
-        		return false;
-        	});
 		});	
+
+
+        /////////////////////////////////////////////////////////
+        ////// Fonctions perso //////////////////////////////////
+        /////////////////////////////////////////////////////////
+        function stopSlide(){
+            defauts.paused = true;
+            clearInterval(timer);
+            timer = '';
+        }
+
+        function runSlide(){
+            timer = setInterval(function() {
+                slideSuivant();
+            }, defauts.pauseTime);
+        }
 
         function slideSuivant(){
             var $imageSuivante = $('#categoriesMiddle img:visible').next('img'); // on stock la valeur de l'image suivante dans une variable
