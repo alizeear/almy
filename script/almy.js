@@ -11,8 +11,13 @@
             pauseOnHover: true
         }, params);  
         var category = Array();
-        
+        // recalcul de la taille des image au redimentionnement de la fenêtre
+        $( window ).resize(function() {
+            alignImg($('#categoriesMiddle img:visible')); // on align l'image centre
+        });
         return this.each(function(){
+            
+                // on recupere les differentes catégories presentes dans les tag des balises "a"
                 $(this).find("a").each(function() {
                     if((typeof $(this).attr("almy-cat") !== "undefined")) {
                         var cat = $(this).attr("almy-cat").split(";");
@@ -22,11 +27,13 @@
                         }
                     }
                 });
-                var uiCat = "";
+                
+                // on affiche la liste des catégories presentes
+                var htmlCat = "";
                 for(var i=0; i<category.length; i++) {
-                    uiCat += '<div>'+category[i]+'</div>';
+                    htmlCat += '<div>'+category[i]+'</div>';
                 }
-                $(this).html('<div class="almyListCat">'+uiCat+'</div>' + $(this).html());
+                $(this).html('<div class="almyListCat">'+htmlCat+'</div>' + $(this).html());
             
 
             /////////////////////////////////////////////////////////
@@ -45,12 +52,6 @@
                     'text-align': 'center',
                 }, 500);
 
-            // positionnement des images suivantes du slider
-            var $widthImageNext = $(this).find('#categoriesMiddle img:gt(0)').width(); // stock dans une variable la width de l'image qui arrive
-                $(this).find('.imgContainer').css({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
-                    width: $widthImageNext,
-                    'text-align': 'center'
-                }, 500);
             
             // Images du slider les unes dérrière les autres
         	$(this).find('.imgContainer img').css({
@@ -61,6 +62,9 @@
             // on cache toutes les images sauf la premiere
             $(this).find('#categoriesMiddle img:gt(0)').hide();
 
+            // positionnement des images suivantes du slider
+            alignImg($('#categoriesMiddle img:visible')); // on align l'image centre
+                
             // Affichage les unes à coté des autres des miniatures
             $(this).find('a img').css({
                 'width': defauts.widthImage,
@@ -129,8 +133,8 @@
                 return false;
             });
 		});	
-
-
+            
+            
         /////////////////////////////////////////////////////////
         ////// Fonctions perso //////////////////////////////////
         /////////////////////////////////////////////////////////
@@ -149,27 +153,79 @@
         function slideSuivant(){
             var $imageSuivante = $('#categoriesMiddle img:visible').next('img'); // on stock la valeur de l'image suivante dans une variable
             if($imageSuivante.length<1) $imageSuivante = $("#categoriesMiddle img:first"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
-            var $widthImageNext = $('#categoriesMiddle img:visible').width(); // stock dans une variable la width de l'image qui arrive
-            $('.imgContainer').animate({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
-                width: $widthImageNext,
-                'text-align': 'center'
-            }, 500);
+            alignImg($imageSuivante); // on align l'image centre
             $("#categoriesMiddle img:visible").stop().fadeOut('slow'); // on cache l'image actuelle
+            var $temp = $("#categoriesMiddle img:visible");
+            setTimeout(function() {
+                $temp.css("display","none");
+            }, 500);
             $imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
             return true;
         }
 
         function slidePrecedent(){
-            var $imageSuivante = $('#categoriesMiddle img:visible').next('img'); // on stock la valeur de l'image suivante dans une variable
-            if($imageSuivante.length<1) $imageSuivante = $("#categoriesMiddle img:first"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
-            var $widthImageNext = $('#categoriesMiddle img:visible').width(); // stock dans une variable la width de l'image qui arrive
-            $('.imgContainer').animate({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
-                width: $widthImageNext,
-                'text-align': 'center'
-            }, 500);
+            var $imageSuivante = $('#categoriesMiddle img:visible').prev('img'); // on stock la valeur de l'image suivante dans une variable
+            if($imageSuivante.length<1) $imageSuivante = $("#categoriesMiddle img:last"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
+            alignImg($imageSuivante); // on align l'image centre
             $("#categoriesMiddle img:visible").stop().fadeOut('slow'); // on cache l'image actuelle
+            var $temp = $("#categoriesMiddle img:visible");
+            setTimeout(function() {
+                $temp.css("display","none");
+            }, 500);
             $imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
             return true;
-        }				   
+        }	
+        
+        // retourne les dimention optimal pour afficher l'image entiere sans la déformer
+        function getDimMaxImg($W_Src, $H_Src) {
+            var $H_max = $("#categoriesMiddle .imgContainer").height();
+            var $W_max = $("#categoriesMiddle").width();
+            var $W_test = Math.round($W_Src * ($H_max / $H_Src));
+            var $H_test = Math.round($H_Src * ($W_max / $W_Src));
+            if($W_max===0 && $H_max===0) {
+               $W = $W_Src;
+               $H = $H_Src;
+            } else if($W_max===0) {
+               $W = $W_test;
+               $H = $H_max;
+            } else if($H_max===0) {
+               $W = $W_max;
+               $H = $H_test;
+            } else if($H_test > $H_max) {
+               $W = $W_test;
+               $H = $H_max;
+            } else {
+               $W = $W_max;
+               $H = $H_test;
+            }
+            
+            return Array($W, $H);
+        }
+        
+        // anime les images afin de les centrer
+        function alignImg($image) {
+            var temp = getDimMaxImg($image.width(), $image.height());
+            var $widthImageNext = temp[0]; // stock dans une variable la width de l'image qui arrive
+            var $heightImageNext = temp[1];
+            
+            if($widthImageNext<270) {
+                $("#categoriesMiddle").find('.imgContainer').stop().animate({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
+                    'width': "270px"
+                }, 500);
+                $($image).css('left', Math.round((270-$widthImageNext)/2)+"px").animate({
+                    'height': $heightImageNext,
+                    'width': $widthImageNext
+                }, 500);
+            }
+            else {
+                $($image).css('left', "0px").animate({
+                    'height': $heightImageNext,
+                    'width': $widthImageNext
+                }, 500);
+                $("#categoriesMiddle").find('.imgContainer').stop().animate({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
+                    width: $widthImageNext
+                }, 500);
+            }
+        }
 	};
 })(jQuery);
