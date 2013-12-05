@@ -155,10 +155,6 @@
             if($imageSuivante.length<1) $imageSuivante = $("#categoriesMiddle img:first"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
             alignImg($imageSuivante); // on align l'image centre
             $("#categoriesMiddle img:visible").stop().fadeOut('slow'); // on cache l'image actuelle
-            var $temp = $("#categoriesMiddle img:visible");
-            setTimeout(function() {
-                $temp.css("display","none");
-            }, 500);
             $imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
             return true;
         }
@@ -168,10 +164,6 @@
             if($imageSuivante.length<1) $imageSuivante = $("#categoriesMiddle img:last"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
             alignImg($imageSuivante); // on align l'image centre
             $("#categoriesMiddle img:visible").stop().fadeOut('slow'); // on cache l'image actuelle
-            var $temp = $("#categoriesMiddle img:visible");
-            setTimeout(function() {
-                $temp.css("display","none");
-            }, 500);
             $imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
             return true;
         }	
@@ -182,7 +174,11 @@
             var $W_max = $("#categoriesMiddle").width();
             var $W_test = Math.round($W_Src * ($H_max / $H_Src));
             var $H_test = Math.round($H_Src * ($W_max / $W_Src));
-            if($W_max===0 && $H_max===0) {
+            
+            if($W_Src<$W_max && $H_Src<$H_max) {
+               $W = $W_Src;
+               $H = $H_Src;
+            } else if($W_max===0 && $H_max===0) {
                $W = $W_Src;
                $H = $H_Src;
             } else if($W_max===0) {
@@ -208,11 +204,14 @@
             var $widthImageNext = temp[0]; // stock dans une variable la width de l'image qui arrive
             var $heightImageNext = temp[1];
             
-            if($widthImageNext<270) {
+            
+            // donne une taille minimal à 
+            var minWidth = 270;
+            if($widthImageNext<minWidth) {
                 $("#categoriesMiddle").find('.imgContainer').stop().animate({ // modifie la width de la div contenant l'image pour que l'image reste bien au centre
-                    'width': "270px"
+                    'width': minWidth+"px"
                 }, 500);
-                $($image).css('left', Math.round((270-$widthImageNext)/2)+"px").animate({
+                $($image).css('left', Math.round((minWidth-$widthImageNext)/2)+"px").animate({
                     'height': $heightImageNext,
                     'width': $widthImageNext
                 }, 500);
