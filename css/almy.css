@@ -63,6 +63,7 @@
   background-image: url(../images/fleche_v2.png);
   text-indent: -9999px;
   border: 0;
+  cursor: pointer;
 }
 .navDirection .navPrev{
 
@@ -80,4 +81,5 @@
   height: 100%;
   margin-left: auto;
   margin-right: auto;
+  overflow: hidden;
 }
