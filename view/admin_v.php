@@ -51,7 +51,7 @@
                  <ul>
                     <?php
                         foreach($listeCat as $cat) {
-                           echo "<li><class =\"title\">".$cat['name']."</span><span class=\"id\">".$cat['id']."</span></li>";
+                           echo "<li><span class=\"title\">".$cat['name']."</span><span class=\"id\">".$cat['id']."</span></li>";
                         }
                     ?>
                  </ul>
