@@ -3,6 +3,23 @@ $(document).ready(function() {
 	initCat();
 	initImg();
 	
+	// Requte AJAX de verification d'existancee des fichiers avec la base
+	$("#checkAllLink").click(function() {
+		loadOn();
+		var requete = $.ajax({
+			url: "ajax.php?do=checkAllLink",
+			type: "post",
+			success: function() {
+					var json = JSON.parse(requete.responseText);
+					showImg(json);
+					$("#reglage").html("");
+					$(".active").removeClass("active");
+					initImg();
+					loadOff();
+			}
+		});
+	});
+	
 	// Gestion de l'upload du drag'N drop
 	$(document).on('dragenter', '#dropfile', function() {
 		$(this).css('border', '1px solid #677EA1');
@@ -92,7 +109,9 @@ $(document).ready(function() {
 
 // initialise les clicks sur les noms de catégories
 function initCat() {
-	$("#listeCat li").click(function () {
+	$("#listeCat li").click(function() {
+		$(".active").removeClass("active");
+		$(this).addClass("active");
 		// code HTML affiché dans la colonne de droite (Reglages)
 		var html = 'Nom de la Catégorie: \
 				  <div class="input-group"> \
@@ -118,6 +137,7 @@ function initCat() {
 					var json = JSON.parse(requete.responseText);
 					showCat(json);
 					$("#reglage").html("");
+					$(".active").removeClass("active");
 					initCat();
                                         loadOff();
 				}
@@ -143,6 +163,7 @@ function initCat() {
 					var json = JSON.parse(requete.responseText);
 					showCat(json);
 					$("#reglage").html("");
+					$(".active").removeClass("active");
 					initCat();
 					loadOff();
 				}
@@ -155,6 +176,8 @@ function initImg() {
 	$("#listeImg li").click(function () {
 		// code HTML affiché dans la colonne de droite (Reglages)
 		loadOn();
+		$(".active").removeClass("active");
+		$(this).addClass("active");
 		var html = 'Titre de l\'image: \
 				  <div class="input-group"> \
 					 <input id="txtImgUpdate" type="text" class="form-control" value="'+$(this).find(".title").text()+'"> \
@@ -211,6 +234,7 @@ function initImg() {
 					var json = JSON.parse(requete.responseText);
 					showImg(json);
 					$("#reglage").html("");
+					$(".active").removeClass("active");
 					initImg();
 					loadOff();
 				}
@@ -236,6 +260,7 @@ function initImg() {
 					var json = JSON.parse(requete.responseText);
 					showCat(json);
 					$("#reglage").html("");
+					$(".active").removeClass("active");
 					initCat();
 					loadOff();
 				}

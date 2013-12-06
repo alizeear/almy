@@ -132,17 +132,20 @@
       }
 		public function checkAllLink() {
 			$list = $this->getListeImage();
+			$count= 0;
 			foreach($list as $image) {
 				if(!file_exists($image['url'])) {
 					if(file_exists($image['url_min']))
 						unlink($image['url_min']);
 					$this->deleteImage($image['id']);
+					$count++;
 				}
 				else {
 					if(!file_exists($image['url_min']))
-						$this->updateImage($image['id'], array("url_min","NULL"));
+						$this->updateImage($image['id'], array("url_min" => createMin($image['url'])));
 				}
 			}
+			return $count;
 		}
       public function deleteImage($id) {
          $sql = "DELETE FROM image WHERE id = ".$id.";";
@@ -159,12 +162,12 @@
 			$dot = 0;
 			foreach ($arg as $field => $value) {
 				if($dot != 0)
-					$set .= " ,";
-				$set .= $field." = '".$value."'";
+					$set .= ", ";
+				$set .= (($value == "NULL")?$field." = NULL":$field." = '".$value."'");
                                 $dot++;
 			}
 			$sql = "UPDATE image SET ".$set." WHERE id = ".$id.";";
-                        
+         
 			$query = almyDb::$PDO->query($sql);
 			if($query->rowCount() == 1) {
 				return true;
