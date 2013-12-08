@@ -28,6 +28,7 @@
       <nav class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
         <div class="navbar-header">
         <a class="navbar-brand" href="#">Almy</a>
+		  <a id="checkAllLink" class="btn btn-danger" role="button" href="#">Verifier les liens</a>
     </div>
          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
@@ -50,7 +51,7 @@
                  <ul>
                     <?php
                         foreach($listeCat as $cat) {
-                           echo "<li><class =\"title\">".$cat['name']."</span><span class=\"id\">".$cat['id']."</span></li>";
+                           echo "<li><span class=\"title\">".$cat['name']."</span><span class=\"id\">".$cat['id']."</span></li>";
                         }
                     ?>
                  </ul>

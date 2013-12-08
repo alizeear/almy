@@ -53,29 +53,9 @@
       <div id="divAlmy" class="containerAlmy">
         <?php
             foreach($images as $image) {
-                echo "<a almy-cat=\"".implode(";", $image['cat'])."\" href=\"".$image['url']."\"><img src=\"".$image['url_min']."\"></a>";
+                echo "<a almy-cat=\"".implode(";", $image['cat'])."\" href=\"".$image['url']."\"><img title=\"".$image['title']."\" alt=\"".$image['descr']."\" src=\"".$image['url_min']."\"></a>";
             }
         ?>
-
-        <!-- Ce qui va apparaitre au clique sur une image -->
-        <div class="background">
-            <div id="categoriesTop"></div>
-            <div id="categoriesMiddle">
-              <div class="imgContainer">
-              <?php
-                  foreach($images as $image) {
-                      echo "<img src=\"".$image['url']."\">";
-                  }
-              ?>
-              <div class="navDirection">
-                <ul><li><a class="navPrev"></a></li><li><a class="navPause"></a></li><li><a class="navNext"></a></li></ul>
-              </div>
-            </div>
-            <div id="mosaiqueBottom"></div>
-            </div>
-        </div>
-        <!-- End clic image -->
-
       </div>
       </div>
       <div id="load"></div>

@@ -1,3 +1,6 @@
+.active {
+	background-color: #dfdfdf;
+}
 .classe,
 #listeCat li:hover ,
 #listeImg li:hover ,
@@ -63,4 +66,9 @@ ul {
 .selected {
 	font-weight: bold;
 	background: rgba(250, 250, 250, 0.8);
+}
+#checkAllLink {
+	font-size: 12px;
+	float: left;
+	margin-top: 15px;
 }
