@@ -67,6 +67,19 @@
   	width: 100%;
 	z-index: 3;
 }
+#categoriesMiddle #mosaiqueBottom ul li img{
+	display: block!important;
+	max-height: 100%;
+}
+#categoriesMiddle #mosaiqueBottom ul li{
+	margin-right: 20px;
+	height: 100%;
+}
+#categoriesMiddle #mosaiqueBottom ul{
+	margin-top: 10px;
+	width: 5000px;
+	position: absolute;
+}
 .navDirection{
 	position: relative;
 	margin: 0;
