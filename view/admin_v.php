@@ -28,6 +28,7 @@
       <nav class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
         <div class="navbar-header">
         <a class="navbar-brand" href="#">Almy</a>
+		  <a id="checkAllLink" class="btn btn-danger" role="button" href="#">Verifier les liens</a>
     </div>
          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
@@ -50,7 +51,7 @@
                  <ul>
                     <?php
                         foreach($listeCat as $cat) {
-                           echo "<li>".$cat['name']."<span class=\"id\">".$cat['id']."</class></li>";
+                           echo "<li><span class=\"title\">".$cat['name']."</span><span class=\"id\">".$cat['id']."</span></li>";
                         }
                     ?>
                  </ul>
@@ -74,7 +75,7 @@
 					  <ul>
 						  <?php
 								foreach($listeImg as $img) {
-									echo "<li><img src=\"".$img['url_min']."\">".((!empty($img['title']))?$img['title']:"")."<span class=\"id\">".$img['id']."</class></li>";
+									echo "<li><img src=\"".$img['url_min']."\"><span class=\"title\">".((!empty($img['title']))?$img['title']:"")."</span><span class=\"id\">".$img['id']."</span><span class=\"descr\">".$img['descr']."</class></li>";
 								}
 						  ?>
 					  </ul>

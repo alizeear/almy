@@ -1,6 +1,33 @@
 .containerAlmy {
 	width: 100%;
 }
+.containerAlmy ul {
+	padding: 0px;
+	list-style: none;
+	display: inline-block;
+	margin: 0px;
+}
+.containerAlmy ul li {
+	display: inline-block;
+	text-align: center;
+	cursor: pointer;
+	font-size: 1.2em;
+	font-weight: bold;
+	background: #333;
+	vertical-align: top;
+	color: #ddd;
+	height: 35px;
+}
+.containerAlmy ul li span {
+	display: inline-block;
+	height: 100%;
+	width: 100%;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+.containerAlmy a {
+	display: inline-block;
+}
 .containerAlmy a img{
 	display: inline-block;
 }
@@ -15,7 +42,6 @@
 }
 #categoriesMiddle{
 	position: fixed;
-   text-align: center;
    width: 100%;
    top: 15%;
 	height: 70%;
@@ -23,14 +49,15 @@
 .background img{
 	width: auto!important;  /*conflit avec le paramètre du plugin */
 	height: 100%;
+	display: block;
 }
 #categoriesTop{
 	background-color: rgba(1, 1, 1, 0.95);
 	position: fixed;
-   	top: 0;
-   	height: 15%;
-   	width: 100%;
-   	z-index: 3;
+	top: 0;
+	height: 15%;
+	width: 100%;
+	z-index: 3;
 }
 #mosaiqueBottom{
 	background-color: rgba(1, 1, 1, 0.95);
@@ -38,5 +65,48 @@
   	bottom: 0;
   	height: 15%;
   	width: 100%;
-   	z-index: 3;
+	z-index: 3;
+}
+.navDirection{
+	position: relative;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+.navDirection ul{
+	width: 100%;
+	/*margin-top: -35px;*/
+	padding: 0;
+}
+.navDirection ul li{
+	display: inline-block;
+	padding-right: 30px;
+	padding-left: 30px;
+}
+.navDirection ul li a{
+	display: block;
+	width: 30px;
+	height: 30px;
+	background-image: url(../images/fleche_v2.png);
+	text-indent: -9999px;
+	border: 0;
+	cursor: pointer;
+}
+.navDirection .navPrev{
+
+}
+.navDirection .navNext{
+	background-position: -30px 0;
+}
+.navDirection .navPause{
+	background-image: url(../images/playpause.png);
+	background-position: -30px 0;
+	width: 30px;
+}
+.imgContainer{
+	position: relative;
+	height: 100%;
+	margin-left: auto;
+	margin-right: auto;
+	overflow: hidden;
 }

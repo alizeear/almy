@@ -2,9 +2,9 @@
 	class almyDb
 	{
 		private static $serveur='mysql:host=127.0.0.1';
-     	private static $bdd='dbname=almy';   		
-     	private static $user='almy';    		
-     	private static $mdp='123456';
+                private static $bdd='dbname=almy';   		
+                private static $user='almy';    		
+                private static $mdp='123456';
 		private static $PDO;
 		private static $almyDb=null;
 	
@@ -40,9 +40,28 @@
          $query = almyDb::$PDO->query($sql);
          return $query->fetchAll();
       }
+      public function getListeIdCategorie() {
+         $sql = "SELECT id FROM category ORDER BY name ASC";
+         $query = almyDb::$PDO->query($sql);
+         $list = $query->fetchAll();
+         $retour = array();
+         foreach ($list as $temp) {
+             $retour[] = $list['id'];
+         }
+         return $retour;
+      }
+      public function getListeIdCategorieImg($idImg) {
+         $retour = array();
+         $list = $this->getListeCategorieImg($idImg);
+         foreach ($list as $temp) {
+             if($temp['is']===true) 
+                $retour[] = $temp['id'];
+         }
+         return $retour;
+      }
       public function getListeCategorieImg($idImg) {
 		 $retour = array();
-         $list = $this->getListeCategorie();
+                 $list = $this->getListeCategorie();
 		 foreach($list as $cat) {
 			 $sql = "SELECT * FROM catimg WHERE id_img=".$idImg." AND id_cat = ".$cat['id'].";";
 			 $query = almyDb::$PDO->query($sql);
@@ -113,17 +132,20 @@
       }
 		public function checkAllLink() {
 			$list = $this->getListeImage();
+			$count= 0;
 			foreach($list as $image) {
 				if(!file_exists($image['url'])) {
 					if(file_exists($image['url_min']))
 						unlink($image['url_min']);
 					$this->deleteImage($image['id']);
+					$count++;
 				}
 				else {
 					if(!file_exists($image['url_min']))
-						$this->updateImage($image['id'], array("url_min","NULL"));
+						$this->updateImage($image['id'], array("url_min" => createMin($image['url'])));
 				}
 			}
+			return $count;
 		}
       public function deleteImage($id) {
          $sql = "DELETE FROM image WHERE id = ".$id.";";
@@ -141,10 +163,11 @@
 			foreach ($arg as $field => $value) {
 				if($dot != 0)
 					$set .= ", ";
-				$set .= " '".$field."' = '".$value."' ";
+				$set .= (($value == "NULL")?$field." = NULL":$field." = '".$value."'");
+                                $dot++;
 			}
-			$sql = "UPDATE image SET ".$set." WHERE id =".$id.";";
-			
+			$sql = "UPDATE image SET ".$set." WHERE id = ".$id.";";
+         
 			$query = almyDb::$PDO->query($sql);
 			if($query->rowCount() == 1) {
 				return true;
@@ -153,7 +176,33 @@
 				return false;
 			}
 		}
-
+                function addCatImage($id_img, $id_cat) {
+                        $sql = "INSERT INTO catimg (id_img, id_cat) VALUES (".$id_img.", ".$id_cat.");";
+			$query = almyDb::$PDO->query($sql);
+			if($query->rowCount() == 1) {
+				return true;
+			}
+			else {
+				return false;
+			}
+                }
+                
+                function removeCatImage($id_img, $id_cat) {
+                        $sql = "DELETE FROM catimg WHERE id_img = ".$id_img." AND id_cat = ".$id_cat.";";
+			$query = almyDb::$PDO->query($sql);
+			if($query->rowCount() == 1) {
+				return true;
+			}
+			else {
+				return false;
+			}
+                }
+                
+                
+                /**
+                 * Autre
+                 */
+                
       public function traitementConnexion($login, $mdp) {
 
          $req  =  'SELECT * FROM user WHERE login="'.$login.'" AND pass="'.MD5($mdp).'"';

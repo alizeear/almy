@@ -23,11 +23,11 @@
    	<script type="text/javascript" src="script/almy.js"></script>
 
     <script>
-    $(document).ready(function() {
+    $(window).load(function() {
 
         $('#divAlmy').almy({
-            width        : '100%',
-            widthImage   : '300px'
+            width        : '452px',
+            widthImage   : '150px'
         });
 
     });
@@ -53,18 +53,9 @@
       <div id="divAlmy" class="containerAlmy">
         <?php
             foreach($images as $image) {
-                echo "<a href=\"".$image['url']."\"><img src=\"".$image['url_min']."\"></a>";
+                echo "<a almy-cat=\"".implode(";", $image['cat'])."\" href=\"".$image['url']."\"><img title=\"".$image['title']."\" alt=\"".$image['descr']."\" src=\"".$image['url_min']."\"></a>";
             }
         ?>
-
-        <!-- Ce qui va apparaitre au clique sur une image -->
-        <div class="background">
-            <div id="categoriesTop"></div>
-            <div id="categoriesMiddle"><?php echo "<img src=\"".$image['url_min']."\">"; ?></div>
-            <div id="mosaiqueBottom"></div>
-        </div>
-        <!-- End clic image -->
-
       </div>
       </div>
       <div id="load"></div>

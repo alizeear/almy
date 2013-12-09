@@ -3,6 +3,23 @@ $(document).ready(function() {
 	initCat();
 	initImg();
 	
+	// Requte AJAX de verification d'existancee des fichiers avec la base
+	$("#checkAllLink").click(function() {
+		loadOn();
+		var requete = $.ajax({
+			url: "ajax.php?do=checkAllLink",
+			type: "post",
+			success: function() {
+					var json = JSON.parse(requete.responseText);
+					showImg(json);
+					$("#reglage").html("");
+					$(".active").removeClass("active");
+					initImg();
+					loadOff();
+			}
+		});
+	});
+	
 	// Gestion de l'upload du drag'N drop
 	$(document).on('dragenter', '#dropfile', function() {
 		$(this).css('border', '1px solid #677EA1');
@@ -53,7 +70,32 @@ $(document).ready(function() {
 					// sinon, affichage d'un message d'erreur
 					$("#errCatAdd").text("Il est impossible d'ajouter cette catégorie.");
 				}
-				loadOff();
+				if($("#idImgUpdate").length != 0) {
+                                    var requeteCatImg = $.ajax({
+                                        url: "ajax.php?do=getCatImg",
+                                        type: "post",
+                                        data: {
+                                            id: $("#idImgUpdate").val()
+                                        },
+                                        success: function(){
+                                            var json = JSON.parse(requeteCatImg.responseText);
+                                            $("#catImgUpdate").html("");
+                                            for (var i in a = json) {
+                                                $("#catImgUpdate").append("<li "+((a[i]['is'])?"class=\"selected\"":"")+">"+a[i]['name']+"<span class=\"id\">"+a[i]['id']+"</class></li>");
+                                            }
+                                            $("#catImgUpdate li").click(function() {
+                                                if($(this).hasClass("selected"))
+                                                    $(this).removeClass("selected");
+                                                else
+                                                    $(this).addClass("selected");
+                                            });
+                                            loadOff();
+                                        }
+                                    });
+                                }
+                                else {
+                                    loadOff();
+                                }
 			}
 		});
 	});
@@ -67,12 +109,14 @@ $(document).ready(function() {
 
 // initialise les clicks sur les noms de catégories
 function initCat() {
-	$("#listeCat li").click(function () {
+	$("#listeCat li").click(function() {
+		$(".active").removeClass("active");
+		$(this).addClass("active");
 		// code HTML affiché dans la colonne de droite (Reglages)
 		var html = 'Nom de la Catégorie: \
 				  <div class="input-group"> \
-					 <input id="txtCatUpdate" type="text" class="form-control" value="'+$(this).text().substr(0,$(this).text().length-$(this).find("span").text().length)+'"> \
-					 <input id="idCatUpdate" type="hidden" value="'+$(this).find("span").text()+'"> \
+					 <input id="txtCatUpdate" type="text" class="form-control" value="'+$(this).find(".title").text()+'"> \
+					 <input id="idCatUpdate" type="hidden" value="'+$(this).find(".id").text()+'"> \
 					 <span class="input-group-btn"> \
 						<button id="btnCatUpdate" class="btn btn-default" type="button">Modifier</button> \
 					 </span> \
@@ -93,8 +137,9 @@ function initCat() {
 					var json = JSON.parse(requete.responseText);
 					showCat(json);
 					$("#reglage").html("");
+					$(".active").removeClass("active");
 					initCat();
-					loadOff();
+                                        loadOff();
 				}
 			});
 		});
@@ -118,6 +163,7 @@ function initCat() {
 					var json = JSON.parse(requete.responseText);
 					showCat(json);
 					$("#reglage").html("");
+					$(".active").removeClass("active");
 					initCat();
 					loadOff();
 				}
@@ -130,16 +176,18 @@ function initImg() {
 	$("#listeImg li").click(function () {
 		// code HTML affiché dans la colonne de droite (Reglages)
 		loadOn();
+		$(".active").removeClass("active");
+		$(this).addClass("active");
 		var html = 'Titre de l\'image: \
 				  <div class="input-group"> \
-					 <input id="txtImgUpdate" type="text" class="form-control" value="'+$(this).text().substr(0,$(this).text().length-$(this).find("span").text().length)+'"> \
-					 <input id="idImgUpdate" type="hidden" value="'+$(this).find("span").text()+'"> \
+					 <input id="txtImgUpdate" type="text" class="form-control" value="'+$(this).find(".title").text()+'"> \
+					 <input id="idImgUpdate" type="hidden" value="'+$(this).find(".id").text()+'"> \
 					 <span class="input-group-btn"> \
 						<button id="btnImgUpdate" class="btn btn-default" type="button">Modifier</button> \
 					 </span> \
 				  </div> \
 				  Description de l\'image \
-				  <textarea id="descrImgUpdate" class="form-control" rows="3"></textarea> \
+				  <textarea id="descrImgUpdate" class="form-control" rows="3">'+$(this).find(".descr").text()+'</textarea> \
 				  <ul id="catImgUpdate"></ul> \
 				  <button id="btnImgDelete" class="btn btn-danger btn-xs delete" type="button">Supprimer</button>';
 		$("#reglage").html(html);
@@ -169,18 +217,25 @@ function initImg() {
 		//envoye de la requette AJAX de modification de la catégorie
 		$("#btnImgUpdate").click(function() {
 			loadOn();
+                        var cat = Array();
+                        $("#catImgUpdate li.selected").each(function() {
+                            cat.push($(this).find(".id").text());
+                        });
 			var requete = $.ajax({
 				url: "ajax.php?do=updateImg",
 				type: "post",
 				data: {
 					id: $("#idImgUpdate").val(),
-					name: $("#txtImgUpdate").val()
+					title: $("#txtImgUpdate").val(),
+                                        descr: $("#descrImgUpdate").val(),
+                                        cat: cat
 				},
 				success: function(){
 					var json = JSON.parse(requete.responseText);
-					showCat(json);
+					showImg(json);
 					$("#reglage").html("");
-					initCat();
+					$(".active").removeClass("active");
+					initImg();
 					loadOff();
 				}
 			});
@@ -205,6 +260,7 @@ function initImg() {
 					var json = JSON.parse(requete.responseText);
 					showCat(json);
 					$("#reglage").html("");
+					$(".active").removeClass("active");
 					initCat();
 					loadOff();
 				}
@@ -217,13 +273,13 @@ function initImg() {
 function showCat(json) {
 	$("#listeCat").html("<ul></ul>");
 	for (var i in a = json[1]) {
-		$("#listeCat ul").append("<li>"+a[i]['name']+"<span class=\"id\">"+a[i]['id']+"</class></li>");
+		$("#listeCat ul").append("<li><span class=\"title\">"+a[i]['name']+"</span><span class=\"id\">"+a[i]['id']+"</span></li>");
 	}
 }
 function showImg(json) {
 	$("#listeImg").html("<ul></ul>");
 	for (var i in a = json[1]) {
-		$("#listeImg ul").append("<li><img src=\""+a[i]['url_min']+"\">"+((a[i]['title']!=null)?a[i]['title']:"")+"<span class=\"id\">"+a[i]['id']+"</class></li>");
+		$("#listeImg ul").append("<li><img src=\""+a[i]['url_min']+"\"><span class=\"title\">"+((a[i]['title']!=null)?a[i]['title']:"")+"</span><span class=\"id\">"+a[i]['id']+"</span><span class=\"descr\">"+a[i]['descr']+"</span></li>");
 	}
 }
 
