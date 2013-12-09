@@ -8,7 +8,7 @@
 			running: true,
 			paused: true,
 			pauseTime: 3000,
-			pauseOnHover: true
+			pauseOnHover: false
 		}, params);
 
 		var dateTime = new Date().getTime();
@@ -302,9 +302,13 @@
 			$(idAlmy).find("a").each(function() {
 				listImg += '<img src="'+$(this).attr('href')+'" alt="'+$(this).find("img").attr('alt')+'" title="'+$(this).find("img").attr('title')+'">';
 			});
+			var catTmp = '';
+			for(var i = 0;i<category.length;i++) {
+				catTmp += '<div id="listCategoriesSlider">'+category[i]+'</div>';
+			}
 			if($(idAlmy).find(".background").length==0) {
 				$(idAlmy).append('<div class="background">\
-							<div id="categoriesTop"></div>\
+							<div id="categoriesTop">'+catTmp+'</div>\
 							<div id="categoriesMiddle">\
 								<div class="imgContainer">\
 									'+listImg+'\
@@ -316,6 +320,21 @@
 							</div>\
 						</div>');
 			}
+
+			$(idAlmy).find("#categoriesTop #listCategoriesSlider").mouseover(function() {
+				$(this).stop().animate({
+						'opacity': 0.5
+						},"fast");
+			});
+			$(idAlmy).find("#categoriesTop #listCategoriesSlider").mouseout(function() {
+				$(this).stop().animate({
+						'opacity': 1
+						},"fast");
+			});
+			
+
+			
+
 
 			/////////////////////////////////////////////////////////
 			////// Initialisation du slider /////////////////////////
@@ -381,17 +400,31 @@
 				}
 			}
 
+			// Hover de la souris sur l'image
+				if(defauts.pauseOnHover) {
+					$(idAlmy).find('#categoriesMiddle img, .navNext, .navPrev').hover(function() {
+						stopSlide();
+						$('.navPause').css('background-position', '0px 0px');
+					}, function() {
+						defauts.paused = false;
+						if(timer==''&&!defauts.paused) {
+							runSlide();
+						}
+						$('.navPause').css('background-position', '-30px 0px');
+					});
+				}
+
 			// au clic sur le bouton play/pause
 			$(idAlmy).find('.navPause').click(function() {
 				if(!defauts.paused) { // au clic sur pause
 					stopSlide();
-					$(idAlmy).css('background-position', '0px 0px');
+					$(this).css('background-position', '0px 0px');
 				} else { // bouton play
 					defauts.paused = false;
 					if(timer==''&&!defauts.paused) {
 						runSlide();
 					}
-					$(idAlmy).css('background-position', '-30px 0px');
+					$(this).css('background-position', '-30px 0px');
 				}
 			});
 
