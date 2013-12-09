@@ -139,7 +139,7 @@ function initCat() {
 					$("#reglage").html("");
 					$(".active").removeClass("active");
 					initCat();
-                                        loadOff();
+                    loadOff();
 				}
 			});
 		});
@@ -248,20 +248,20 @@ function initImg() {
 		});
 		
 		// envoye de la requette AJAX de suppression de la catégorie
-		$("#btnCatDelete").click(function() {
+		$("#btnImgDelete").click(function() {
 			loadOn();
 			var requete = $.ajax({
-				url: "ajax.php?do=deleteCat",
+				url: "ajax.php?do=deleteImg",
 				type: "post",
 				data: {
-					id: $("#idCatUpdate").val()
+					id: $("#idImgUpdate").val()
 				},
 				success: function(){
 					var json = JSON.parse(requete.responseText);
-					showCat(json);
+					showImg(json);
 					$("#reglage").html("");
 					$(".active").removeClass("active");
-					initCat();
+					initImg();
 					loadOff();
 				}
 			});
@@ -279,7 +279,7 @@ function showCat(json) {
 function showImg(json) {
 	$("#listeImg").html("<ul></ul>");
 	for (var i in a = json[1]) {
-		$("#listeImg ul").append("<li><img src=\""+a[i]['url_min']+"\"><span class=\"title\">"+((a[i]['title']!=null)?a[i]['title']:"")+"</span><span class=\"id\">"+a[i]['id']+"</span><span class=\"descr\">"+a[i]['descr']+"</span></li>");
+		$("#listeImg ul").append("<li><img src=\""+a[i]['url_min']+"\"><span class=\"title\">"+((a[i]['title']!=null)?a[i]['title']:"")+"</span><span class=\"id\">"+a[i]['id']+"</span><span class=\"descr\">"+((a[i]['descr']!=null)?a[i]['descr']:"")+"</span></li>");
 	}
 }
 

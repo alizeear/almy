@@ -115,6 +115,16 @@
      /*
      ** Gestion des images
      */
+      public function getImage($id) {
+         $sql = "SELECT * FROM image WHERE id=".$id.";";
+         $query = almyDb::$PDO->query($sql);
+         return $query->fetch();
+      }
+      public function getImageByLink($url) {
+         $sql = "SELECT * FROM image WHERE url='".$url."' OR url_min='".$url."';";
+         $query = almyDb::$PDO->query($sql);
+         return $query->fetch();
+      }
       public function getListeImage($cat = null) {
          $sql = "SELECT image.* FROM image ".(($cat == null)?"":"INNER JOIN catimg WHERE catimg.id_cat = ".$cat)." ORDER BY title ASC";
          $query = almyDb::$PDO->query($sql);
@@ -130,6 +140,7 @@
             return false;
          }
       }
+	  
 		public function checkAllLink() {
 			$list = $this->getListeImage();
 			$count= 0;
@@ -145,8 +156,34 @@
 						$this->updateImage($image['id'], array("url_min" => createMin($image['url'])));
 				}
 			}
+			
+			$dir = "upload";
+			$dirOpen = opendir($dir) or die('Erreur');
+			while($file = @readdir($dirOpen)) {
+				if(!is_dir($dir.'/'.$file)&& $file != '.' && $file != '..') {
+					$temp = $this->getImageByLink($dir.'/'.$file);
+					if(!$temp && ($file!= "newFolder.txt")) {
+						unlink($dir.'/'.$file);
+					}
+				}
+			}
+		    closedir($dirOpen);
+			
+			$dir = "upload/miniatures";
+			$dirOpen = opendir($dir) or die('Erreur');
+			while($file = @readdir($dirOpen)) {
+				if(!is_dir($dir.'/'.$file)&& $file != '.' && $file != '..') {
+					$temp = $this->getImageByLink($dir.'/'.$file);
+					if(!$temp && ($file!= "newFolder.txt")) {
+						unlink($dir.'/'.$file);
+					}
+				}
+			}
+		    closedir($dirOpen);
+			
 			return $count;
 		}
+		
       public function deleteImage($id) {
          $sql = "DELETE FROM image WHERE id = ".$id.";";
          $query = almyDb::$PDO->query($sql);
@@ -197,6 +234,16 @@
 				return false;
 			}
                 }
+        function removeAllCatImage($id_img) {
+            $sql = "DELETE FROM catimg WHERE id_img = ".$id_img.";";
+			$query = almyDb::$PDO->query($sql);
+			if($query->rowCount() != 0) {
+				return true;
+			}
+			else {
+				return false;
+			}
+        }
                 
                 
                 /**
