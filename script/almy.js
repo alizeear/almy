@@ -40,82 +40,129 @@
 				position: 'relative'
 			});
 		   $(this).css("border", "1px solid #333");
-			
-			var htmlCat = "<li><span class=\"all\">Toutes</span></li>";
-			for(var i = 0;i<category.length;i++) {
-				htmlCat += '<li><span>'+category[i]+'</span></li>';
-			}
-			$(this).prepend('<div class="almyListCat"><ul>'+htmlCat+'</ul></div>');
-			$(".almyListCat").find("li").width($(this).find(".almyListCat").width()/$(".almyListCat").find("li").length);
-			
-			var n=0;
-			$(this).find(".almyListCat ul li span").mouseenter(function() {
-				$(this).parents("ul").find("span").stop().animate({
-					'opacity': 0.7
-				},"fast");
-				$(this).stop().animate({
-					'opacity': 1
-				},"fast");
-				var tempCat = $(this).text();
-				if(!$(this).hasClass("all")) {
-					$(idAlmy).find("a img").parent().each(function() {
-						if($(this).attr("almy-cat").indexOf(tempCat) == -1)
-							$(this).stop().animate({
-								'opacity': 0.6
-							});
-					});
+		   
+		   // affichage des catégories
+			if(category.length != 0) {
+				var htmlCat = "<li><span class=\"all\">Toutes</span></li>";
+				for(var i = 0;i<category.length;i++) {
+					htmlCat += '<li><span>'+category[i]+'</span></li>';
 				}
-			}).mouseleave(function() {
-				if($(this).parents("ul").find("span.active").length == 0) {
+				$(this).prepend('<div class="almyListCat"><ul>'+htmlCat+'</ul></div>');
+				$(".almyListCat").find("li").width($(this).find(".almyListCat").width()/$(".almyListCat").find("li").length);
+				
+				var n=0;
+				$(this).find(".almyListCat ul li span").mouseenter(function() {
 					$(this).parents("ul").find("span").stop().animate({
+						'opacity': 0.7
+					},"fast");
+					$(this).stop().animate({
 						'opacity': 1
 					},"fast");
-					$(idAlmy).find("a img").parent().each(function() {
-						$(this).stop().animate({
+					var tempCat = $(this).text();
+					if(!$(this).hasClass("all")) {
+						$(idAlmy).find("a img").parent().each(function() {
+							if($(this).attr("almy-cat").indexOf(tempCat) == -1)
+								$(this).stop().animate({
+									'opacity': 0.6
+								});
+						});
+					}
+				}).mouseleave(function() {
+					if($(this).parents("ul").find("span.active").length == 0) {
+						$(this).parents("ul").find("span").stop().animate({
 							'opacity': 1
 						},"fast");
-					});
-				}
-				else{
-					$(this).parent().stop().animate({
-						'opacity': 1
-					},"fast");
-					$(this).parents("ul").find("span").each(function() {
-						if(!$(this).hasClass("active"))
-							$(this).stop().animate({
-								'opacity': 0.7
-							},"fast");
-						else
+						$(idAlmy).find("a img").parent().each(function() {
 							$(this).stop().animate({
 								'opacity': 1
 							},"fast");
-					});
-				}
-			}).click(function() {
-				if(!$(this).hasClass("active")) {
-					$(this).addClass("active");
-					var tempCat = $(this).text();
-					if(!$(this).hasClass("all")) {
-						$(idAlmy).find("img").parent().each(function() {
+						});
+					}
+					else{
+						$(this).parent().stop().animate({
+							'opacity': 1
+						},"fast");
+						$(this).parents("ul").find("span").each(function() {
+							if(!$(this).hasClass("active"))
+								$(this).stop().animate({
+									'opacity': 0.7
+								},"fast");
+							else
+								$(this).stop().animate({
+									'opacity': 1
+								},"fast");
+						});
+					}
+				}).click(function() {
+					if(!$(this).hasClass("active")) {
+						$(this).addClass("active")
+						var tempCat = $(this).text();
+						if(!$(this).hasClass("all")) {
+							$(idAlmy).find("img").parent().each(function() {
+								if($(this).attr("almy-cat").indexOf(tempCat) == -1)
+									$(this).stop().slideUp();
+							});
+						}
+						else {
+							$(idAlmy).find("a img").parent().stop().slideDown();
+						}
+						
+						
+						var colorStart = Array();
+						var colorEnd = {r: 31, g: 31, b:31};
+						var tempColor = $(this).css("color");
+						if(tempColor.indexOf("rgb") == -1) {
+							colorStart['r'] = parseInt(tempColor.substr(1,2));
+							colorStart['g'] = parseInt(tempColor.substr(3,2));
+							colorStart['b'] = parseInt(tempColor.substr(5,2));
+						}
+						else {
+							colorStart['r'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[0]);
+							colorStart['g'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[1]);
+							colorStart['b'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[2]);
+						}
+						
+						// HERE BAZAIM !
+						
+						var element = $(this);
+						console.log(element);
+						for(var i=0; i<10; i++) {
+							setTimeout(function() {
+								var colorStep = new Array();
+								var r = parseInt(colorEnd['r'] - colorStart['r']/i);
+								var g = parseInt(colorEnd['r'] - colorStart['r']/i);
+								var b = parseInt(colorEnd['r'] - colorStart['r']/i);
+								var colorActuel = new Array();
+								var tempColor = $(element).css("color");
+								console.log($(element));
+								if(tempColor.indexOf("rgb") == -1) {
+									colorActuel['r'] = parseInt(tempColor.substr(1,2));
+									colorActuel['g'] = parseInt(tempColor.substr(3,2));
+									colorActuel['b'] = parseInt(tempColor.substr(5,2));
+								}
+								else {
+									colorActuel['r'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[0]);
+									colorActuel['g'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[1]);
+									colorActuel['b'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[2]);
+								}
+								console.log("rgb("+(colorActuel['r']-r)+", "+(colorActuel['g']-g)+", "+(colorActuel['b']-b)+")");
+								$(element).css("color", "rgb("+(colorActuel['r']-r)+", "+(colorActuel['g']-g)+", "+(colorActuel['b']-b)+")");
+							}, i*30);
+						}
+					} else {
+						$(this).removeClass("active");
+						var tempCat = Array();
+						$(idAlmy).find(".almyListCat ul li span.active").each(function() {
+							tempCat.push($(this).text());
+						});
+						$(idAlmy).find("a img").parent().each(function() {
 							if($(this).attr("almy-cat").indexOf(tempCat) == -1)
 								$(this).stop().slideUp();
 						});
 					}
-					else {
-						$(idAlmy).find("a img").parent().stop().slideDown();
-					}
-				} else {
-					$(this).removeClass("active");
-					var tempCat = Array();
-					$(idAlmy).find(".almyListCat ul li span.active").each(function() {
-						tempCat.push($(this).text());
-					});
-					$(idAlmy).find("a img").parent().each(function() {
-						if($(this).attr("almy-cat").indexOf(tempCat) == -1)
-							$(this).stop().slideUp();
-					});
-				}
-			});
+				});
+			}
+			
 			$(this).children("a").click(function(e) {
 				e.preventDefault();
 				afficherSlider(this);

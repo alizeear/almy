@@ -26,7 +26,7 @@
     $(window).load(function() {
 
         $('#divAlmy').almy({
-            width        : '452px',
+            width        : '302px',
             widthImage   : '150px'
         });
 
