@@ -8,7 +8,7 @@
 			running: true,
 			paused: true,
 			pauseTime: 3000,
-			pauseOnHover: true
+			pauseOnHover: false
 		}, params);
 
 		var dateTime = new Date().getTime();
@@ -58,7 +58,7 @@
 				},"fast");
 				var tempCat = $(this).text();
 				if(!$(this).hasClass("all")) {
-					$(idAlmy).find("img").parent().each(function() {
+					$(idAlmy).find("a img").parent().each(function() {
 						if($(this).attr("almy-cat").indexOf(tempCat) == -1)
 							$(this).stop().animate({
 								'opacity': 0.6
@@ -70,7 +70,7 @@
 					$(this).parents("ul").find("span").stop().animate({
 						'opacity': 1
 					},"fast");
-					$(idAlmy).find("img").parent().each(function() {
+					$(idAlmy).find("a img").parent().each(function() {
 						$(this).stop().animate({
 							'opacity': 1
 						},"fast");
@@ -102,7 +102,7 @@
 						});
 					}
 					else {
-						$(idAlmy).find("img").parent().stop().slideDown();
+						$(idAlmy).find("a img").parent().stop().slideDown();
 					}
 				} else {
 					$(this).removeClass("active");
@@ -110,7 +110,7 @@
 					$(idAlmy).find(".almyListCat ul li span.active").each(function() {
 						tempCat.push($(this).text());
 					});
-					$(idAlmy).find("img").parent().each(function() {
+					$(idAlmy).find("a img").parent().each(function() {
 						if($(this).attr("almy-cat").indexOf(tempCat) == -1)
 							$(this).stop().slideUp();
 					});
@@ -198,13 +198,13 @@
 		}
 
 		function slidePrecedent() {
-			var $imageSuivante = $('#categoriesMiddle img:visible').prev('img'); // on stock la valeur de l'image suivante dans une variable
-			if($imageSuivante.length<1)
-				$imageSuivante = $("#categoriesMiddle img:last"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
-			alignImg($imageSuivante); // on align l'image centre
-			if($imageSuivante.width()>$("#categoriesMiddle img:visible").width()) {
-				var margin = ($imageSuivante.width()-$("#categoriesMiddle img:visible").width())/2;
-				$imageSuivante.stop().css({
+			var $imagePrecedente = $('#categoriesMiddle img:visible').prev('img'); // on stock la valeur de l'image suivante dans une variable
+			if($imagePrecedente.length<1)
+				$imagePrecedente = $("#categoriesMiddle img:last"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
+			alignImg($imagePrecedente); // on align l'image centre
+			if($imagePrecedente.width()>$("#categoriesMiddle img:visible").width()) {
+				var margin = ($imagePrecedente.width()-$("#categoriesMiddle img:visible").width())/2;
+				$imagePrecedente.stop().css({
 					"marginLeft": margin,
 					'display': 'block',
 					'opacity': 0
@@ -223,8 +223,8 @@
 				}); // on cache l'image actuelle
 			}
 			else {
-				var margin = ($("#categoriesMiddle img:visible").width()-$imageSuivante.width())/2;
-				$imageSuivante.stop().css("marginLeft", margin).animate({
+				var margin = ($("#categoriesMiddle img:visible").width()-$imagePrecedente.width())/2;
+				$imagePrecedente.stop().css("marginLeft", margin).animate({
 					'marginLeft': 0
 				}, "slow"); // on cache l'image actuelle
 				$("#categoriesMiddle img:visible").stop().animate({
@@ -302,9 +302,17 @@
 			$(idAlmy).find("a").each(function() {
 				listImg += '<img src="'+$(this).attr('href')+'" alt="'+$(this).find("img").attr('alt')+'" title="'+$(this).find("img").attr('title')+'">';
 			});
+			var listImg2 = "";
+			$(idAlmy).find("a").each(function() {
+				listImg2 += '<li><img src="'+$(this).attr('href')+'" alt="'+$(this).find("img").attr('alt')+'" title="'+$(this).find("img").attr('title')+'"></li>';
+			});
+			var catTmp = '';
+			for(var i = 0;i<category.length;i++) {
+				catTmp += '<div id="listCategoriesSlider">'+category[i]+'</div>';
+			}
 			if($(idAlmy).find(".background").length==0) {
 				$(idAlmy).append('<div class="background">\
-							<div id="categoriesTop"></div>\
+							<div id="categoriesTop">'+catTmp+'</div>\
 							<div id="categoriesMiddle">\
 								<div class="imgContainer">\
 									'+listImg+'\
@@ -312,10 +320,22 @@
 										<ul><li><a class="navPrev"></a></li><li><a class="navPause"></a></li><li><a class="navNext"></a></li></ul>\
 									</div>\
 								</div>\
-								<div id="mosaiqueBottom"></div>\
+								<div id="mosaiqueBottom"><ul>'+listImg2+'</ul></div>\
 							</div>\
 						</div>');
 			}
+
+			$(idAlmy).find("#categoriesTop #listCategoriesSlider").mouseover(function() {
+				$(this).stop().animate({
+						'opacity': 0.5
+						},"fast");
+			});
+			$(idAlmy).find("#categoriesTop #listCategoriesSlider").mouseout(function() {
+				$(this).stop().animate({
+						'opacity': 1
+						},"fast");
+			});
+
 
 			/////////////////////////////////////////////////////////
 			////// Initialisation du slider /////////////////////////
@@ -381,17 +401,31 @@
 				}
 			}
 
+			// Hover de la souris sur l'image
+				if(defauts.pauseOnHover) {
+					$(idAlmy).find('#categoriesMiddle img, .navNext, .navPrev').hover(function() {
+						stopSlide();
+						$('.navPause').css('background-position', '0px 0px');
+					}, function() {
+						defauts.paused = false;
+						if(timer==''&&!defauts.paused) {
+							runSlide();
+						}
+						$('.navPause').css('background-position', '-30px 0px');
+					});
+				}
+
 			// au clic sur le bouton play/pause
 			$(idAlmy).find('.navPause').click(function() {
 				if(!defauts.paused) { // au clic sur pause
 					stopSlide();
-					$(idAlmy).css('background-position', '0px 0px');
+					$(this).css('background-position', '0px 0px');
 				} else { // bouton play
 					defauts.paused = false;
 					if(timer==''&&!defauts.paused) {
 						runSlide();
 					}
-					$(idAlmy).css('background-position', '-30px 0px');
+					$(this).css('background-position', '-30px 0px');
 				}
 			});
 
