@@ -320,7 +320,13 @@
 										<ul><li><a class="navPrev"></a></li><li><a class="navPause"></a></li><li><a class="navNext"></a></li></ul>\
 									</div>\
 								</div>\
-								<div id="mosaiqueBottom"><ul>'+listImg2+'</ul></div>\
+								<div id="mosaiqueBottom">\
+									<ul>'+listImg2+'</ul>\
+									<div class="navDirectionMosaique">\
+										<a class="navPrevMosaique"></a>\
+										<a class="navNextMosaique"></a>\
+									</div>\
+								</div>\
 							</div>\
 						</div>');
 			}
@@ -329,8 +335,7 @@
 				$(this).stop().animate({
 						'opacity': 0.5
 						},"fast");
-			});
-			$(idAlmy).find("#categoriesTop #listCategoriesSlider").mouseout(function() {
+			}).mouseout(function() {
 				$(this).stop().animate({
 						'opacity': 1
 						},"fast");
@@ -454,6 +459,49 @@
 					$(idAlmy).find(".background").remove();
 				}
 			});
+
+			/////////////////////////////////////////////////////////
+			////// Controle mosaique ////////////////////////////////
+			/////////////////////////////////////////////////////////
+
+			
+
+			$(idAlmy).find('.navNextMosaique').mouseover(function() {
+				time = '';
+				time = setInterval(function() {
+					var tailleUl = $(idAlmy).find('#mosaiqueBottom ul').width();
+
+					if(parseInt($(idAlmy).find('#mosaiqueBottom ul').css('left')) >= (parseInt($(idAlmy).find('#mosaiqueBottom').width()) - parseInt($(idAlmy).find('#mosaiqueBottom ul').width()))){
+						$(idAlmy).find('#mosaiqueBottom ul').stop().animate({
+						'left': $(idAlmy).find('#mosaiqueBottom ul').css('left', '-=15')
+						}, 30);
+					}
+				}, 30);
+			}).mouseout(function() {
+				clearInterval(time);
+				timer = '';
+			});
+
+
+			$(idAlmy).find('.navPrevMosaique').mouseover(function() {
+				time = '';
+				time = setInterval(function() {
+					if(parseInt($(idAlmy).find('#mosaiqueBottom ul').css('left')) <= -5){
+						$(idAlmy).find('#mosaiqueBottom ul').stop().animate({
+							'left': $(idAlmy).find('#mosaiqueBottom ul').css('left', '+=15')
+						}, 30);
+					}
+				}, 30);
+			}).mouseout(function() {
+				clearInterval(time);
+				timer = '';
+			});
+
+			var tailleUl = 0;
+			$(idAlmy).find('#mosaiqueBottom ul li').each(function(){
+				tailleUl += $(this).outerWidth(true);
+			});
+			$(idAlmy).find('#mosaiqueBottom ul').width(tailleUl);
 		}
 	};
 })(jQuery);
