@@ -351,7 +351,7 @@
 			});
 			var listImg2 = "";
 			$(idAlmy).find("a").each(function() {
-				listImg2 += '<li><img src="'+$(this).attr('href')+'" alt="'+$(this).find("img").attr('alt')+'" title="'+$(this).find("img").attr('title')+'"></li>';
+				listImg2 += '<li><img src="'+$(this).find("img").attr('src')+'" alt="'+$(this).find("img").attr('alt')+'" title="'+$(this).find("img").attr('title')+'"></li>';
 			});
 			var catTmp = '';
 			for(var i = 0;i<category.length;i++) {
@@ -546,6 +546,7 @@
 
 			var tailleUl = 0;
 			$(idAlmy).find('#mosaiqueBottom ul li').each(function(){
+				console.log($(this).outerWidth(true));
 				tailleUl += $(this).outerWidth(true);
 			});
 			$(idAlmy).find('#mosaiqueBottom ul').width(tailleUl);
