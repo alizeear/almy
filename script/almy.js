@@ -269,13 +269,13 @@
 		}
 
 		function slideSuivant() {
-			var $imageSuivante = $('#categoriesMiddle .imgContainer > img:visible').next('img'); // on stock la valeur de l'image suivante dans une variable
-			if($imageSuivante.length<1)
-				$imageSuivante = $("#categoriesMiddle .imgContainer > img:first"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
-			alignImg($imageSuivante); // on align l'image centre
-			var margin = (($imageSuivante.width()>$("#categoriesMiddle .imgContainer > img:visible").width()))
-				?($imageSuivante.width()-$("#categoriesMiddle .imgContainer > img:visible").width())/2
-				:($("#categoriesMiddle .imgContainer > img:visible").width()-$imageSuivante.width())/2;
+			var imageSuivante = $('#categoriesMiddle .imgContainer > img:visible').next('img'); // on stock la valeur de l'image suivante dans une variable
+			if(imageSuivante.length<1)
+				imageSuivante = $("#categoriesMiddle .imgContainer > img:first"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
+			alignImg(imageSuivante); // on align l'image centre
+			var margin = ((imageSuivante.width()>$("#categoriesMiddle .imgContainer > img:visible").width()))
+				?(imageSuivante.width()-$("#categoriesMiddle .imgContainer > img:visible").width())/2
+				:($("#categoriesMiddle .imgContainer > img:visible").width()-imageSuivante.width())/2;
 			$("#categoriesMiddle .imgContainer > img:visible").stop().css("marginLeft", "0px").animate({
 				'marginLeft': margin,
 				'opacity': 0
