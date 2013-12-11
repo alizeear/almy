@@ -107,7 +107,7 @@
 							$(idAlmy).find("a img").parent().stop().slideDown();
 						}
 						
-						
+						// variables pour la transition du la font color
 						var colorStart = Array();
 						var colorEnd = {r: 31, g: 31, b:31};
 						var tempColor = $(this).css("color");
@@ -121,20 +121,45 @@
 							colorStart['g'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[1]);
 							colorStart['b'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[2]);
 						}
+						// variables pour la transition du la background color
+						var backStart = Array();
+						var backEnd = {r: 221, g: 221, b:221};
+						var tempColor = $(this).parent().css("backgroundColor");
+						if(tempColor.indexOf("rgb") == -1) {
+							backStart['r'] = parseInt(tempColor.substr(1,2));
+							backStart['g'] = parseInt(tempColor.substr(3,2));
+							backStart['b'] = parseInt(tempColor.substr(5,2));
+						}
+						else {
+							if(tempColor.indexOf("rgba") == -1) {
+								backStart['r'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[0]);
+								backStart['g'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[1]);
+								backStart['b'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[2]);
+							}
+							else {
+								backStart['r'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[0]);
+								backStart['g'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[1]);
+								backStart['b'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[2]);
+							}
+						}
+						
+						var colorStep = new Array();
+						colorStep['r'] = parseInt((colorEnd['r'] - colorStart['r'])/10);
+						colorStep['g'] = parseInt((colorEnd['g'] - colorStart['g'])/10);
+						colorStep['b'] = parseInt((colorEnd['b'] - colorStart['b'])/10);
+								
+						var backStep = new Array();
+						backStep['r'] = parseInt((backEnd['r'] - backStart['r'])/10);
+						backStep['g'] = parseInt((backEnd['g'] - backStart['g'])/10);
+						backStep['b'] = parseInt((backEnd['b'] - backStart['b'])/10);
 						
 						// HERE BAZAIM !
 						
 						var element = $(this);
-						console.log(element);
 						for(var i=0; i<10; i++) {
 							setTimeout(function() {
-								var colorStep = new Array();
-								var r = parseInt(colorEnd['r'] - colorStart['r']/i);
-								var g = parseInt(colorEnd['r'] - colorStart['r']/i);
-								var b = parseInt(colorEnd['r'] - colorStart['r']/i);
 								var colorActuel = new Array();
 								var tempColor = $(element).css("color");
-								console.log($(element));
 								if(tempColor.indexOf("rgb") == -1) {
 									colorActuel['r'] = parseInt(tempColor.substr(1,2));
 									colorActuel['g'] = parseInt(tempColor.substr(3,2));
@@ -145,9 +170,30 @@
 									colorActuel['g'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[1]);
 									colorActuel['b'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[2]);
 								}
-								console.log("rgb("+(colorActuel['r']-r)+", "+(colorActuel['g']-g)+", "+(colorActuel['b']-b)+")");
-								$(element).css("color", "rgb("+(colorActuel['r']-r)+", "+(colorActuel['g']-g)+", "+(colorActuel['b']-b)+")");
-							}, i*30);
+								
+								var backActuel = new Array();
+								var tempColor = $(element).css("backgroundColor");
+								if(tempColor.indexOf("rgb") == -1) {
+									backActuel['r'] = parseInt(tempColor.substr(1,2));
+									backActuel['g'] = parseInt(tempColor.substr(3,2));
+									backActuel['b'] = parseInt(tempColor.substr(5,2));
+								}
+								else {
+									if(tempColor.indexOf("rgba") == -1) {
+										backActuel['r'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[0]);
+										backActuel['g'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[1]);
+										backActuel['b'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[2]);
+									}
+									else {
+										backActuel['r'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[0]);
+										backActuel['g'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[1]);
+										backActuel['b'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[2]);
+									}
+								}
+								
+								$(element).css("color", "rgb("+(colorActuel['r']+colorStep['r'])+", "+(colorActuel['g']+colorStep['g'])+", "+(colorActuel['b']+colorStep['b'])+")");
+								$(element).css("backgroundColor", "rgb("+(backActuel['r']+backStep['r'])+", "+(backActuel['g']+backStep['g'])+", "+(backActuel['b']+backStep['b'])+")");
+							}, i*35);
 						}
 					} else {
 						$(this).removeClass("active");
@@ -347,13 +393,13 @@
 				$("#categoriesMiddle").find('.imgContainer').stop().animate({// modifie la width de la div contenant l'image pour que l'image reste bien au centre
 					'width': minWidth+"px"
 				}, 500);
-				$($image).css('left', Math.round((minWidth-$widthImageNext)/2)+"px").animate({
+				$($image).css('left', Math.round((minWidth-$widthImageNext)/2)+"px").stop().animate({
 					'height': $heightImageNext,
 					'width': $widthImageNext
 				}, 500);
 			}
 			else {
-				$($image).css('left', "0px").animate({
+				$($image).css('left', "0px").stop().animate({
 					'height': $heightImageNext,
 					'width': $widthImageNext
 				}, 500);
