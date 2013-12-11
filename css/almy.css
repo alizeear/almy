@@ -32,16 +32,16 @@
 	display: inline-block;
 }
 .background{
-	/*display: none;*/
    position: fixed;
-   top: 0px;
+   top: -101%;
    right: 0px;
    bottom: 0px;
    left: 0px;
    background-color: rgba(0, 0, 0, 0.95);
+   height: 100%;
 }
 #categoriesMiddle{
-	position: fixed;
+	position: absolute;
    width: 100%;
    top: 15%;
 	height: 70%;
@@ -53,7 +53,7 @@
 }
 #categoriesTop{
 	background-color: rgba(1, 1, 1, 0.95);
-	position: fixed;
+	position: absolute;
 	top: 0;
 	height: 15%;
 	width: 100%;
@@ -61,9 +61,8 @@
 }
 #mosaiqueBottom{
 	background-color: rgba(1, 1, 1, 0.95);
-	position: fixed;
-  	bottom: 0;
-  	height: 15%;
+	position: absolute;
+  	height: 22%;
   	width: 100%;
 	z-index: 3;
 	overflow: hidden;
@@ -77,9 +76,10 @@
 	height: 100%;
 }
 #categoriesMiddle #mosaiqueBottom ul{
-	margin-top: 10px;
+	margin-top: 0.5%;
 	left: 0px;
 	position: absolute;
+	height: 86%;
 }
 .navDirection{
 	position: relative;

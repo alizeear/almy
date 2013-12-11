@@ -223,14 +223,14 @@
 		}
 
 		function slideSuivant() {
-			var $imageSuivante = $('#categoriesMiddle img:visible').next('img'); // on stock la valeur de l'image suivante dans une variable
-			if($imageSuivante.length<1)
-				$imageSuivante = $("#categoriesMiddle img:first"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
-			alignImg($imageSuivante); // on align l'image centre
-			var margin = (($imageSuivante.width()>$("#categoriesMiddle img:visible").width()))
-				?($imageSuivante.width()-$("#categoriesMiddle img:visible").width())/2
-				:($("#categoriesMiddle img:visible").width()-$imageSuivante.width())/2;
-			$("#categoriesMiddle img:visible").stop().css("marginLeft", "0px").animate({
+			var imageSuivante = $('#categoriesMiddle .imgContainer > img:visible').next('img'); // on stock la valeur de l'image suivante dans une variable
+			if(imageSuivante.length<1)
+				imageSuivante = $("#categoriesMiddle .imgContainer > img:first"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
+			alignImg(imageSuivante); // on align l'image centre
+			var margin = ((imageSuivante.width()>$("#categoriesMiddle .imgContainer > img:visible").width()))
+				?(imageSuivante.width()-$("#categoriesMiddle .imgContainer > img:visible").width())/2
+				:($("#categoriesMiddle .imgContainer > img:visible").width()-imageSuivante.width())/2;
+			$("#categoriesMiddle .imgContainer > img:visible").stop().css("marginLeft", "0px").animate({
 				'marginLeft': margin,
 				'opacity': 0
 			},"slow", function() {
@@ -240,50 +240,69 @@
 				});
 			}); // on cache l'image actuelle
 			
-			$imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
+			imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
 			return true;
 		}
 
 		function slidePrecedent() {
-			var $imagePrecedente = $('#categoriesMiddle img:visible').prev('img'); // on stock la valeur de l'image suivante dans une variable
-			if($imagePrecedente.length<1)
-				$imagePrecedente = $("#categoriesMiddle img:last"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
-			alignImg($imagePrecedente); // on align l'image centre
-			if($imagePrecedente.width()>$("#categoriesMiddle img:visible").width()) {
-				var margin = ($imagePrecedente.width()-$("#categoriesMiddle img:visible").width())/2;
-				$imagePrecedente.stop().css({
-					"marginLeft": margin,
-					'display': 'block',
-					'opacity': 0
-				}).animate({
+			var imagePrecedente = $('#categoriesMiddle .imgContainer > img:visible').prev('img'); // on stock la valeur de l'image suivante dans une variable
+			if(imagePrecedente.length<1)
+				imagePrecedente = $("#categoriesMiddle .imgContainer > img:last"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
+			alignImg(imagePrecedente); // on align l'image centre
+			var margin = ((imagePrecedente.width()>$("#categoriesMiddle .imgContainer > img:visible").width()))
+				?(imagePrecedente.width()+$("#categoriesMiddle .imgContainer > img:visible").width())/2
+				:($("#categoriesMiddle .imgContainer > img:visible").width()-imagePrecedente.width())/2;
+			$("#categoriesMiddle .imgContainer > img:visible").stop().css("marginLeft", "0px").animate({
+				'marginLeft': margin,
+				'opacity': 0
+			},"slow", function() {
+				$(this).hide().css({
 					'opacity': 1,
 					'marginLeft': "0px"
-				}, "slow");
-				$("#categoriesMiddle img:visible").stop().css("marginLeft", 0).animate({
-					'marginLeft': margin,
-					'opacity': 0
-				},"slow", function() {
-					$(this).hide().css({
-						'opacity': 1,
-						'marginLeft': "0px"
-					});
-				}); // on cache l'image actuelle
-			}
-			else {
-				var margin = ($("#categoriesMiddle img:visible").width()-$imagePrecedente.width())/2;
-				$imagePrecedente.stop().css("marginLeft", margin).animate({
-					'marginLeft': 0
-				}, "slow"); // on cache l'image actuelle
-				$("#categoriesMiddle img:visible").stop().animate({
-					'opacity': 0
-				},"slow", function() {
-					$(this).hide().css({
-						'opacity': 1,
-						'marginLeft': "0px"
-					});
-				}); // on cache l'image actuelle
-			}
+				});
+			}); // on cache l'image actuelle
+			
+			imagePrecedente.stop().fadeIn('slow'); // on affiche la nouvelle
 			return true;
+			// var imagePrecedente = $('#categoriesMiddle .imgContainer > img:visible').prev('img'); // on stock la valeur de l'image suivante dans une variable
+			// if(imagePrecedente.length<1)
+			// 	imagePrecedente = $("#categoriesMiddle .imgContainer > img:first"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
+			// alignImg(imagePrecedente); // on align l'image centre
+			// if(imagePrecedente.width()>$("#categoriesMiddle .imgContainer > img:visible").width()) {
+			// 	var margin = (imagePrecedente.width()-$("#categoriesMiddle .imgContainer > img:visible").width())/2;
+			// 	imagePrecedente.stop().css({
+			// 		"marginLeft": margin,
+			// 		'display': 'block',
+			// 		'opacity': 0
+			// 	}).animate({
+			// 		'opacity': 1,
+			// 		'marginLeft': "0px"
+			// 	}, "slow");
+			// 	$("#categoriesMiddle .imgContainer > img:visible").stop().css("marginLeft", 0).animate({
+			// 		'marginLeft': margin,
+			// 		'opacity': 0
+			// 	},"slow", function() {
+			// 		$(this).hide().css({
+			// 			'opacity': 1,
+			// 			'marginLeft': "0px"
+			// 		});
+			// 	}); // on cache l'image actuelle
+			// }
+			// else {
+			// 	var margin = ($("#categoriesMiddle .imgContainer > img:visible").width()-imagePrecedente.width())/2;
+			// 	imagePrecedente.stop().css("marginLeft", margin).animate({
+			// 		'marginLeft': 0
+			// 	}, "slow"); // on cache l'image actuelle
+			// 	$("#categoriesMiddle .imgContainer > img:visible").stop().animate({
+			// 		'opacity': 0
+			// 	},"slow", function() {
+			// 		$(this).hide().css({
+			// 			'opacity': 1,
+			// 			'marginLeft': "0px"
+			// 		});
+			// 	}); // on cache l'image actuelle
+			// }
+			// return true;
 		}
 
 		// retourne les dimention optimal pour afficher l'image entiere sans la déformer
@@ -349,9 +368,9 @@
 			$(idAlmy).find("a").each(function() {
 				listImg += '<img src="'+$(this).attr('href')+'" alt="'+$(this).find("img").attr('alt')+'" title="'+$(this).find("img").attr('title')+'">';
 			});
-			var listImg2 = "";
+			var listMiniatures = "";
 			$(idAlmy).find("a").each(function() {
-				listImg2 += '<li><img src="'+$(this).find("img").attr('src')+'" alt="'+$(this).find("img").attr('alt')+'" title="'+$(this).find("img").attr('title')+'"></li>';
+				listMiniatures += '<li><img src="'+$(this).find("img").attr('src')+'" alt="'+$(this).find("img").attr('alt')+'" title="'+$(this).find("img").attr('title')+'"></li>';
 			});
 			var catTmp = '';
 			for(var i = 0;i<category.length;i++) {
@@ -368,7 +387,7 @@
 									</div>\
 								</div>\
 								<div id="mosaiqueBottom">\
-									<ul>'+listImg2+'</ul>\
+									<ul>'+listMiniatures+'</ul>\
 									<div class="navDirectionMosaique">\
 										<a class="navPrevMosaique"></a>\
 										<a class="navNextMosaique"></a>\
@@ -376,7 +395,16 @@
 								</div>\
 							</div>\
 						</div>');
+				$(idAlmy).find('.background').stop().animate({
+					'top': '0'
+				}, 450).animate({'top': '-2%'}, 200).animate({'top': '0'}, 300);
 			}
+
+
+
+			/////////////////////////////////////////////////////////
+			////// Affichage catégories dessus slider ///////////////
+			///////////////////////////////////////////////////////// 
 
 			$(idAlmy).find("#categoriesTop #listCategoriesSlider").mouseover(function() {
 				$(this).stop().animate({
@@ -503,7 +531,29 @@
 			// appuye sur la touche Echap
 			$(document).keydown(function(e) {
 				if(e.keyCode == 27) {
-					$(idAlmy).find(".background").remove();
+					$(idAlmy).find(".background").stop().animate({
+						'top': '-101%'
+					}, 450, function(e) {
+						$(this).remove();
+					});
+				}
+				if(e.keyCode == 39) {
+					slideSuivant()
+				}
+				if(e.keyCode == 37) {
+					slidePrecedent()
+				}
+				if(e.keyCode == 32) {
+					if(!defauts.paused) {
+						stopSlide();
+						$(idAlmy).find('.navPause').css('background-position', '0px 0px');
+					} else {
+						defauts.paused = false;
+						if(timer==''&&!defauts.paused) {
+							runSlide();
+						}
+						$(idAlmy).find('.navPause').css('background-position', '-30px 0px');
+					}
 				}
 			});
 
@@ -522,6 +572,8 @@
 						$(idAlmy).find('#mosaiqueBottom ul').stop().animate({
 						'left': $(idAlmy).find('#mosaiqueBottom ul').css('left', '-=15')
 						}, 30);
+					}else{
+						
 					}
 				}, 30);
 			}).mouseout(function() {
@@ -546,7 +598,6 @@
 
 			var tailleUl = 0;
 			$(idAlmy).find('#mosaiqueBottom ul li').each(function(){
-				console.log($(this).outerWidth(true));
 				tailleUl += $(this).outerWidth(true);
 			});
 			$(idAlmy).find('#mosaiqueBottom ul').width(tailleUl);
