@@ -10,7 +10,8 @@
 			pauseTime: 3000,
 			pauseOnHover: false
 		}, params);
-
+	
+		var dateLastCat = new Date().getTime();
 		var dateTime = new Date().getTime();
 		var idAlmy = "#"+$(this).attr("id");
 		var category = Array();
@@ -54,156 +55,89 @@
 				$(this).find(".almyListCat ul li span").mouseenter(function() {
 					$(this).parents("ul").find("span").stop().animate({
 						'opacity': 0.7
-					},"fast");
-					$(this).stop().animate({
+					},200);
+					$(this).animate({
 						'opacity': 1
-					},"fast");
+					},200);
 					var tempCat = $(this).text();
 					if(!$(this).hasClass("all")) {
 						$(idAlmy).find("a img").parent().each(function() {
 							if($(this).attr("almy-cat").indexOf(tempCat) == -1)
-								$(this).stop().animate({
+								$(this).animate({
 									'opacity': 0.6
-								});
+								},200);
 						});
 					}
 				}).mouseleave(function() {
 					if($(this).parents("ul").find("span.active").length == 0) {
 						$(this).parents("ul").find("span").stop().animate({
 							'opacity': 1
-						},"fast");
+						},200);
 						$(idAlmy).find("a img").parent().each(function() {
-							$(this).stop().animate({
+							$(this).animate({
 								'opacity': 1
-							},"fast");
+							},200);
 						});
 					}
 					else{
 						$(this).parent().stop().animate({
 							'opacity': 1
-						},"fast");
+						},200);
 						$(this).parents("ul").find("span").each(function() {
 							if(!$(this).hasClass("active"))
-								$(this).stop().animate({
+								$(this).animate({
 									'opacity': 0.7
-								},"fast");
+								},200);
 							else
-								$(this).stop().animate({
+								$(this).animate({
 									'opacity': 1
-								},"fast");
+								},200);
 						});
 					}
-				}).click(function() {
-					if(!$(this).hasClass("active")) {
-						$(this).addClass("active")
-						var tempCat = $(this).text();
-						if(!$(this).hasClass("all")) {
-							$(idAlmy).find("img").parent().each(function() {
-								if($(this).attr("almy-cat").indexOf(tempCat) == -1)
-									$(this).stop().slideUp();
+				}).click(function() { 
+					var temp = new Date().getTime();
+					if(dateLastCat+400 < temp)  {
+						dateLastCat = temp;
+						if(!$(this).hasClass("active")) {
+							$(this).addClass("active")
+						}
+						else {
+							$(this).removeClass("active")
+						}
+						
+						var catSelect = Array();
+						$(idAlmy).find(".active").each(function() {
+							catSelect.push($(this).text());
+						});
+						$(this).css("backgroundColor", $(this).parent().css("backgroundColor"));
+						animateColor($(this));
+						console.log(catSelect);
+						
+						if(catSelect.indexOf("Toutes") != -1) {
+							catSelect = Array();
+							$(idAlmy).find(".active").each(function() {
+								$(this).removeClass("active");
+								animateColor($(this));
 							});
 						}
-						else {
-							$(idAlmy).find("a img").parent().stop().slideDown();
-						}
-						
-						// variables pour la transition du la font color
-						var colorStart = Array();
-						var colorEnd = {r: 31, g: 31, b:31};
-						var tempColor = $(this).css("color");
-						if(tempColor.indexOf("rgb") == -1) {
-							colorStart['r'] = parseInt(tempColor.substr(1,2));
-							colorStart['g'] = parseInt(tempColor.substr(3,2));
-							colorStart['b'] = parseInt(tempColor.substr(5,2));
-						}
-						else {
-							colorStart['r'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[0]);
-							colorStart['g'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[1]);
-							colorStart['b'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[2]);
-						}
-						// variables pour la transition du la background color
-						var backStart = Array();
-						var backEnd = {r: 221, g: 221, b:221};
-						var tempColor = $(this).parent().css("backgroundColor");
-						if(tempColor.indexOf("rgb") == -1) {
-							backStart['r'] = parseInt(tempColor.substr(1,2));
-							backStart['g'] = parseInt(tempColor.substr(3,2));
-							backStart['b'] = parseInt(tempColor.substr(5,2));
-						}
-						else {
-							if(tempColor.indexOf("rgba") == -1) {
-								backStart['r'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[0]);
-								backStart['g'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[1]);
-								backStart['b'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[2]);
+						$(idAlmy).find("a img").parent().each(function() {
+							var aff = true;
+							for(var i in a = catSelect) {
+								if($(this).attr("almy-cat").indexOf(a[i])===-1)
+									aff = false;
+							}
+							if(aff) {
+								$(this).animate({
+									'width': defauts.widthImage,
+									'opacity': 1
+								},300);
 							}
 							else {
-								backStart['r'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[0]);
-								backStart['g'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[1]);
-								backStart['b'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[2]);
+								$(this).animate({
+									'width': '0px',
+									'opacity': 0
+								},300);
 							}
-						}
-						
-						var colorStep = new Array();
-						colorStep['r'] = parseInt((colorEnd['r'] - colorStart['r'])/10);
-						colorStep['g'] = parseInt((colorEnd['g'] - colorStart['g'])/10);
-						colorStep['b'] = parseInt((colorEnd['b'] - colorStart['b'])/10);
-								
-						var backStep = new Array();
-						backStep['r'] = parseInt((backEnd['r'] - backStart['r'])/10);
-						backStep['g'] = parseInt((backEnd['g'] - backStart['g'])/10);
-						backStep['b'] = parseInt((backEnd['b'] - backStart['b'])/10);
-						
-						// HERE BAZAIM !
-						
-						var element = $(this);
-						for(var i=0; i<10; i++) {
-							setTimeout(function() {
-								var colorActuel = new Array();
-								var tempColor = $(element).css("color");
-								if(tempColor.indexOf("rgb") == -1) {
-									colorActuel['r'] = parseInt(tempColor.substr(1,2));
-									colorActuel['g'] = parseInt(tempColor.substr(3,2));
-									colorActuel['b'] = parseInt(tempColor.substr(5,2));
-								}
-								else {
-									colorActuel['r'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[0]);
-									colorActuel['g'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[1]);
-									colorActuel['b'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[2]);
-								}
-								
-								var backActuel = new Array();
-								var tempColor = $(element).css("backgroundColor");
-								if(tempColor.indexOf("rgb") == -1) {
-									backActuel['r'] = parseInt(tempColor.substr(1,2));
-									backActuel['g'] = parseInt(tempColor.substr(3,2));
-									backActuel['b'] = parseInt(tempColor.substr(5,2));
-								}
-								else {
-									if(tempColor.indexOf("rgba") == -1) {
-										backActuel['r'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[0]);
-										backActuel['g'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[1]);
-										backActuel['b'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[2]);
-									}
-									else {
-										backActuel['r'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[0]);
-										backActuel['g'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[1]);
-										backActuel['b'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[2]);
-									}
-								}
-								
-								$(element).css("color", "rgb("+(colorActuel['r']+colorStep['r'])+", "+(colorActuel['g']+colorStep['g'])+", "+(colorActuel['b']+colorStep['b'])+")");
-								$(element).css("backgroundColor", "rgb("+(backActuel['r']+backStep['r'])+", "+(backActuel['g']+backStep['g'])+", "+(backActuel['b']+backStep['b'])+")");
-							}, i*35);
-						}
-					} else {
-						$(this).removeClass("active");
-						var tempCat = Array();
-						$(idAlmy).find(".almyListCat ul li span.active").each(function() {
-							tempCat.push($(this).text());
-						});
-						$(idAlmy).find("a img").parent().each(function() {
-							if($(this).attr("almy-cat").indexOf(tempCat) == -1)
-								$(this).stop().slideUp();
 						});
 					}
 				});
@@ -218,6 +152,13 @@
 				$(this).css({
 					'width': defauts.widthImage,
 					'display': 'inline'
+				});
+			});
+			$(this).find('a').each(function() {
+				$(this).css({
+					'overflow': 'hidden',
+					'height': $(this).find('a img').height(),
+					'width': $(this).find('a img').width()
 				});
 			});
 			
@@ -380,7 +321,109 @@
 
 			return Array($W, $H);
 		}
-
+		
+		function animateColor(element) {
+			// variables pour la transition du la font color
+			var colorStart = Array();
+			var tempColor = $(element).css("color");
+			if(tempColor.indexOf("rgb") == -1) {
+				colorStart['r'] = parseInt(tempColor.substr(1,2));
+				colorStart['g'] = parseInt(tempColor.substr(3,2));
+				colorStart['b'] = parseInt(tempColor.substr(5,2));
+			}
+			else {
+				if(tempColor.indexOf("rgba") == -1) {
+					colorStart['r'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[0]);
+					colorStart['g'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[1]);
+					colorStart['b'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[2]);
+				}
+				else {
+					colorStart['r'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[0]);
+					colorStart['g'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[1]);
+					colorStart['b'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[2]);
+				}
+			}
+			// variables pour la transition du la background color
+			var backStart = Array();
+			var tempColor = $(element).css("backgroundColor");
+			if(tempColor.indexOf("rgb") == -1) {
+				backStart['r'] = parseInt(tempColor.substr(1,2));
+				backStart['g'] = parseInt(tempColor.substr(3,2));
+				backStart['b'] = parseInt(tempColor.substr(5,2));
+			}
+			else {
+				if(tempColor.indexOf("rgba") == -1) {
+					backStart['r'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[0]);
+					backStart['g'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[1]);
+					backStart['b'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[2]);
+				}
+				else {
+					backStart['r'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[0]);
+					backStart['g'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[1]);
+					backStart['b'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[2]);
+				}
+			}
+			
+			if($(element).hasClass("active")) {
+				var colorEnd = {r: 31, g: 31, b:31};
+				var backEnd = {r: 221, g: 221, b:221};
+			}
+			else {
+				var colorEnd = {r: 221, g: 221, b:221};
+				var backEnd = {r: 51, g: 51, b:51};
+			}
+			
+			var colorStep = new Array();
+			colorStep['r'] = parseInt((colorEnd['r'] - colorStart['r'])/10);
+			colorStep['g'] = parseInt((colorEnd['g'] - colorStart['g'])/10);
+			colorStep['b'] = parseInt((colorEnd['b'] - colorStart['b'])/10);
+					
+			var backStep = new Array();
+			backStep['r'] = parseInt((backEnd['r'] - backStart['r'])/10);
+			backStep['g'] = parseInt((backEnd['g'] - backStart['g'])/10);
+			backStep['b'] = parseInt((backEnd['b'] - backStart['b'])/10);
+			
+			for(var i=0; i<10; i++) {
+				setTimeout(function() {
+					var colorActuel = new Array();
+					var tempColor = $(element).css("color");
+					if(tempColor.indexOf("rgb") == -1) {
+						colorActuel['r'] = parseInt(tempColor.substr(1,2));
+						colorActuel['g'] = parseInt(tempColor.substr(3,2));
+						colorActuel['b'] = parseInt(tempColor.substr(5,2));
+					}
+					else {
+						colorActuel['r'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[0]);
+						colorActuel['g'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[1]);
+						colorActuel['b'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[2]);
+					}
+					
+					var backActuel = new Array();
+					var tempColor = $(element).css("backgroundColor");
+					if(tempColor.indexOf("rgb") == -1) {
+						backActuel['r'] = parseInt(tempColor.substr(1,2));
+						backActuel['g'] = parseInt(tempColor.substr(3,2));
+						backActuel['b'] = parseInt(tempColor.substr(5,2));
+					}
+					else {
+						if(tempColor.indexOf("rgba") == -1) {
+							backActuel['r'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[0]);
+							backActuel['g'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[1]);
+							backActuel['b'] = parseInt(tempColor.substr(4, tempColor.length-5).split(", ")[2]);
+						}
+						else {
+							backActuel['r'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[0]);
+							backActuel['g'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[1]);
+							backActuel['b'] = parseInt(tempColor.substr(5, tempColor.length-5).split(", ")[2]);
+						}
+					}
+					
+					$(element).css("color", "rgb("+(colorActuel['r']+colorStep['r'])+", "+(colorActuel['g']+colorStep['g'])+", "+(colorActuel['b']+colorStep['b'])+")");
+					$(element).css("backgroundColor", "rgb("+(backActuel['r']+backStep['r'])+", "+(backActuel['g']+backStep['g'])+", "+(backActuel['b']+backStep['b'])+")");
+				}, i*35);
+			}
+		}
+		
 		// anime les images afin de les centrer
 		function alignImg($image) {
 			var temp = getDimMaxImg($image.width(), $image.height());
@@ -448,9 +491,9 @@
 
 
 
-			/////////////////////////////////////////////////////////
-			////// Affichage catégories dessus slider ///////////////
-			///////////////////////////////////////////////////////// 
+			///////////////////////////////////////////////////////// /////////////////////////////////////////////////////////
+			////// Affichage catégories dessus slider /////////////// ////// Affichage catégories dessus slider ///////////////
+			///////////////////////////////////////////////////////// /////////////////////////////////////////////////////////
 
 			$(idAlmy).find("#categoriesTop #listCategoriesSlider").mouseover(function() {
 				$(this).stop().animate({
