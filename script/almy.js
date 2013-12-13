@@ -13,10 +13,13 @@
 			pauseTime: 3000,
 			pauseOnHover: false
 		}, params);
+		
 		var dateLastCat = new Date().getTime();
 		var dateTime = new Date().getTime();
 		var idAlmy = "#"+$(this).attr("id");
 		var category = Array();
+		
+		var index = 0;
 		var imagesAll 	= Array();
 		// recalcul de la taille des image au redimentionnement de la fenêtre
 		$(window).resize(function() {
@@ -27,13 +30,6 @@
 
 			// on recupere les differentes catégories presentes dans les tag des balises "a"
 			$(this).find("a").each(function() {
-				imagesAll.push({
-					'url': $(this).attr('href'), 
-					'url_min': $(this).find('img').attr('src'),
-					'title': $(this).find('img').attr('title'),
-					'desc': $(this).find('img').attr('alt'),
-					'cat': $(this).attr('almy-cat').split(';')
-				});
 				if((typeof $(this).attr("almy-cat")!=="undefined" && $(this).attr("almy-cat")!=="")) {
 					var cat = $(this).attr("almy-cat").split(";");
 					for(var i in a = cat) {
@@ -140,13 +136,13 @@
 								$(this).animate({
 									'width': defauts.widthImage,
 									'opacity': 1
-								},300);
+								},300).removeClass("off");
 							}
 							else {
 								$(this).animate({
 									'width': '0px',
 									'opacity': 0
-								},300);
+								},300).addClass("off");
 							}
 						});
 					}
@@ -434,16 +430,25 @@
 		}
 
 		function afficherSlider(element) {
+			imagesAll = Array();
+			$(idAlmy).find("a:not(.off)").each(function() {
+				imagesAll.push({
+					'url': $(this).attr('href'), 
+					'url_min': $(this).find('img').attr('src'),
+					'title': $(this).find('img').attr('title'),
+					'desc': $(this).find('img').attr('alt'),
+					'cat': $(this).attr('almy-cat').split(';')
+				});
+			});
 			var infoTmp = getInfoImage($(element).attr("href"));
+			index = imagesAll.indexOf(infoTmp);
 			var listImg = "";
-			$(idAlmy).find("a").each(function() {
-				listImg += '<img src="'+$(this).attr('href')+'" alt="'+$(this).find("img").attr('alt')+'" title="'+$(this).find("img").attr('title')+'">';
-			});
 			var listMiniatures = "";
-			$(idAlmy).find("a").each(function() {
-				listMiniatures += '<li><img src="'+$(this).find("img").attr('src')+'" alt="'+$(this).find("img").attr('alt')+'" title="'+$(this).find("img").attr('title')+'"></li>';
+			console.log(imagesAll);
+			$(imagesAll).each(function() {
+				listImg += '<img src="'+$(this)[0]['url']+'" alt="'+$(this)[0]['desc']+'" title="'+$(this)[0]['title']+'">';
+				listMiniatures += '<li><img src="'+$(this)[0]['url_min']+'" alt="'+$(this)[0]['desc']+'" title="'+$(this)[0]['title']+'"></li>';
 			});
-
 
 			var blocDesc = "";
 			if(defauts.blocDescriptionOnImg)
