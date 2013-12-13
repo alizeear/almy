@@ -5,16 +5,19 @@
 		var defauts = $.extend({
 			width: '400px',
 			widthImage: '200px',
+			blocDescriptionOnImg: true,
+			blocDescriptionTop: true,
+			textAlignInfoImgTop: 'center',
 			running: true,
 			paused: true,
 			pauseTime: 3000,
 			pauseOnHover: false
 		}, params);
-	
 		var dateLastCat = new Date().getTime();
 		var dateTime = new Date().getTime();
 		var idAlmy = "#"+$(this).attr("id");
 		var category = Array();
+		var imagesAll 	= Array();
 		// recalcul de la taille des image au redimentionnement de la fenêtre
 		$(window).resize(function() {
 			if($('#categoriesMiddle').length !== 0)
@@ -24,6 +27,13 @@
 
 			// on recupere les differentes catégories presentes dans les tag des balises "a"
 			$(this).find("a").each(function() {
+				imagesAll.push({
+					'url': $(this).attr('href'), 
+					'url_min': $(this).find('img').attr('src'),
+					'title': $(this).find('img').attr('title'),
+					'desc': $(this).find('img').attr('alt'),
+					'cat': $(this).attr('almy-cat').split(';')
+				});
 				if((typeof $(this).attr("almy-cat")!=="undefined" && $(this).attr("almy-cat")!=="")) {
 					var cat = $(this).attr("almy-cat").split(";");
 					for(var i in a = cat) {
@@ -213,6 +223,11 @@
 			var imageSuivante = $('#categoriesMiddle .imgContainer > img:visible').next('img'); // on stock la valeur de l'image suivante dans une variable
 			if(imageSuivante.length<1)
 				imageSuivante = $("#categoriesMiddle .imgContainer > img:first"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
+			var infoTmp = getInfoImage($(imageSuivante).attr("src"));
+			$(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
+			$(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
+			$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
+			$(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
 			alignImg(imageSuivante); // on align l'image centre
 			var margin = ((imageSuivante.width()>$("#categoriesMiddle .imgContainer > img:visible").width()))
 				?(imageSuivante.width()-$("#categoriesMiddle .imgContainer > img:visible").width())/2
@@ -235,6 +250,11 @@
 			var imagePrecedente = $('#categoriesMiddle .imgContainer > img:visible').prev('img'); // on stock la valeur de l'image suivante dans une variable
 			if(imagePrecedente.length<1)
 				imagePrecedente = $("#categoriesMiddle .imgContainer > img:last"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
+			var infoTmp = getInfoImage($(imagePrecedente).attr("src"));
+			$(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
+			$(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
+			$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
+			$(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
 			alignImg(imagePrecedente); // on align l'image centre
 			var margin = ((imagePrecedente.width()>$("#categoriesMiddle .imgContainer > img:visible").width()))
 				?(imagePrecedente.width()+$("#categoriesMiddle .imgContainer > img:visible").width())/2
@@ -251,45 +271,6 @@
 			
 			imagePrecedente.stop().fadeIn('slow'); // on affiche la nouvelle
 			return true;
-			// var imagePrecedente = $('#categoriesMiddle .imgContainer > img:visible').prev('img'); // on stock la valeur de l'image suivante dans une variable
-			// if(imagePrecedente.length<1)
-			// 	imagePrecedente = $("#categoriesMiddle .imgContainer > img:first"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
-			// alignImg(imagePrecedente); // on align l'image centre
-			// if(imagePrecedente.width()>$("#categoriesMiddle .imgContainer > img:visible").width()) {
-			// 	var margin = (imagePrecedente.width()-$("#categoriesMiddle .imgContainer > img:visible").width())/2;
-			// 	imagePrecedente.stop().css({
-			// 		"marginLeft": margin,
-			// 		'display': 'block',
-			// 		'opacity': 0
-			// 	}).animate({
-			// 		'opacity': 1,
-			// 		'marginLeft': "0px"
-			// 	}, "slow");
-			// 	$("#categoriesMiddle .imgContainer > img:visible").stop().css("marginLeft", 0).animate({
-			// 		'marginLeft': margin,
-			// 		'opacity': 0
-			// 	},"slow", function() {
-			// 		$(this).hide().css({
-			// 			'opacity': 1,
-			// 			'marginLeft': "0px"
-			// 		});
-			// 	}); // on cache l'image actuelle
-			// }
-			// else {
-			// 	var margin = ($("#categoriesMiddle .imgContainer > img:visible").width()-imagePrecedente.width())/2;
-			// 	imagePrecedente.stop().css("marginLeft", margin).animate({
-			// 		'marginLeft': 0
-			// 	}, "slow"); // on cache l'image actuelle
-			// 	$("#categoriesMiddle .imgContainer > img:visible").stop().animate({
-			// 		'opacity': 0
-			// 	},"slow", function() {
-			// 		$(this).hide().css({
-			// 			'opacity': 1,
-			// 			'marginLeft': "0px"
-			// 		});
-			// 	}); // on cache l'image actuelle
-			// }
-			// return true;
 		}
 
 		// retourne les dimention optimal pour afficher l'image entiere sans la déformer
@@ -453,6 +434,7 @@
 		}
 
 		function afficherSlider(element) {
+			var infoTmp = getInfoImage($(element).attr("href"));
 			var listImg = "";
 			$(idAlmy).find("a").each(function() {
 				listImg += '<img src="'+$(this).attr('href')+'" alt="'+$(this).find("img").attr('alt')+'" title="'+$(this).find("img").attr('title')+'">';
@@ -461,19 +443,33 @@
 			$(idAlmy).find("a").each(function() {
 				listMiniatures += '<li><img src="'+$(this).find("img").attr('src')+'" alt="'+$(this).find("img").attr('alt')+'" title="'+$(this).find("img").attr('title')+'"></li>';
 			});
+
+
+			var blocDesc = "";
+			if(defauts.blocDescriptionOnImg)
+				blocDesc = '<div class="descriptionDiv"><h2>'+infoTmp['title']+'</h2><p>'+infoTmp['desc']+'</p></div>';
+
+			var blocDescTop = "";
+			if(defauts.blocDescriptionTop)
+				blocDescTop = '<div class="descriptionDivTop"><h2>'+infoTmp['title']+'</h2><p>'+infoTmp['desc']+'</p></div>';
+			
+			
+
 			var catTmp = '';
 			for(var i = 0;i<category.length;i++) {
 				catTmp += '<div id="listCategoriesSlider">'+category[i]+'</div>';
 			}
+
 			if($(idAlmy).find(".background").length==0) {
 				$(idAlmy).append('<div class="background">\
-							<div id="categoriesTop">'+catTmp+'</div>\
+							<div id="categoriesTop">'+blocDescTop+'</div>\
 							<div id="categoriesMiddle">\
 								<div class="imgContainer">\
 									'+listImg+'\
 									<div class="navDirection">\
 										<ul><li><a class="navPrev"></a></li><li><a class="navPause"></a></li><li><a class="navNext"></a></li></ul>\
 									</div>\
+									'+blocDesc+'\
 								</div>\
 								<div id="mosaiqueBottom">\
 									<ul>'+listMiniatures+'</ul>\
@@ -488,7 +484,23 @@
 					'top': '0'
 				}, 450).animate({'top': '-2%'}, 200).animate({'top': '0'}, 300);
 			}
+			/////////////////////////////////////////////////////////
+			////// Gestion du bloc description //////////////////////
+			/////////////////////////////////////////////////////////
 
+			$(idAlmy).find(".descriptionDiv").mouseover(function() {
+				$(this).stop().animate({
+						'right': 0
+						},"fast");
+			}).mouseout(function() {
+				$(this).stop().animate({
+						'right': '-64%'
+						},"fast");
+			});
+
+			$(idAlmy).find('.descriptionDivTop').css({
+				'text-align': defauts.textAlignInfoImgTop
+			});
 
 
 			///////////////////////////////////////////////////////// /////////////////////////////////////////////////////////
@@ -557,7 +569,7 @@
 			// Hover de la souris sur l'image si le slider n'est pas en pause par défaut
 			if(!defauts.paused) {
 				if(defauts.pauseOnHover) {
-					$(idAlmy).find('#categoriesMiddle img, .navNext, .navPrev').hover(function() {
+					$(idAlmy).find('#categoriesMiddle img, .navNext, .navPrev, .descriptionDiv').hover(function() {
 						stopSlide();
 						$('.navPause').css('background-position', '0px 0px');
 					}, function() {
@@ -572,7 +584,7 @@
 
 			// Hover de la souris sur l'image
 				if(defauts.pauseOnHover) {
-					$(idAlmy).find('#categoriesMiddle img, .navNext, .navPrev').hover(function() {
+					$(idAlmy).find('#categoriesMiddle img, .navNext, .navPrev, .descriptionDiv').hover(function() {
 						stopSlide();
 						$('.navPause').css('background-position', '0px 0px');
 					}, function() {
@@ -646,6 +658,7 @@
 				}
 			});
 
+
 			/////////////////////////////////////////////////////////
 			////// Controle mosaique ////////////////////////////////
 			/////////////////////////////////////////////////////////
@@ -690,6 +703,20 @@
 				tailleUl += $(this).outerWidth(true);
 			});
 			$(idAlmy).find('#mosaiqueBottom ul').width(tailleUl);
+		}
+
+
+		/////////////////////////////////////////////////////////
+		////// Retourne toutes les infos d'une images ///////////
+		/////////////////////////////////////////////////////////
+
+		function getInfoImage(url){
+			for(var i = 0;i<imagesAll.length;i++) {
+				if(imagesAll[i]['url'] == url || imagesAll[i]['url_min'] == url){
+					return imagesAll[i];
+				}
+			}
+			return false;
 		}
 	};
 })(jQuery);
