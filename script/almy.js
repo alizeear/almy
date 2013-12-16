@@ -573,6 +573,40 @@ if (!Array.prototype.indexOf)
 					'top': '0'
 				}, 450).animate({'top': '-2%'}, 200).animate({'top': '0'}, 300);
 			}
+
+			/////////////////////////////////////////////////////////
+			////// Changement image clic image mosaique /////////////
+			/////////////////////////////////////////////////////////
+
+			$('#mosaiqueBottom ul li img').click(function(){
+				var infoTmp = getInfoImage($(this).attr('src'));
+
+				var imageSuivante = $('#categoriesMiddle .imgContainer > img[src=\''+infoTmp['url']+'\']'); // on stock la valeur de l'image suivante dans une variable
+				// here 
+				$(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
+				$(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
+				$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
+				$(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
+				alignImg(imageSuivante); // on align l'image centre
+				var margin = ((imageSuivante.width()>$("#categoriesMiddle .imgContainer > img:visible").width()))
+					?(imageSuivante.width()-$("#categoriesMiddle .imgContainer > img:visible").width())/2
+					:($("#categoriesMiddle .imgContainer > img:visible").width()-imageSuivante.width())/2;
+				$("#categoriesMiddle .imgContainer > img:visible").stop().css("marginLeft", "0px").animate({
+					'marginLeft': margin,
+					'opacity': 0
+				},"slow", function() {
+					$(this).hide().css({
+						'opacity': 1,
+						'marginLeft': "0px"
+					});
+				}); // on cache l'image actuelle
+				
+				imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
+				
+			});
+
+
+
 			/////////////////////////////////////////////////////////
 			////// Gestion du bloc description //////////////////////
 			/////////////////////////////////////////////////////////
