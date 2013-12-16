@@ -552,7 +552,6 @@ if (!Array.prototype.indexOf)
 				}); // on cache l'image actuelle
 				
 				imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
-				
 			});
 
 

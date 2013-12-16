@@ -21,3 +21,6 @@ img{
 	width: 50%;
 	display: inline-block;
 }
+.navbar-collapse{
+	border: none;
+}
