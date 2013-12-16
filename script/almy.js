@@ -20,7 +20,9 @@ if (!Array.prototype.indexOf)
     return -1;
   };
 }
+
 (function($) {
+
 	$.fn.almy = function(params) {
 
 		//On définit nos paramètres par défaut
