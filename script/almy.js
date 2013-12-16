@@ -272,11 +272,37 @@ if (!Array.prototype.indexOf)
 			var infoTmp = getInfoImage(index);
 			
 			var imageSuivante = $('#categoriesMiddle .imgContainer > img[src=\''+infoTmp['url']+'\']'); // on stock la valeur de l'image suivante dans une variable
-			// here 
-			$(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
-			$(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
-			$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
-			$(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
+			// here
+			$(idAlmy).find(".descriptionDiv  > h2").animate({
+				'opacity': 0
+			}, '300',function(){
+				$(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
+			}).animate({
+				'opacity': 1
+			}, '300');
+
+			$(idAlmy).find(".descriptionDiv  > p").animate({
+				'opacity': 0
+			}, '300',function(){
+				$(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
+			}).animate({
+				'opacity': 1
+			}, '300');
+
+
+			// $(idAlmy).find(".descriptionDiv  > p").hide(function(){
+			// 	$(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
+			// }).show();
+				
+
+			$(idAlmy).find(".descriptionDivTop").animate({
+					'top': '-100%'
+				}, 'fast', function(){
+					$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
+					$(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
+				}).animate({
+					'top': '0'
+				}, 'fast');
 			alignImg(imageSuivante); // on align l'image centre
 			var margin = ((imageSuivante.width()>$("#categoriesMiddle .imgContainer > img:visible").width()))
 				?(imageSuivante.width()-$("#categoriesMiddle .imgContainer > img:visible").width())/2
@@ -307,8 +333,14 @@ if (!Array.prototype.indexOf)
 			// here 
 			$(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
 			$(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
-			$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
-			$(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
+			$(idAlmy).find(".descriptionDivTop").animate({
+					'top': '-100%'
+				}, 'fast', function(){
+					$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
+					$(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
+				}).animate({
+					'top': '0'
+				}, 'fast');
 			alignImg(imagePrecedente); // on align l'image centre
 			var margin = ((imagePrecedente.width()>$("#categoriesMiddle .imgContainer > img:visible").width()))
 				?(imagePrecedente.width()+$("#categoriesMiddle .imgContainer > img:visible").width())/2
@@ -528,7 +560,7 @@ if (!Array.prototype.indexOf)
 
 			if($(idAlmy).find(".background").length==0) {
 				$(idAlmy).append('<div class="background">\
-							<div id="categoriesTop">'+blocDescTop+'</div>\
+							<div id="categoriesTop"><img src="images/up.png" alt="up" id="up">'+blocDescTop+'</div>\
 							<div id="categoriesMiddle">\
 								<div class="imgContainer">\
 									'+listImg+'\
@@ -564,8 +596,15 @@ if (!Array.prototype.indexOf)
 				// here 
 				$(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
 				$(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
-				$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
-				$(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
+				$(idAlmy).find(".descriptionDivTop").animate({
+					'top': '-100%'
+				}, 'fast', function(){
+					$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
+					$(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
+				}).animate({
+					'top': '0'
+				}, 'fast');
+				
 				alignImg(imageSuivante); // on align l'image centre
 				var margin = ((imageSuivante.width()>$(imageActuel).width()))
 					?(imageSuivante.width()-$(imageActuel).width())/2
@@ -730,6 +769,16 @@ if (!Array.prototype.indexOf)
 				return false;
 			});
 			
+
+
+			// clique sur le bouton de remonté
+				$(idAlmy).find("#categoriesTop > img").click(function(){
+					$(idAlmy).find(".background").stop().animate({
+						'top': '-101%'
+					}, 450, function(e) {
+						$(this).remove();
+					})
+				});
 			// appuye sur la touche Echap
 			$(document).keydown(function(e) {
 				if(e.keyCode == 27) {
@@ -739,6 +788,7 @@ if (!Array.prototype.indexOf)
 						$(this).remove();
 					});
 				}
+			
 				if(e.keyCode == 39) {
 					if(dateTime+600<new Date().getTime()) {
 						slideSuivant();
