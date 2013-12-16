@@ -35,7 +35,8 @@
 
       <!--[if IE]>
          <script src="script/html5.js"></script>
-      <![endif]-->   
+      <![endif]--> 
+      <!--[if (IE) & (!IE9)]> <link rel="stylesheet" href="css/ie78.css" type="text/css" media="screen" /> <![endif]-->  
    </head>
    <body>
       <nav style="z-index: 0;" class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
