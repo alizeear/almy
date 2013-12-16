@@ -241,33 +241,7 @@ if (!Array.prototype.indexOf)
 				}
 			}, defauts.pauseTime);
 		}
-
-		// function slideSuivant() {
-			// var imageSuivante = $('#categoriesMiddle .imgContainer > img:visible').next('img'); // on stock la valeur de l'image suivante dans une variable
-			// if(imageSuivante.length<1)
-				// imageSuivante = $("#categoriesMiddle .imgContainer > img:first"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
-			// var infoTmp = getInfoImage($(imageSuivante).attr("src"));
-			// $(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
-			// $(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
-			// $(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
-			// $(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
-			// alignImg(imageSuivante); // on align l'image centre
-			// var margin = ((imageSuivante.width()>$("#categoriesMiddle .imgContainer > img:visible").width()))
-				// ?(imageSuivante.width()-$("#categoriesMiddle .imgContainer > img:visible").width())/2
-				// :($("#categoriesMiddle .imgContainer > img:visible").width()-imageSuivante.width())/2;
-			// $("#categoriesMiddle .imgContainer > img:visible").stop().css("marginLeft", "0px").animate({
-				// 'marginLeft': margin,
-				// 'opacity': 0
-			// },"slow", function() {
-				// $(this).hide().css({
-					// 'opacity': 1,
-					// 'marginLeft': "0px"
-				// });
-			// }); // on cache l'image actuelle
-			
-			// imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
-			// return true;
-		// }
+		
 		function slideSuivant() {
 			index++;
 			if(index >= imagesAll.length)
@@ -297,33 +271,7 @@ if (!Array.prototype.indexOf)
 			imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
 			return true;
 		}
-
-		// function slidePrecedent() {
-			// var imagePrecedente = $('#categoriesMiddle .imgContainer > img:visible').prev('img'); // on stock la valeur de l'image suivante dans une variable
-			// if(imagePrecedente.length<1)
-				// imagePrecedente = $("#categoriesMiddle .imgContainer > img:last"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
-			// var infoTmp = getInfoImage($(imagePrecedente).attr("src"));
-			// $(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
-			// $(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
-			// $(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
-			// $(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
-			// alignImg(imagePrecedente); // on align l'image centre
-			// var margin = ((imagePrecedente.width()>$("#categoriesMiddle .imgContainer > img:visible").width()))
-				// ?(imagePrecedente.width()+$("#categoriesMiddle .imgContainer > img:visible").width())/2
-				// :($("#categoriesMiddle .imgContainer > img:visible").width()-imagePrecedente.width())/2;
-			// $("#categoriesMiddle .imgContainer > img:visible").stop().css("marginLeft", "0px").animate({
-				// 'marginLeft': margin,
-				// 'opacity': 0
-			// },"slow", function() {
-				// $(this).hide().css({
-					// 'opacity': 1,
-					// 'marginLeft': "0px"
-				// });
-			// }); // on cache l'image actuelle
-			
-			// imagePrecedente.stop().fadeIn('slow'); // on affiche la nouvelle
-			// return true;
-		// }
+		
 		function slidePrecedent() {
 			index--;
 			if(index < 0)
@@ -515,17 +463,17 @@ if (!Array.prototype.indexOf)
 
 		function afficherSlider(element) {
 			imagesAll = Array();
-			var index = 0;
+			var indTmp = 0;
 			$(idAlmy).find("a:not(.off)").each(function() {
 				imagesAll.push({
-					'index': index,
+					'index': indTmp,
 					'url': $(this).attr('href'), 
 					'url_min': $(this).find('img').attr('src'),
 					'title': $(this).find('img').attr('title'),
 					'desc': $(this).find('img').attr('alt'),
 					'cat': $(this).attr('almy-cat').split(';')
 				});
-				index++;
+				indTmp++;
 			});
 			var infoTmp = getInfoImage($(element).attr("href"));
 			index = imagesAll.indexOf(infoTmp);
@@ -583,7 +531,6 @@ if (!Array.prototype.indexOf)
 			$('#mosaiqueBottom ul li img').click(function(){
 				var infoTmp = getInfoImage($(this).attr('src'));
 				index = infoTmp['index'];
-				console.log(index)
 				var imageSuivante = $('#categoriesMiddle .imgContainer > img[src=\''+infoTmp['url']+'\']'); // on stock la valeur de l'image suivante dans une variable
 				// here 
 				$(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
