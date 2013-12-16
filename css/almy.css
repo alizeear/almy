@@ -59,6 +59,13 @@
 	width: 100%;
 	z-index: 3;
 }
+#up{
+	position: absolute;
+	z-index: 1;
+	right: 10px;
+	width: 80%;
+	cursor: pointer;
+}
 #mosaiqueBottom{
 	background-color: rgba(1, 1, 1, 0.95);
 	position: absolute;
