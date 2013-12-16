@@ -30,7 +30,7 @@
         <a class="navbar-brand" href="#">Almy</a>
 		  <a id="checkAllLink" class="btn btn-danger" role="button" href="#">Verifier les liens</a>
     </div>
-         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+         <div class="navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
           <li><a href="?do=logout" id="deconnexion">Déconnexion</a></li>
         </ul>

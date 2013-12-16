@@ -17,6 +17,7 @@
    	
     <link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
    	<link rel="stylesheet" type="text/css" href="css/almy.css" media="screen" />
+    <!--[if (IE)]> <link rel="stylesheet" href="css/ie78.css" type="text/css" media="screen" /> <![endif]-->
    	
    	<script type="text/javascript" src="script/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="script/connexion.js"></script>
@@ -36,7 +37,7 @@
       <!--[if IE]>
          <script src="script/html5.js"></script>
       <![endif]--> 
-      <!--[if (IE) & (!IE9)]> <link rel="stylesheet" href="css/ie78.css" type="text/css" media="screen" /> <![endif]-->  
+        
    </head>
    <body>
       <nav style="z-index: 0;" class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
@@ -44,7 +45,7 @@
 		    <a class="navbar-brand" href="#">Almy</a>
         <?php if(isset($error)) echo '<p id="errorPhp" class="navbar-text colorRedText">'.$error.'</p>'; ?>
 		</div>
-         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+         <div class="navbar-collapse btnConnex" id="bs-example-navbar-collapse-1">
 	    	<ul class="nav navbar-nav navbar-right">
 		      <li><a href="#" id="connexion">Connexion</a></li>
 		    </ul>

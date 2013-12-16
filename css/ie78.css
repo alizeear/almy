@@ -13,3 +13,11 @@ img{
 .descriptionDiv{
 	background-color: rgb(0, 0, 0);
 }
+.navbar-header{
+	width: 50%;
+	display: inline-block;
+}
+.btnConnex{
+	width: 50%;
+	display: inline-block;
+}
