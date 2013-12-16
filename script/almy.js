@@ -37,6 +37,7 @@ if (!Array.prototype.indexOf)
 		}, params);
 		
 		var dateLastCat = new Date().getTime();
+		
 		var dateTime = new Date().getTime();
 		var idAlmy = "#"+$(this).attr("id");
 		var category = Array();
@@ -139,7 +140,6 @@ if (!Array.prototype.indexOf)
 						});
 						$(this).css("backgroundColor", $(this).parent().css("backgroundColor"));
 						animateColor($(this));
-						console.log(catSelect);
 						
 						if(catSelect.indexOf("Toutes") != -1) {
 							catSelect = Array();
@@ -233,15 +233,47 @@ if (!Array.prototype.indexOf)
 
 		function runSlide() {
 			timer = setInterval(function() {
-				slideSuivant();
+				if(dateTime+600<new Date().getTime()) {
+					slideSuivant();
+					dateTime = new Date().getTime();
+				}
 			}, defauts.pauseTime);
 		}
 
+		// function slideSuivant() {
+			// var imageSuivante = $('#categoriesMiddle .imgContainer > img:visible').next('img'); // on stock la valeur de l'image suivante dans une variable
+			// if(imageSuivante.length<1)
+				// imageSuivante = $("#categoriesMiddle .imgContainer > img:first"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
+			// var infoTmp = getInfoImage($(imageSuivante).attr("src"));
+			// $(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
+			// $(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
+			// $(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
+			// $(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
+			// alignImg(imageSuivante); // on align l'image centre
+			// var margin = ((imageSuivante.width()>$("#categoriesMiddle .imgContainer > img:visible").width()))
+				// ?(imageSuivante.width()-$("#categoriesMiddle .imgContainer > img:visible").width())/2
+				// :($("#categoriesMiddle .imgContainer > img:visible").width()-imageSuivante.width())/2;
+			// $("#categoriesMiddle .imgContainer > img:visible").stop().css("marginLeft", "0px").animate({
+				// 'marginLeft': margin,
+				// 'opacity': 0
+			// },"slow", function() {
+				// $(this).hide().css({
+					// 'opacity': 1,
+					// 'marginLeft': "0px"
+				// });
+			// }); // on cache l'image actuelle
+			
+			// imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
+			// return true;
+		// }
 		function slideSuivant() {
-			var imageSuivante = $('#categoriesMiddle .imgContainer > img:visible').next('img'); // on stock la valeur de l'image suivante dans une variable
-			if(imageSuivante.length<1)
-				imageSuivante = $("#categoriesMiddle .imgContainer > img:first"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
-			var infoTmp = getInfoImage($(imageSuivante).attr("src"));
+			index++;
+			if(index >= imagesAll.length)
+				index = 0;
+			var infoTmp = getInfoImage(index);
+			
+			var imageSuivante = $('#categoriesMiddle .imgContainer > img[src=\''+infoTmp['url']+'\']'); // on stock la valeur de l'image suivante dans une variable
+			// here 
 			$(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
 			$(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
 			$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
@@ -264,11 +296,40 @@ if (!Array.prototype.indexOf)
 			return true;
 		}
 
+		// function slidePrecedent() {
+			// var imagePrecedente = $('#categoriesMiddle .imgContainer > img:visible').prev('img'); // on stock la valeur de l'image suivante dans une variable
+			// if(imagePrecedente.length<1)
+				// imagePrecedente = $("#categoriesMiddle .imgContainer > img:last"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
+			// var infoTmp = getInfoImage($(imagePrecedente).attr("src"));
+			// $(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
+			// $(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
+			// $(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
+			// $(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
+			// alignImg(imagePrecedente); // on align l'image centre
+			// var margin = ((imagePrecedente.width()>$("#categoriesMiddle .imgContainer > img:visible").width()))
+				// ?(imagePrecedente.width()+$("#categoriesMiddle .imgContainer > img:visible").width())/2
+				// :($("#categoriesMiddle .imgContainer > img:visible").width()-imagePrecedente.width())/2;
+			// $("#categoriesMiddle .imgContainer > img:visible").stop().css("marginLeft", "0px").animate({
+				// 'marginLeft': margin,
+				// 'opacity': 0
+			// },"slow", function() {
+				// $(this).hide().css({
+					// 'opacity': 1,
+					// 'marginLeft': "0px"
+				// });
+			// }); // on cache l'image actuelle
+			
+			// imagePrecedente.stop().fadeIn('slow'); // on affiche la nouvelle
+			// return true;
+		// }
 		function slidePrecedent() {
-			var imagePrecedente = $('#categoriesMiddle .imgContainer > img:visible').prev('img'); // on stock la valeur de l'image suivante dans une variable
-			if(imagePrecedente.length<1)
-				imagePrecedente = $("#categoriesMiddle .imgContainer > img:last"); // on test si on est pas à la fin de la liste d'image et au cas ou on retourne à la première
-			var infoTmp = getInfoImage($(imagePrecedente).attr("src"));
+			index--;
+			if(index < 0)
+				index = imagesAll.length-1;
+			var infoTmp = getInfoImage(index);
+			
+			var imagePrecedente = $('#categoriesMiddle .imgContainer > img[src=\''+infoTmp['url']+'\']'); // on stock la valeur de l'image suivante dans une variable
+			// here 
 			$(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
 			$(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
 			$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
@@ -288,7 +349,6 @@ if (!Array.prototype.indexOf)
 			}); // on cache l'image actuelle
 			
 			imagePrecedente.stop().fadeIn('slow'); // on affiche la nouvelle
-			return true;
 		}
 
 		// retourne les dimention optimal pour afficher l'image entiere sans la déformer
@@ -668,10 +728,16 @@ if (!Array.prototype.indexOf)
 					});
 				}
 				if(e.keyCode == 39) {
-					slideSuivant()
+					if(dateTime+600<new Date().getTime()) {
+						slideSuivant();
+						dateTime = new Date().getTime();
+					}
 				}
 				if(e.keyCode == 37) {
-					slidePrecedent()
+					if(dateTime+600<new Date().getTime()) {
+						slidePrecedent();
+						dateTime = new Date().getTime();
+					}
 				}
 				if(e.keyCode == 32) {
 					if(!defauts.paused) {
@@ -739,9 +805,10 @@ if (!Array.prototype.indexOf)
 		////// Retourne toutes les infos d'une images ///////////
 		/////////////////////////////////////////////////////////
 
-		function getInfoImage(url){
+		function getInfoImage(search){
+			//here 
 			for(var i = 0;i<imagesAll.length;i++) {
-				if(imagesAll[i]['url'] == url || imagesAll[i]['url_min'] == url){
+				if(imagesAll[i]['url'] == search || imagesAll[i]['url_min'] == search || imagesAll[i]['index'] == search){
 					return imagesAll[i];
 				}
 			}
