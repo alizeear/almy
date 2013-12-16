@@ -431,20 +431,22 @@
 
 		function afficherSlider(element) {
 			imagesAll = Array();
+			var index = 0;
 			$(idAlmy).find("a:not(.off)").each(function() {
 				imagesAll.push({
+					'index': index,
 					'url': $(this).attr('href'), 
 					'url_min': $(this).find('img').attr('src'),
 					'title': $(this).find('img').attr('title'),
 					'desc': $(this).find('img').attr('alt'),
 					'cat': $(this).attr('almy-cat').split(';')
 				});
+				index++;
 			});
 			var infoTmp = getInfoImage($(element).attr("href"));
 			index = imagesAll.indexOf(infoTmp);
 			var listImg = "";
 			var listMiniatures = "";
-			console.log(imagesAll);
 			$(imagesAll).each(function() {
 				listImg += '<img src="'+$(this)[0]['url']+'" alt="'+$(this)[0]['desc']+'" title="'+$(this)[0]['title']+'">';
 				listMiniatures += '<li><img src="'+$(this)[0]['url_min']+'" alt="'+$(this)[0]['desc']+'" title="'+$(this)[0]['title']+'"></li>';
