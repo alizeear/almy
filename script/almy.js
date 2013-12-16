@@ -55,6 +55,10 @@ if (!Array.prototype.indexOf)
 
 			// on recupere les differentes catégories presentes dans les tag des balises "a"
 			$(this).find("a").each(function() {
+				// precharge les images
+				var img = new Image();
+				img.src = $(this).attr("href");
+				
 				if((typeof $(this).attr("almy-cat")!=="undefined" && $(this).attr("almy-cat")!=="")) {
 					var cat = $(this).attr("almy-cat").split(";");
 					for(var i in a = cat) {
@@ -173,16 +177,17 @@ if (!Array.prototype.indexOf)
 									aff = false;
 							}
 							if(aff) {
+								$(this).show()
 								$(this).animate({
-									'width': defauts.widthImage,
 									'opacity': 1
 								},300).removeClass("off");
 							}
 							else {
 								$(this).animate({
-									'width': '0px',
 									'opacity': 0
-								},300).addClass("off");
+								},300, function() {
+									$(this).hide();
+								}).addClass("off");
 							}
 						});
 					}
@@ -328,13 +333,14 @@ if (!Array.prototype.indexOf)
 			var $W_test = Math.round($W_Src*($H_max/$H_Src));
 			var $H_test = Math.round($H_Src*($W_max/$W_Src));
 
-			if($W_Src<$W_max&&$H_Src<$H_max) {
-				$W = $W_Src;
-				$H = $H_Src;
-			} else if($W_max===0&&$H_max===0) {
-				$W = $W_Src;
-				$H = $H_Src;
-			} else if($W_max===0) {
+			// if($W_Src<$W_max&&$H_Src<$H_max) {
+				// $W = $W_Src;
+				// $H = $H_Src;
+			// } else if($W_max===0&&$H_max===0) {
+				// $W = $W_Src;
+				// $H = $H_Src;
+			// } else 
+			if($W_max===0) {
 				$W = $W_test;
 				$H = $H_max;
 			} else if($H_max===0) {
@@ -456,6 +462,7 @@ if (!Array.prototype.indexOf)
 		// anime les images afin de les centrer
 		function alignImg($image) {
 			var temp = getDimMaxImg($image.width(), $image.height());
+			console.log(temp);
 			var $widthImageNext = temp[0]; // stock dans une variable la width de l'image qui arrive
 			var $heightImageNext = temp[1];
 
