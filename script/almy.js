@@ -87,16 +87,24 @@ if (!Array.prototype.indexOf)
 					$(this).parents("ul").find("span").stop().animate({
 						'opacity': 0.7
 					},200);
-					$(this).animate({
+					$(this).stop().animate({
 						'opacity': 1
 					},200);
 					var tempCat = $(this).text();
 					if(!$(this).hasClass("all")) {
 						$(idAlmy).find("a img").parent().each(function() {
-							if($(this).attr("almy-cat").indexOf(tempCat) == -1)
-								$(this).animate({
-									'opacity': 0.6
-								},200);
+							if($(this).attr("almy-cat").indexOf(tempCat) == -1) {
+								if(dateLastCat+300 < new Date().getTime()) {
+									$(this).stop().animate({
+										'opacity': 0.6
+									},200);
+								}
+								else {
+									$(this).animate({
+										'opacity': 0.6
+									},200);
+								}
+							}
 						});
 					}
 				}).mouseleave(function() {
@@ -104,52 +112,60 @@ if (!Array.prototype.indexOf)
 						$(this).parents("ul").find("span").stop().animate({
 							'opacity': 1
 						},200);
-						$(idAlmy).find("a img").parent().each(function() {
-							$(this).animate({
-								'opacity': 1
-							},200);
-						});
 					}
 					else{
-						$(this).parent().stop().animate({
+						$(this).parents("ul").find("span.active").parent().stop().animate({
 							'opacity': 1
 						},200);
-						$(this).parents("ul").find("span").each(function() {
-							if(!$(this).hasClass("active"))
-								$(this).animate({
-									'opacity': 0.7
-								},200);
-							else
-								$(this).animate({
-									'opacity': 1
-								},200);
-						});
+						$(this).parents("ul").find("span.active").stop().animate({
+							'opacity': 1
+						},200);
+					}
+					
+					if(dateLastCat+300 < new Date().getTime()) {
+						$(idAlmy).find("a img").parent().stop().animate({
+							'opacity': 1
+						},200);
+					}
+					else {
+						$(idAlmy).find("a img").parent().animate({
+							'opacity': 1
+						},200);
 					}
 				}).click(function() { 
 					var temp = new Date().getTime();
 					if(dateLastCat+400 < temp)  {
 						dateLastCat = temp;
-						if(!$(this).hasClass("active")) {
-							$(this).addClass("active")
-						}
-						else {
-							$(this).removeClass("active")
-						}
-						
-						var catSelect = Array();
-						$(idAlmy).find(".active").each(function() {
-							catSelect.push($(this).text());
-						});
-						$(this).css("backgroundColor", $(this).parent().css("backgroundColor"));
-						animateColor($(this));
-						
-						if(catSelect.indexOf("Toutes") != -1) {
-							catSelect = Array();
+						if($(this).hasClass("all")) {
+							catSelect = new Array();
 							$(idAlmy).find(".active").each(function() {
 								$(this).removeClass("active");
 								animateColor($(this));
 							});
+							console.log($(".active"));
 						}
+						else {
+							if(!$(this).hasClass("active")) {
+								$(this).addClass("active")
+							}
+							else {
+								$(this).removeClass("active")
+							}
+							
+							var catSelect = Array();
+							$(idAlmy).find(".active").each(function() {
+								catSelect.push($(this).text());
+							});
+							$(this).css("backgroundColor", $(this).parent().css("backgroundColor"));
+							animateColor($(this)); 
+							var catSelect = Array();
+							$(idAlmy).find(".active").each(function() {
+								catSelect.push($(this).text());
+							});
+							$(this).css("backgroundColor", $(this).parent().css("backgroundColor"));
+							animateColor($(this));
+						}
+						
 						$(idAlmy).find("a img").parent().each(function() {
 							var aff = true;
 							for(var i in a = catSelect) {
@@ -243,6 +259,8 @@ if (!Array.prototype.indexOf)
 		}
 		
 		function slideSuivant() {
+			var infoTmp = getInfoImage(index);
+			var imageActuel = $('#categoriesMiddle .imgContainer > img[src=\''+infoTmp['url']+'\']'); 
 			index++;
 			if(index >= imagesAll.length)
 				index = 0;
@@ -273,6 +291,8 @@ if (!Array.prototype.indexOf)
 		}
 		
 		function slidePrecedent() {
+			var infoTmp = getInfoImage(index);
+			var imageActuel = $('#categoriesMiddle .imgContainer > img[src=\''+infoTmp['url']+'\']'); 
 			index--;
 			if(index < 0)
 				index = imagesAll.length-1;
@@ -529,6 +549,8 @@ if (!Array.prototype.indexOf)
 			/////////////////////////////////////////////////////////
 
 			$('#mosaiqueBottom ul li img').click(function(){
+				var infoTmp = getInfoImage(index);
+				var imageActuel = $('#categoriesMiddle .imgContainer > img[src=\''+infoTmp['url']+'\']'); 
 				var infoTmp = getInfoImage($(this).attr('src'));
 				index = infoTmp['index'];
 				var imageSuivante = $('#categoriesMiddle .imgContainer > img[src=\''+infoTmp['url']+'\']'); // on stock la valeur de l'image suivante dans une variable
@@ -538,10 +560,10 @@ if (!Array.prototype.indexOf)
 				$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
 				$(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
 				alignImg(imageSuivante); // on align l'image centre
-				var margin = ((imageSuivante.width()>$("#categoriesMiddle .imgContainer > img:visible").width()))
-					?(imageSuivante.width()-$("#categoriesMiddle .imgContainer > img:visible").width())/2
-					:($("#categoriesMiddle .imgContainer > img:visible").width()-imageSuivante.width())/2;
-				$("#categoriesMiddle .imgContainer > img:visible").stop().css("marginLeft", "0px").animate({
+				var margin = ((imageSuivante.width()>$(imageActuel).width()))
+					?(imageSuivante.width()-$(imageActuel).width())/2
+					:($(imageActuel).width()-imageSuivante.width())/2;
+				$(imageActuel).stop().css("marginLeft", "0px").animate({
 					'marginLeft': margin,
 					'opacity': 0
 				},"slow", function() {
