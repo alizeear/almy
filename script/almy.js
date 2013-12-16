@@ -580,7 +580,8 @@ if (!Array.prototype.indexOf)
 
 			$('#mosaiqueBottom ul li img').click(function(){
 				var infoTmp = getInfoImage($(this).attr('src'));
-
+				index = infoTmp['index'];
+				console.log(index)
 				var imageSuivante = $('#categoriesMiddle .imgContainer > img[src=\''+infoTmp['url']+'\']'); // on stock la valeur de l'image suivante dans une variable
 				// here 
 				$(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
@@ -626,9 +627,9 @@ if (!Array.prototype.indexOf)
 			});
 
 
-			///////////////////////////////////////////////////////// /////////////////////////////////////////////////////////
-			////// Affichage catégories dessus slider /////////////// ////// Affichage catégories dessus slider ///////////////
-			///////////////////////////////////////////////////////// /////////////////////////////////////////////////////////
+			///////////////////////////////////////////////////////// 
+			////// Affichage catégories dessus slider /////////////// 
+			/////////////////////////////////////////////////////////
 
 			$(idAlmy).find("#categoriesTop #listCategoriesSlider").mouseover(function() {
 				$(this).stop().animate({
@@ -836,7 +837,7 @@ if (!Array.prototype.indexOf)
 
 
 		/////////////////////////////////////////////////////////
-		////// Retourne toutes les infos d'une images ///////////
+		////// Retourne toutes les infos d'une image ////////////
 		/////////////////////////////////////////////////////////
 
 		function getInfoImage(search){
