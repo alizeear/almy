@@ -258,6 +258,31 @@
                  * Autre
                  */
                 
+      public function getUser($id = null) {
+
+         $req  =  'SELECT * FROM user'.(($id != null)?' WHERE id='.$id:'').' ORDER BY name;';
+         $query = almyDb::$PDO->query($req);
+		 if($id == null)
+			return $query->fetchAll();
+		 else
+			return $query->fetch();
+      }
+      public function updateUser($id, $args) {
+		 $set = "";
+		 foreach($args as $key => $val) {
+			if($set !== "")
+				$set .= ", ";
+			$set .= $key."=\"".$val."\"";
+		 }
+         $req  = 'UPDATE user SET '.$set.' WHERE id ='.$id;
+         $query = almyDb::$PDO->query($req);
+         if($query->rowCount() == 1) {
+             return true;
+         }
+         else {
+            return false;
+         }
+      }
       public function traitementConnexion($login, $mdp) {
 
          $req  =  'SELECT * FROM user WHERE login="'.$login.'" AND pass="'.MD5($mdp).'"';

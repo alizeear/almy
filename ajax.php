@@ -103,6 +103,19 @@
 				$list = $db->getListeImage();
 				echo json_encode(array($retour, $list));
 				break;
+			case "updateUser":
+				$retour = false;
+				$temp = $db->getUser(isset($_POST['id'])? $_POST['id'] : $_SESSION['id']);
+				if(isset($_POST['pass'])) {
+					if($temp['pass'] == md5($_POST['old'])) {
+						$retour = $db->updateUser((isset($_POST['id'])? $_POST['id'] : $_SESSION['id']), Array("pass" => md5($_POST['new'])));
+					}
+				}
+				if(isset($_POST['name'])) {
+					$retour = $db->updateUser((isset($_POST['id'])? $_POST['id'] : $_SESSION['id']), Array("name" => $_POST['name']));
+				}
+				echo json_encode(array($retour));
+				break;
 		}
 	}
 	else {

@@ -1,6 +1,79 @@
 var listeAllCats = Array();
 var listeAllImgs = Array();
 $(document).ready(function() {
+	// gestion du compte
+	$("#account input").keydown(function(e) {
+		if(e.keyCode==13) {
+			$("#changePass").click();
+		}
+	});
+	$("#changePass").click(function() {
+		if($("#afterPass1").val() == $("#afterPass2").val()) {
+			loadOn();
+			var requeteCat = $.ajax({
+				url: "ajax.php?do=updateUser",
+				type: "post",
+				data : {
+					'old' : $("#beforePass").val(),
+					'new' : $("#afterPass2").val()
+				},
+				success: function() {
+					$("#account input").val("");
+					var json = JSON.parse(requeteCat.responseText);
+					if(json[0]==true) {
+						// si le serveur n'a pas retourné d'erreur dans le fichier JSON
+						$("#txtCatAdd").val("");
+						$("#errChangeAccount").slideUp(200, function() {
+							$(this).text("");
+						});
+						$("#doneChangeAccount").text("Le mot de passe a correctement été modifié.").delay(200).slideDown(200);
+					}
+					else {
+						// sinon, affichage d'un message d'erreur
+						$("#errChangeAccount").text("L'ancien mot de passe est pas incorrect.").delay(200).slideDown(200);
+						$("#doneChangeAccount").slideUp(200, function() {
+							$(this).text("");
+						});
+					}
+					loadOff();
+				}
+			});
+		}
+		else {
+			$("#errChangePass").text("Les nouveaux mots de passe ne sont pas identiques.");
+		}
+	});
+	$("#changeName").click(function() {
+		if($("#nameText").val() != $("#name").text()) {
+			loadOn();
+			var requeteCat = $.ajax({
+				url: "ajax.php?do=updateUser",
+				type: "post",
+				data : {
+					'name' : $("#nameText").val()
+				},
+				success: function() {
+					var json = JSON.parse(requeteCat.responseText);
+					if(json[0]==true) {
+						// si le serveur n'a pas retourné d'erreur dans le fichier JSON
+						$("#txtCatAdd").val("");
+						$("#errChangeAccount").slideUp(200, function() {
+							$(this).text("");
+						});
+						$("#doneChangeAccount").text("Le mot de passe a correctement été modifié.").delay(200).slideDown(200);
+					}
+					else {
+						// sinon, affichage d'un message d'erreur
+						$("#errChangeAccount").text("L'ancien mot de passe est pas incorrect.").delay(200).slideDown(200);
+						$("#doneChangeAccount").slideUp(200, function() {
+							$(this).text("");
+						});
+					}
+					loadOff();
+				}
+			});
+		}
+	});
 	$(".clear").mouseenter(function() {
 		$(this).stop().animate({
 			'opacity': 0.4
@@ -150,11 +223,13 @@ $(document).ready(function() {
 				if(json[0]==true) {
 					// si le serveur n'a pas retourné d'erreur dans le fichier JSON
 					$("#txtCatAdd").val("");
-					$("#errCatAdd").text("");
+					$("#errCatAdd").slideUp(200, function() {
+						$(this).text("");
+					});
 				}
 				else {
 					// sinon, affichage d'un message d'erreur
-					$("#errCatAdd").text("Il est impossible d'ajouter cette catégorie.");
+					$("#errCatAdd").text("Il est impossible d'ajouter cette catégorie.").delay(200).slideDown(200);
 				}
 				if($("#idImgUpdate").length!=0) {
 					var requeteCatImg = $.ajax({
@@ -368,7 +443,6 @@ function showImg(json) {
 	listeAllImgs = Array();
 	$("#listeImg").html("<ul></ul>");
 	for(var i in a = json[1]) {
-		console.log(a[i]);
 		listeAllImgs.push(a[i]['title']);
 		$("#listeImg ul").append("<li><img src=\""+a[i]['url_min']+"\"><span class=\"title\">"+((a[i]['title']!=null) ? a[i]['title'] : "")+"</span><span class=\"id\">"+a[i]['id']+"</span><span class=\"descr\">"+((a[i]['descr']!=null) ? a[i]['descr'] : "")+"</span></li>");
 	}
@@ -411,8 +485,8 @@ function handleReaderLoad(evt) {
 
 // fonction d'affichage des chargements
 function loadOn() {
-	$("#load").fadeIn("fast");
+	$("#load").stop().fadeIn("fast");
 }
 function loadOff() {
-	$("#load").fadeOut("fast");
+	$("#load").stop().fadeOut("fast");
 }

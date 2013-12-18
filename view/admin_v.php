@@ -34,6 +34,7 @@
 			</div>
          <div class="navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
+					<li><a id="name"><?php echo $_SESSION['name']; ?></a></li>
 					<li><a href="?do=logout" id="deconnexion">Déconnexion</a></li>
 				</ul>
 			</div>
@@ -49,10 +50,10 @@
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="cat">
+					<div id="errCatAdd" class="alert alert-danger"></div>
 					<div class="col-xs-6 col-md-4">
 						<h2>Catégories</h2>
 						Ajouter une Catégorie: 
-						<div id="errCatAdd"></div>
 						<div class="input-group">
 							<input type="text" class="form-control" id="txtCatAdd">
 							<span class="input-group-btn">
@@ -66,7 +67,7 @@
 						<div id="reglageCat"></div>
 					</div>
 					<div class="col-xs-6 col-md-4">
-						<h2>Recherche<img src="css/img/clear.png" class="clear"></h2>
+						<h2>Recherche<img src="css/img/clear.png" class="clear"></h2><br>
 						<input class="form-control" id="textSearchCat">
 						<div id="searchCat"></div>
 						<div id="listeSearchCat"></div>
@@ -85,13 +86,31 @@
 						<div id="reglageImg"></div>
 					</div>
 					<div class="col-xs-6 col-md-4">
-						<h2>Recherche<img src="css/img/clear.png" class="clear"></h2>
+						<h2>Recherche<img src="css/img/clear.png" class="clear"></h2><br>
 						<input class="form-control" id="textSearchImg">
 						<div id="searchImg"></div>
 						<div id="listeSearchImg"></div>
 					</div>
 				</div>
-				<div class="tab-pane" id="account">Comptes</div>
+				<div class="tab-pane" id="account">
+					<div id="doneChangeAccount" class="alert alert-success"></div>
+					<div id="errChangeAccount" class="alert alert-danger"></div>
+					<div class="col-xs-6 col-md-4">
+						<h2>Changer de mot de passe</h2><br>
+						Ancien mot de passe
+						<input class="form-control" id="beforePass">
+						Nouveau mot de passe
+						<input class="form-control" id="afterPass1">
+						Nouveau mot de passe
+						<input class="form-control" id="afterPass2">
+						<button type="button" class="btn btn-info" id="changePass">Valider</button>
+					</div>
+					<div class="col-xs-6 col-md-4">
+						<h2>Changer de nom</h2>
+						<input class="form-control" id="nameText" value="<?php echo $_SESSION['name']; ?>">
+						<button type="button" class="btn btn-info" id="changeName">Valider</button>
+					</div>
+				</div>
 				<div class="tab-pane" id="settings">Options</div>
 			</div>
 

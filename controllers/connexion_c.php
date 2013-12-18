@@ -6,6 +6,7 @@
 		$tmp = $db->traitementConnexion($_POST['login'], $_POST['password']);
 
 		$_SESSION['id'] = $tmp['id'];
+		$_SESSION['name'] = $tmp['name'];
 
 
 		if (!empty($_SESSION['id'])) {
