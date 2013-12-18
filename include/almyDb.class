@@ -35,8 +35,11 @@
       /* 
       ** Gestion des catégories
       */
-      public function getListeCategorie() {
-         $sql = "SELECT * FROM category ORDER BY name ASC";
+      public function getListeCategorie($search = null) {
+			if($search == null)
+				$sql = "SELECT * FROM category ORDER BY name ASC";
+			else
+				$sql = "SELECT * FROM category WHERE name LIKE \"%".$search."%\" ORDER BY name ASC";
          $query = almyDb::$PDO->query($sql);
          return $query->fetchAll();
       }

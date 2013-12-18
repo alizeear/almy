@@ -10,9 +10,10 @@
 ul {
 	list-style: none;
 }
-#listeCat {
+#listeSearchCat, #listeCat {
    margin-top: 10px;
 }
+#listeSearchCat li,
 #listeCat li{
 	cursor: pointer;
 	margin-bottom: 3px;
@@ -71,4 +72,7 @@ ul {
 	font-size: 12px;
 	float: left;
 	margin-top: 15px;
+}
+.clear {
+	float: right;
 }

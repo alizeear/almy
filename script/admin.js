@@ -1,8 +1,50 @@
-$(document).ready(function() {	
-	// initialise les clicks sur les noms de catégories et sur les images
-	initCat();
-	initImg();
+var listeAllCats = Array();
+$(document).ready(function() {
+
+	$('#onglets a').click(function(e) {
+		e.preventDefault();
+		$(this).tab('show');
+	});
 	
+	// Chargement des categories
+	loadOn();
+	var requeteCatImg = $.ajax({
+		url: "ajax.php?do=getCat",
+		type: "post",
+		success: function() {
+			var json = JSON.parse(requeteCatImg.responseText);
+			showCat({1:json});
+			initCat("listeCat");
+			loadOff();
+		}
+	});
+	$('#textSearchCat').typeahead({
+		source: function(query, process) { return listeAllCats; },
+		updater: function(item) { 
+			$(this).val(item);
+			var requeteCatImg = $.ajax({
+				url: "ajax.php?do=searchCat",
+				type: "post",
+				data: {
+					search: item
+				},
+				success: function() {
+					var json = JSON.parse(requeteCatImg.responseText);
+					$("#listeSearchCat").html("<ul></ul>");
+					for(var i in a = json) {
+						$("#listeSearchCat ul").append("<li><span class=\"title\">"+a[i]['name']+"</span> <span class=\"id\">"+a[i]['id']+"</span></li>");
+					}
+					initCat("listeSearchCat");
+					if($("#listeSearchCat li").length == 1)
+						$("#listeSearchCat li").click();
+				}
+			});
+		}
+	});
+
+	// initialise les clicks sur les noms de catégories et sur les images
+	initImg();
+
 	// Requte AJAX de verification d'existancee des fichiers avec la base
 	$("#checkAllLink").click(function() {
 		loadOn();
@@ -10,29 +52,30 @@ $(document).ready(function() {
 			url: "ajax.php?do=checkAllLink",
 			type: "post",
 			success: function() {
-					var json = JSON.parse(requete.responseText);
-					showImg(json);
-					$("#reglage").html("");
-					$(".active").removeClass("active");
-					initImg();
-					loadOff();
+				var json = JSON.parse(requete.responseText);
+				showImg(json);
+				$("#reglageCat").html("");
+				$("#reglageImg").html("");
+				$(".tab-content .tab-pane .active").removeClass("active");
+				initImg();
+				loadOff();
 			}
 		});
 	});
-	
+
 	// Gestion de l'upload du drag'N drop
 	$(document).on('dragenter', '#dropfile', function() {
 		$(this).css('border', '1px solid #677EA1');
 		return false;
 	});
-	$(document).on('dragover', '#dropfile', function(e){
+	$(document).on('dragover', '#dropfile', function(e) {
 		e.preventDefault();
 		e.stopPropagation();
 		$(this).css('border-color', '1px solid #677EA1');
 		return false;
 	});
 	$(document).on('drop', '#dropfile', function(e) {
-		if(e.originalEvent.dataTransfer){
+		if(e.originalEvent.dataTransfer) {
 			if(e.originalEvent.dataTransfer.files.length) {
 				// Stop the propagation of the event
 				e.preventDefault();
@@ -40,7 +83,7 @@ $(document).ready(function() {
 				$(this).css('border', '1px solid #ccc');
 				// Main function to upload
 				upload(e.originalEvent.dataTransfer.files);
-			}  
+			}
 		}
 		else {
 			$(this).css('border', '1px solid #ccc;');
@@ -57,10 +100,10 @@ $(document).ready(function() {
 			data: {
 				name: $("#txtCatAdd").val()
 			},
-			success: function(){
+			success: function() {
 				var json = JSON.parse(requete.responseText);
 				showCat(json);
-				initCat();
+				initCat("listeCat");
 				if(json[0]==true) {
 					// si le serveur n'a pas retourné d'erreur dans le fichier JSON
 					$("#txtCatAdd").val("");
@@ -70,47 +113,47 @@ $(document).ready(function() {
 					// sinon, affichage d'un message d'erreur
 					$("#errCatAdd").text("Il est impossible d'ajouter cette catégorie.");
 				}
-				if($("#idImgUpdate").length != 0) {
-                                    var requeteCatImg = $.ajax({
-                                        url: "ajax.php?do=getCatImg",
-                                        type: "post",
-                                        data: {
-                                            id: $("#idImgUpdate").val()
-                                        },
-                                        success: function(){
-                                            var json = JSON.parse(requeteCatImg.responseText);
-                                            $("#catImgUpdate").html("");
-                                            for (var i in a = json) {
-                                                $("#catImgUpdate").append("<li "+((a[i]['is'])?"class=\"selected\"":"")+">"+a[i]['name']+"<span class=\"id\">"+a[i]['id']+"</class></li>");
-                                            }
-                                            $("#catImgUpdate li").click(function() {
-                                                if($(this).hasClass("selected"))
-                                                    $(this).removeClass("selected");
-                                                else
-                                                    $(this).addClass("selected");
-                                            });
-                                            loadOff();
-                                        }
-                                    });
-                                }
-                                else {
-                                    loadOff();
-                                }
+				if($("#idImgUpdate").length!=0) {
+					var requeteCatImg = $.ajax({
+						url: "ajax.php?do=getCatImg",
+						type: "post",
+						data: {
+							id: $("#idImgUpdate").val()
+						},
+						success: function() {
+							var json = JSON.parse(requeteCatImg.responseText);
+							$("#catImgUpdate").html("");
+							for(var i in a = json) {
+								$("#catImgUpdate").append("<li "+((a[i]['is']) ? "class=\"selected\"" : "")+">"+a[i]['name']+"<span class=\"id\">"+a[i]['id']+"</class></li>");
+							}
+							$("#catImgUpdate li").click(function() {
+								if($(this).hasClass("selected"))
+									$(this).removeClass("selected");
+								else
+									$(this).addClass("selected");
+							});
+							loadOff();
+						}
+					});
+				}
+				else {
+					loadOff();
+				}
 			}
 		});
 	});
 	// détéction de l'appuye sur la touche [Entrée] du clavier, déclanche l'ajout de la catégorie
 	$("#txtCatAdd").keydown(function(e) {
-		if(e.keyCode == 13) {
+		if(e.keyCode==13) {
 			$("#btnCatAdd").click();
 		}
 	});
 });
 
 // initialise les clicks sur les noms de catégories
-function initCat() {
-	$("#listeCat li").click(function() {
-		$(".active").removeClass("active");
+function initCat(idListe) {
+	$("#"+idListe+" li").click(function() {
+		$(".tab-content .tab-pane .active").removeClass("active");
 		$(this).addClass("active");
 		// code HTML affiché dans la colonne de droite (Reglages)
 		var html = 'Nom de la Catégorie: \
@@ -122,7 +165,7 @@ function initCat() {
 					 </span> \
 				  </div> \
 				  <button id="btnCatDelete" class="btn btn-danger btn-xs delete" type="button">Supprimer</button>';
-		$("#reglage").html(html);
+		$("#reglageCat").html(html);
 		//envoye de la requette AJAX de modification de la catégorie
 		$("#btnCatUpdate").click(function() {
 			loadOn();
@@ -133,23 +176,23 @@ function initCat() {
 					id: $("#idCatUpdate").val(),
 					name: $("#txtCatUpdate").val()
 				},
-				success: function(){
+				success: function() {
 					var json = JSON.parse(requete.responseText);
 					showCat(json);
-					$("#reglage").html("");
-					$(".active").removeClass("active");
-					initCat();
-                    loadOff();
+					$("#reglageCat").html("");
+					$(".tab-content .tab-pane .active").removeClass("active");
+					initCat("listeCat");
+					loadOff();
 				}
 			});
 		});
-		
+
 		$("#txtCatUpdate").keydown(function(e) {
-			if(e.keyCode == 13) {
+			if(e.keyCode==13) {
 				$("#btnCatUpdate").click();
 			}
 		});
-		
+
 		// envoye de la requette AJAX de suppression de la catégorie
 		$("#btnCatDelete").click(function() {
 			loadOn();
@@ -159,12 +202,12 @@ function initCat() {
 				data: {
 					id: $("#idCatUpdate").val()
 				},
-				success: function(){
+				success: function() {
 					var json = JSON.parse(requete.responseText);
 					showCat(json);
-					$("#reglage").html("");
-					$(".active").removeClass("active");
-					initCat();
+					$("#reglageCat").html("");
+					$(".tab-content .tab-pane .active").removeClass("active");
+					initCat("listeCat");
 					loadOff();
 				}
 			});
@@ -172,11 +215,11 @@ function initCat() {
 	});
 }
 // initialise les clicks sur les images
-function initImg() {
-	$("#listeImg li").click(function () {
+function initImg(idListe) {
+	$("#"+idListe+" li").click(function() {
 		// code HTML affiché dans la colonne de droite (Reglages)
 		loadOn();
-		$(".active").removeClass("active");
+		$(".tab-content .tab-pane .active").removeClass("active");
 		$(this).addClass("active");
 		var html = 'Titre de l\'image: \
 				  <div class="input-group"> \
@@ -190,19 +233,19 @@ function initImg() {
 				  <textarea id="descrImgUpdate" class="form-control" rows="3">'+$(this).find(".descr").text()+'</textarea> \
 				  <ul id="catImgUpdate"></ul> \
 				  <button id="btnImgDelete" class="btn btn-danger btn-xs delete" type="button">Supprimer</button>';
-		$("#reglage").html(html);
-		
+		$("#reglageImg").html(html);
+
 		var requete = $.ajax({
 			url: "ajax.php?do=getCatImg",
 			type: "post",
 			data: {
 				id: $("#idImgUpdate").val()
 			},
-			success: function(){
+			success: function() {
 				var json = JSON.parse(requete.responseText);
 				$("#catImgUpdate").html("");
-				for (var i in a = json) {
-					$("#catImgUpdate").append("<li "+((a[i]['is'])?"class=\"selected\"":"")+">"+a[i]['name']+"<span class=\"id\">"+a[i]['id']+"</class></li>");
+				for(var i in a = json) {
+					$("#catImgUpdate").append("<li "+((a[i]['is']) ? "class=\"selected\"" : "")+">"+a[i]['name']+"<span class=\"id\">"+a[i]['id']+"</class></li>");
 				}
 				$("#catImgUpdate li").click(function() {
 					if($(this).hasClass("selected"))
@@ -213,40 +256,40 @@ function initImg() {
 				loadOff();
 			}
 		});
-		
+
 		//envoye de la requette AJAX de modification de la catégorie
 		$("#btnImgUpdate").click(function() {
 			loadOn();
-                        var cat = Array();
-                        $("#catImgUpdate li.selected").each(function() {
-                            cat.push($(this).find(".id").text());
-                        });
+			var cat = Array();
+			$("#catImgUpdate li.selected").each(function() {
+				cat.push($(this).find(".id").text());
+			});
 			var requete = $.ajax({
 				url: "ajax.php?do=updateImg",
 				type: "post",
 				data: {
 					id: $("#idImgUpdate").val(),
 					title: $("#txtImgUpdate").val(),
-                                        descr: $("#descrImgUpdate").val(),
-                                        cat: cat
+					descr: $("#descrImgUpdate").val(),
+					cat: cat
 				},
-				success: function(){
+				success: function() {
 					var json = JSON.parse(requete.responseText);
 					showImg(json);
-					$("#reglage").html("");
-					$(".active").removeClass("active");
+					$("#reglageImg").html("");
+					$(".tab-content .tab-pane .active").removeClass("active");
 					initImg();
 					loadOff();
 				}
 			});
 		});
-		
+
 		$("#txtImgUpdate").keydown(function(e) {
-			if(e.keyCode == 13) {
+			if(e.keyCode==13) {
 				$("#btnImgUpdate").click();
 			}
 		});
-		
+
 		// envoye de la requette AJAX de suppression de la catégorie
 		$("#btnImgDelete").click(function() {
 			loadOn();
@@ -256,11 +299,11 @@ function initImg() {
 				data: {
 					id: $("#idImgUpdate").val()
 				},
-				success: function(){
+				success: function() {
 					var json = JSON.parse(requete.responseText);
 					showImg(json);
-					$("#reglage").html("");
-					$(".active").removeClass("active");
+					$("reglageImg").html("");
+					$(".tab-content .tab-pane .active").removeClass("active");
 					initImg();
 					loadOff();
 				}
@@ -271,35 +314,37 @@ function initImg() {
 
 // Affiche les catégories dans la colonne de gauche grace au JSON retourné par le serveur
 function showCat(json) {
+	listeAllCats = Array();
 	$("#listeCat").html("<ul></ul>");
-	for (var i in a = json[1]) {
+	for(var i in a = json[1]) {
+		listeAllCats.push(a[i]['name']);
 		$("#listeCat ul").append("<li><span class=\"title\">"+a[i]['name']+"</span><span class=\"id\">"+a[i]['id']+"</span></li>");
 	}
 }
 function showImg(json) {
 	$("#listeImg").html("<ul></ul>");
-	for (var i in a = json[1]) {
-		$("#listeImg ul").append("<li><img src=\""+a[i]['url_min']+"\"><span class=\"title\">"+((a[i]['title']!=null)?a[i]['title']:"")+"</span><span class=\"id\">"+a[i]['id']+"</span><span class=\"descr\">"+((a[i]['descr']!=null)?a[i]['descr']:"")+"</span></li>");
+	for(var i in a = json[1]) {
+		$("#listeImg ul").append("<li><img src=\""+a[i]['url_min']+"\"><span class=\"title\">"+((a[i]['title']!=null) ? a[i]['title'] : "")+"</span><span class=\"id\">"+a[i]['id']+"</span><span class=\"descr\">"+((a[i]['descr']!=null) ? a[i]['descr'] : "")+"</span></li>");
 	}
 }
 
 // fonction utilisé pour l'upload des fichier avec le drag'N drop
 
 function upload(files) {
-	var f = files[0] ;
+	var f = files[0];
 	// Only process image files.
-	if (!f.type.match('image/jpeg') && !f.type.match('image/png') && !f.type.match('image/gif')) {
-		alert('The file must be a image') ;
-		return false ;
+	if(!f.type.match('image/jpeg')&&!f.type.match('image/png')&&!f.type.match('image/gif')) {
+		alert('The file must be a image');
+		return false;
 	}
 	var reader = new FileReader();
-	
+
 	// When the image is loaded,
 	// run handleReaderLoad function
 	reader.onload = handleReaderLoad;
-	
+
 	// Read in the image file as a data URL.
-	reader.readAsDataURL(f);            
+	reader.readAsDataURL(f);
 }
 function handleReaderLoad(evt) {
 	loadOn();

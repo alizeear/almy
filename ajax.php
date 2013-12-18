@@ -31,6 +31,11 @@
 				$list = $db->getListeCategorie();
 				echo json_encode($list);
 				break;
+				break;
+			case "searchCat":
+				$list = $db->getListeCategorie($_POST['search']);
+				echo json_encode($list);
+				break;
 			case "getCatImg":
 				$list = $db->getListeCategorieImg($_POST['id']);
 				echo json_encode($list);
