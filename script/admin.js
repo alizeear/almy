@@ -1,6 +1,18 @@
 var listeAllCats = Array();
+var listeAllImgs = Array();
 $(document).ready(function() {
-
+	$(".clear").mouseenter(function() {
+		$(this).stop().animate({
+			'opacity': 0.4
+		}, 200);
+	}).mouseleave(function() {
+		$(this).stop().animate({
+			'opacity': 1
+		}, 200);
+	}).click(function() {
+		$(this).parents("div:first").find("ul").remove();
+	});
+	
 	$('#onglets a').click(function(e) {
 		e.preventDefault();
 		$(this).tab('show');
@@ -8,11 +20,11 @@ $(document).ready(function() {
 	
 	// Chargement des categories
 	loadOn();
-	var requeteCatImg = $.ajax({
+	var requeteCat = $.ajax({
 		url: "ajax.php?do=getCat",
 		type: "post",
 		success: function() {
-			var json = JSON.parse(requeteCatImg.responseText);
+			var json = JSON.parse(requeteCat.responseText);
 			showCat({1:json});
 			initCat("listeCat");
 			loadOff();
@@ -22,14 +34,14 @@ $(document).ready(function() {
 		source: function(query, process) { return listeAllCats; },
 		updater: function(item) { 
 			$(this).val(item);
-			var requeteCatImg = $.ajax({
+			var requeteCat = $.ajax({
 				url: "ajax.php?do=searchCat",
 				type: "post",
 				data: {
 					search: item
 				},
 				success: function() {
-					var json = JSON.parse(requeteCatImg.responseText);
+					var json = JSON.parse(requeteCat.responseText);
 					$("#listeSearchCat").html("<ul></ul>");
 					for(var i in a = json) {
 						$("#listeSearchCat ul").append("<li><span class=\"title\">"+a[i]['name']+"</span> <span class=\"id\">"+a[i]['id']+"</span></li>");
@@ -41,9 +53,40 @@ $(document).ready(function() {
 			});
 		}
 	});
-
-	// initialise les clicks sur les noms de catégories et sur les images
-	initImg();
+	
+	var requeteImg = $.ajax({
+		url: "ajax.php?do=getImg",
+		type: "post",
+		success: function() {
+			var json = JSON.parse(requeteImg.responseText);
+			showImg({1:json});
+			initImg("listeImg");
+			loadOff();
+		}
+	});
+	$('#textSearchImg').typeahead({
+		source: function(query, process) { return listeAllImgs; },
+		updater: function(item) { 
+			$(this).val(item);
+			var requeteImg = $.ajax({
+				url: "ajax.php?do=searchImg",
+				type: "post",
+				data: {
+					search: item
+				},
+				success: function() {
+					var json = JSON.parse(requeteImg.responseText);
+					$("#listeSearchImg").html("<ul></ul>");
+					for(var i in a = json) {
+						$("#listeSearchImg ul").append("<li><span class=\"title\">"+a[i]['title']+"</span> <span class=\"id\">"+a[i]['id']+"</span></li>");
+					}
+					initImg("listeSearchImg");
+					if($("#listeSearchImg li").length == 1)
+						$("#listeSearchImg li").click();
+				}
+			});
+		}
+	});
 
 	// Requte AJAX de verification d'existancee des fichiers avec la base
 	$("#checkAllLink").click(function() {
@@ -57,7 +100,7 @@ $(document).ready(function() {
 				$("#reglageCat").html("");
 				$("#reglageImg").html("");
 				$(".tab-content .tab-pane .active").removeClass("active");
-				initImg();
+				initImg("listeImg");
 				loadOff();
 			}
 		});
@@ -278,7 +321,7 @@ function initImg(idListe) {
 					showImg(json);
 					$("#reglageImg").html("");
 					$(".tab-content .tab-pane .active").removeClass("active");
-					initImg();
+					initImg("listeImg");
 					loadOff();
 				}
 			});
@@ -302,9 +345,9 @@ function initImg(idListe) {
 				success: function() {
 					var json = JSON.parse(requete.responseText);
 					showImg(json);
-					$("reglageImg").html("");
+					$("#reglageImg").html("");
 					$(".tab-content .tab-pane .active").removeClass("active");
-					initImg();
+					initImg("listeImg");
 					loadOff();
 				}
 			});
@@ -322,8 +365,11 @@ function showCat(json) {
 	}
 }
 function showImg(json) {
+	listeAllImgs = Array();
 	$("#listeImg").html("<ul></ul>");
 	for(var i in a = json[1]) {
+		console.log(a[i]);
+		listeAllImgs.push(a[i]['title']);
 		$("#listeImg ul").append("<li><img src=\""+a[i]['url_min']+"\"><span class=\"title\">"+((a[i]['title']!=null) ? a[i]['title'] : "")+"</span><span class=\"id\">"+a[i]['id']+"</span><span class=\"descr\">"+((a[i]['descr']!=null) ? a[i]['descr'] : "")+"</span></li>");
 	}
 }
@@ -357,7 +403,7 @@ function handleReaderLoad(evt) {
 		data: str,
 		success: function(data) {
 			showImg(JSON.parse(data));
-			initImg();
+			initImg("listeImg");
 			loadOff();
 		}
 	});

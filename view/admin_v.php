@@ -78,19 +78,17 @@
 						Ajouter une Image:
 						<div id="errImgAdd"></div>
 						<div id="dropfile">Glissez / Déposez des images ici</div>
-						<div id="listeImg">
-							<ul>
-								<?php
-									foreach($listeImg as $img) {
-										echo "<li><img src=\"".$img['url_min']."\"><span class=\"title\">".((!empty($img['title'])) ? $img['title'] : "")."</span><span class=\"id\">".$img['id']."</span><span class=\"descr\">".$img['descr']."</class></li>";
-									}
-								?>
-							</ul>
-						</div>
+						<div id="listeImg"></div>
 					</div>
 					<div class="col-xs-6 col-md-4">
 						<h2>Réglages</h2>
 						<div id="reglageImg"></div>
+					</div>
+					<div class="col-xs-6 col-md-4">
+						<h2>Recherche<img src="css/img/clear.png" class="clear"></h2>
+						<input class="form-control" id="textSearchImg">
+						<div id="searchImg"></div>
+						<div id="listeSearchImg"></div>
 					</div>
 				</div>
 				<div class="tab-pane" id="account">Comptes</div>

@@ -31,13 +31,20 @@
 				$list = $db->getListeCategorie();
 				echo json_encode($list);
 				break;
-				break;
 			case "searchCat":
 				$list = $db->getListeCategorie($_POST['search']);
 				echo json_encode($list);
 				break;
 			case "getCatImg":
 				$list = $db->getListeCategorieImg($_POST['id']);
+				echo json_encode($list);
+				break;
+			case "getImg":
+				$list = $db->getListeImage();
+				echo json_encode($list);
+				break;
+			case "searchImg":
+				$list = $db->getListeSearchImage($_POST['search']);
 				echo json_encode($list);
 				break;
 			case "addImage":

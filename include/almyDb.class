@@ -128,6 +128,11 @@
          $query = almyDb::$PDO->query($sql);
          return $query->fetch();
       }
+      public function getListeSearchImage($search) {
+         $sql = "SELECT * FROM image WHERE title LIKE \"%".$search."%\" OR descr LIKE \"%".$search."%\" ORDER BY title ASC";
+         $query = almyDb::$PDO->query($sql);
+         return $query->fetchAll();
+      }
       public function getListeImage($cat = null) {
          $sql = "SELECT image.* FROM image ".(($cat == null)?"":"INNER JOIN catimg WHERE catimg.id_cat = ".$cat)." ORDER BY title ASC";
          $query = almyDb::$PDO->query($sql);
