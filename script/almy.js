@@ -211,6 +211,10 @@ if (!Array.prototype.indexOf)
 					'height': $(this).find('a img').height(),
 					'width': $(this).find('a img').width()
 				});
+			}).append('<div id="loupe"></div>').mouseover(function(){
+				$(this).find('#loupe').stop().fadeIn();
+			}).mouseout(function(){
+				$(this).find('#loupe').stop().fadeOut();
 			});
 			
 			var countPerLine = Math.floor($(this).width()/parseInt(defauts.widthImage));
