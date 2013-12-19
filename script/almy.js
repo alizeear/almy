@@ -1,18 +1,14 @@
-if (!Array.prototype.indexOf)
-{
-  Array.prototype.indexOf = function(elt /*, from*/)
-  {
+if (!Array.prototype.indexOf) {
+  Array.prototype.indexOf = function(elt) {
+    /* function debug ie8 indeof of in array (Almy) */
     var len = this.length >>> 0;
-
     var from = Number(arguments[1]) || 0;
     from = (from < 0)
          ? Math.ceil(from)
          : Math.floor(from);
     if (from < 0)
       from += len;
-
-    for (; from < len; from++)
-    {
+    for (; from < len; from++){
       if (from in this &&
           this[from] === elt)
         return from;
@@ -53,6 +49,7 @@ if (!Array.prototype.indexOf)
 			
 			var tailleUl = 0;
 			$(idAlmy).find('#mosaiqueBottom ul li').each(function(){
+				$(this).width($(this).find("img").width());
 				tailleUl += $(this).outerWidth(true);
 			});
 			$(idAlmy).find('#mosaiqueBottom ul').width(tailleUl);
@@ -87,10 +84,12 @@ if (!Array.prototype.indexOf)
 		   $(this).css("border", "1px solid #333");
 		   
 		   // affichage des catégories
-			if(category.length != 0) {
+			if(category.length != 0 && ((navigator.userAgent.toLowerCase().indexOf("msie") == -1) || (parseInt(navigator.userAgent.toLowerCase().substr(navigator.userAgent.toLowerCase().indexOf("msie")+5)) > 8))) {
 				var htmlCat = "<li><span class=\"all\">Toutes</span></li>";
 				for(var i = 0;i<category.length;i++) {
-					htmlCat += '<li><span>'+category[i]+'</span></li>';
+					console.log(category[i]);
+					if(typeof  category[i] != "function")
+						htmlCat += '<li><span>'+category[i]+'</span></li>';
 				}
 				$(this).prepend('<div class="almyListCat"><ul>'+htmlCat+'</ul></div>');
 				$(".almyListCat").find("li").width($(this).find(".almyListCat").width()/$(".almyListCat").find("li").length);

@@ -42,17 +42,20 @@
 				$sth->execute();
 			}
 			else {
-				$sql = "SELECT * FROM category WHERE name LIKE ? ORDER BY name ASC";
+				$search = "%".$search."%";
+				$sql = "SELECT * FROM category WHERE name LIKE :search ORDER BY name ASC";
 				$sth = almyDb::$PDO->prepare($sql);
-				$sth->execute(array("\"%".$search."%\""));
-				print_r($sth);
+				$sth->bindParam(':search', $search, PDO::PARAM_STR);
+				$sth->execute();
 			}
          return $sth->fetchAll();
       }
       public function getListeIdCategorie() {
          $sql = "SELECT id FROM category ORDER BY name ASC";
-         $query = almyDb::$PDO->query($sql);
-         $list = $query->fetchAll();
+		 $sth = almyDb::$PDO->prepare($sql);
+		 $sth->execute();
+		 $list =  $sth->fetchAll();
+		 
          $retour = array();
          foreach ($list as $temp) {
              $retour[] = $list['id'];
@@ -72,16 +75,23 @@
 		 $retour = array();
                  $list = $this->getListeCategorie();
 		 foreach($list as $cat) {
-			 $sql = "SELECT * FROM catimg WHERE id_img=".$idImg." AND id_cat = ".$cat['id'].";";
-			 $query = almyDb::$PDO->query($sql);
-			 $retour[count($retour)] = array("id" => $cat['id'], "name" => $cat['name'], "is" => (($query->rowCount() != 0)?true:false));
+			 $sql = "SELECT * FROM catimg WHERE id_img=:idImg AND id_cat=:idCat;";
+			 
+			 $sth = almyDb::$PDO->prepare($sql);
+			 $sth->bindParam(':idImg', $idImg, PDO::PARAM_INT);
+			 $sth->bindParam(':idCat', $cat['id'], PDO::PARAM_INT);
+			 $sth->execute();
+			 
+			 $retour[count($retour)] = array("id" => $cat['id'], "name" => $cat['name'], "is" => (($sth->rowCount() != 0)?true:false));
 		 }
          return $retour;
       }
       public function isCategorie($name) {
-         $sql = "SELECT * FROM category WHERE name='".$name."';";
-         $query = almyDb::$PDO->query($sql);
-         if($query->rowCount() == 0) {
+         $sql = "SELECT * FROM category WHERE name=:name;";
+		 $sth = almyDb::$PDO->prepare($sql);
+		 $sth->bindParam(':name', $name, PDO::PARAM_STR);
+		 $sth->execute();
+         if($sth->rowCount() == 0) {
             return false;
          }
          else {
@@ -90,8 +100,10 @@
       }
       public function addCategorie($name) {
          if(!$this->isCategorie($name)) {
-            $sql = "INSERT INTO category (id, name) VALUES (NULL, '".$name."');";
-            almyDb::$PDO->query($sql);
+            $sql = "INSERT INTO category (id, name) VALUES (NULL, :name);";
+			$sth = almyDb::$PDO->prepare($sql);
+			$sth->bindParam(':name', $name, PDO::PARAM_STR);
+			$sth->execute();
             return true;
          }
          else {
@@ -99,11 +111,16 @@
          }
       }
       public function updateCategorie($id, $name) {
-         $sql = "SELECT * FROM category WHERE id='".$id."';";
-         $query = almyDb::$PDO->query($sql);
-         if(($query->rowCount() == 1) && (!$this->isCategorie($name))) {
-            $sql = "UPDATE category SET name = '".$name."' WHERE id =".$id.";";
-            almyDb::$PDO->query($sql);
+         $sql = "SELECT * FROM category WHERE id=:id;";
+		 $sth = almyDb::$PDO->prepare($sql);
+		 $sth->bindParam(':id', $id, PDO::PARAM_INT);
+		 $sth->execute();
+         if(($sth->rowCount() == 1) && (!$this->isCategorie($name))) {
+            $sql = "UPDATE category SET name = :name WHERE id =:id;";
+			$sth = almyDb::$PDO->prepare($sql);
+			$sth->bindParam(':id', $id, PDO::PARAM_INT);
+			$sth->bindParam(':name', $name, PDO::PARAM_STR);
+			$sth->execute();
             return true;
          }
          else {
@@ -111,9 +128,11 @@
          }
       }
       public function deleteCategorie($id) {
-         $sql = "DELETE FROM category WHERE id = ".$id.";";
-         $query = almyDb::$PDO->query($sql);
-         if($query->rowCount() == 1) {
+         $sql = "DELETE FROM category WHERE id = :id;";
+		 $sth = almyDb::$PDO->prepare($sql);
+		 $sth->bindParam(':id', $id, PDO::PARAM_INT);
+		 $sth->execute();
+         if($sth->rowCount() == 1) {
             return true;
          }
          else {
@@ -125,29 +144,49 @@
      ** Gestion des images
      */
       public function getImage($id) {
-         $sql = "SELECT * FROM image WHERE id=".$id.";";
-         $query = almyDb::$PDO->query($sql);
-         return $query->fetch();
+         $sql = "SELECT * FROM image WHERE id=:id;";
+		 $sth = almyDb::$PDO->prepare($sql);
+		 $sth->bindParam(':id', $id, PDO::PARAM_INT);
+		 $sth->execute();
+         return $sth->fetch();
       }
       public function getImageByLink($url) {
-         $sql = "SELECT * FROM image WHERE url='".$url."' OR url_min='".$url."';";
-         $query = almyDb::$PDO->query($sql);
-         return $query->fetch();
+         $sql = "SELECT * FROM image WHERE url=:url OR url_min=:urlMin;";
+		 $sth = almyDb::$PDO->prepare($sql);
+		 $sth->bindParam(':url', $url, PDO::PARAM_STR);
+		 $sth->bindParam(':urlMin', $url, PDO::PARAM_STR);
+		 $sth->execute();
+         return $sth->fetch();
       }
       public function getListeSearchImage($search) {
-         $sql = "SELECT * FROM image WHERE title LIKE \"%".$search."%\" OR descr LIKE \"%".$search."%\" ORDER BY title ASC";
-         $query = almyDb::$PDO->query($sql);
-         return $query->fetchAll();
+		 $search = "%".$search."%";
+         $sql = "SELECT * FROM image WHERE title LIKE :searchT OR descr LIKE :searchD ORDER BY title ASC";
+		 $sth = almyDb::$PDO->prepare($sql);
+		 $sth->bindParam(':searchT', $search, PDO::PARAM_STR);
+		 $sth->bindParam(':searchD', $search, PDO::PARAM_STR);
+		 $sth->execute();
+         return $sth->fetchAll();
       }
       public function getListeImage($cat = null) {
-         $sql = "SELECT image.* FROM image ".(($cat == null)?"":"INNER JOIN catimg WHERE catimg.id_cat = ".$cat)." ORDER BY title ASC";
-         $query = almyDb::$PDO->query($sql);
-         return $query->fetchAll();
+         $sql = "SELECT image.* FROM image ".(($cat == null)?"":"INNER JOIN catimg WHERE catimg.id_cat = :cat")." ORDER BY title ASC";
+		 $sth = almyDb::$PDO->prepare($sql);
+		 $sth->bindParam(':cat', $cat, PDO::PARAM_STR);
+		 $sth->execute();
+         return $sth->fetchAll();
       }
       public function addImage($link, $linkMin = null, $title = null, $descr = null) {
-         $sql = "INSERT INTO image (id, title, descr, url, url_min) VALUES (NULL, ".(($title == null)?"NULL":"'".$title."'").",".(($descr == null)?"NULL":"'".$descr."'")." ,'".$link."' ,".(($linkMin == null)?"NULL":"'".$linkMin."'")." );";
-         $query = almyDb::$PDO->query($sql);
-         if($query->rowCount() == 1) {
+		 // $title = (($title == null)?"NULL":$title);
+		 // $descr = (($descr == null)?"NULL":$descr);
+		 // $link = (($link == null)?"NULL":$link);
+		 // $linkMin = (($linkMin == null)?"NULL":$linkMin);
+         $sql = "INSERT INTO image (id, title, descr, url, url_min) VALUES (NULL, :title ,:descr ,:link ,:linkmin);";
+		 $sth = almyDb::$PDO->prepare($sql);
+		 $sth->bindParam(':title', $title, PDO::PARAM_STR|PDO::PARAM_NULL );
+		 $sth->bindParam(':descr', $descr, PDO::PARAM_STR|PDO::PARAM_NULL);
+		 $sth->bindParam(':link', $link, PDO::PARAM_STR|PDO::PARAM_NULL);
+		 $sth->bindParam(':linkmin', $linkMin, PDO::PARAM_STR|PDO::PARAM_NULL);
+		 $sth->execute();
+         if($sth->rowCount() == 1) {
             return true;
          }
          else {
@@ -199,9 +238,11 @@
 		}
 		
       public function deleteImage($id) {
-         $sql = "DELETE FROM image WHERE id = ".$id.";";
-         $query = almyDb::$PDO->query($sql);
-         if($query->rowCount() == 1) {
+         $sql = "DELETE FROM image WHERE id = :id;";
+         $sth = almyDb::$PDO->prepare($sql);
+		 $sth->bindParam(':id', $id, PDO::PARAM_INT);
+		 $sth->execute();
+         if($sth->rowCount() == 1) {
             return true;
          }
          else {
@@ -210,27 +251,36 @@
       }
 		public function updateImage($id, $arg) {
 			$set = "";
-			$dot = 0;
+			$count = 0;
 			foreach ($arg as $field => $value) {
-				if($dot != 0)
+				if($count != 0)
 					$set .= ", ";
-				$set .= (($value == "NULL")?$field." = NULL":$field." = '".$value."'");
-                                $dot++;
+				$set .= (($value == "NULL")?$field." = NULL":$field." = :".$field);
+                $count++;
 			}
-			$sql = "UPDATE image SET ".$set." WHERE id = ".$id.";";
-         
-			$query = almyDb::$PDO->query($sql);
-			if($query->rowCount() == 1) {
+			$sql = "UPDATE image SET ".$set." WHERE id = :id;";
+			$sth = almyDb::$PDO->prepare($sql);
+			$sth->bindParam(':id', $id, PDO::PARAM_STR);
+			$count = 0;
+			foreach ($arg as $field => $value) {
+				$sth->bindParam(':'.$field, $value, PDO::PARAM_STR);
+			}
+			$sth->execute();
+			
+			if($sth->rowCount() == 1) {
 				return true;
 			}
 			else {
 				return false;
 			}
 		}
-                function addCatImage($id_img, $id_cat) {
-                        $sql = "INSERT INTO catimg (id_img, id_cat) VALUES (".$id_img.", ".$id_cat.");";
-			$query = almyDb::$PDO->query($sql);
-			if($query->rowCount() == 1) {
+        function addCatImage($id_img, $id_cat) {
+            $sql = "INSERT INTO catimg (id_img, id_cat) VALUES (:idImg, :idCat);";
+			$sth = almyDb::$PDO->prepare($sql);
+			$sth->bindParam(':idImg', $id_img, PDO::PARAM_INT);
+			$sth->bindParam(':idCat', $id_cat, PDO::PARAM_INT);
+			$sth->execute();
+			if($sth->rowCount() == 1) {
 				return true;
 			}
 			else {
@@ -239,9 +289,12 @@
                 }
                 
                 function removeCatImage($id_img, $id_cat) {
-                        $sql = "DELETE FROM catimg WHERE id_img = ".$id_img." AND id_cat = ".$id_cat.";";
-			$query = almyDb::$PDO->query($sql);
-			if($query->rowCount() == 1) {
+                        $sql = "DELETE FROM catimg WHERE id_img = :idImg AND id_cat = :idCat;";
+			$sth = almyDb::$PDO->prepare($sql);
+			$sth->bindParam(':idImg', $id_img, PDO::PARAM_INT);
+			$sth->bindParam(':idCat', $id_cat, PDO::PARAM_INT);
+			$sth->execute();
+			if($sth->rowCount() == 1) {
 				return true;
 			}
 			else {
@@ -249,9 +302,11 @@
 			}
                 }
         function removeAllCatImage($id_img) {
-            $sql = "DELETE FROM catimg WHERE id_img = ".$id_img.";";
-			$query = almyDb::$PDO->query($sql);
-			if($query->rowCount() != 0) {
+            $sql = "DELETE FROM catimg WHERE id_img = :idImg;";
+			$sth = almyDb::$PDO->prepare($sql);
+			$sth->bindParam(':idImg', $id_img, PDO::PARAM_INT);
+			$sth->execute();
+			if($sth->rowCount() != 0) {
 				return true;
 			}
 			else {
@@ -266,37 +321,49 @@
                 
       public function getUser($id = null) {
 
-         $req  =  'SELECT * FROM user'.(($id != null)?' WHERE id='.$id:'').' ORDER BY name;';
-         $query = almyDb::$PDO->query($req);
+         $req  =  'SELECT * FROM user'.(($id != null)?' WHERE id=:id': '').' ORDER BY name;';
+		 $sth = almyDb::$PDO->prepare($req);
+		 $sth->bindParam(':id', $id, PDO::PARAM_INT);
+		 $sth->execute();
+		 
 		 if($id == null)
-			return $query->fetchAll();
+			return $sth->fetchAll();
 		 else
-			return $query->fetch();
+			return $sth->fetch();
       }
       public function updateUser($id, $args) {
 		 $set = "";
 		 foreach($args as $key => $val) {
 			if($set !== "")
 				$set .= ", ";
-			$set .= $key."=\"".$val."\"";
+			$set .= $key."=:".$key."";
 		 }
-         $req  = 'UPDATE user SET '.$set.' WHERE id ='.$id;
-         $query = almyDb::$PDO->query($req);
-         if($query->rowCount() == 1) {
+         $req  = 'UPDATE user SET '.$set.' WHERE id =:id';
+		 $sth = almyDb::$PDO->prepare($req);
+		 $sth->bindParam(':id', $id, PDO::PARAM_INT);
+		 
+		 foreach($args as $key => $val) {
+			$sth->bindParam(':'.$key, $val, PDO::PARAM_STR);
+		 }
+		 $sth->execute();
+         if($sth->rowCount() == 1) {
              return true;
          }
          else {
-				 echo ($query->rowCount()).$req;
+				 echo ($sth->rowCount()).$req;
             return false;
          }
       }
       public function traitementConnexion($login, $mdp) {
 
-         $req  =  'SELECT * FROM user WHERE login="'.$login.'" AND pass="'.MD5($mdp).'"';
+         $req  =  'SELECT * FROM user WHERE login=:login AND pass=:pass';
+		 $sth = almyDb::$PDO->prepare($req);
+		 $sth->bindParam(':login', $login, PDO::PARAM_STR);
+		 $sth->bindParam(':pass', md5($mdp), PDO::PARAM_STR);
+		 $sth->execute();
 
-         $query = almyDb::$PDO->query($req);
-         if($query->rowCount() == 1) {
-             return $query->fetch();
+         if($sth->rowCount() == 1) {
+             return $sth->fetch();
          }
          else {
             return false;

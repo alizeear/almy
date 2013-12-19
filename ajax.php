@@ -106,7 +106,7 @@
 			case "updateUser":
 				$retour = false;
 				$temp = $db->getUser(isset($_POST['id'])? $_POST['id'] : $_SESSION['id']);
-				if(isset($_POST['pass'])) {
+				if(isset($_POST['old']) && isset($_POST['new'])) {
 					if($temp['pass'] == md5($_POST['old'])) {
 						$retour = $db->updateUser((isset($_POST['id'])? $_POST['id'] : $_SESSION['id']), Array("pass" => md5($_POST['new'])));
 					}

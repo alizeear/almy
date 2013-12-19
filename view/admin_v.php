@@ -95,7 +95,7 @@
 				<div class="tab-pane" id="account">
 					<div id="doneChangeAccount" class="alert alert-success"></div>
 					<div id="errChangeAccount" class="alert alert-danger"></div>
-					<div class="col-xs-6 col-md-4">
+					<div class="col-xs-6 col-md-4 passCol">
 						<h2>Changer de mot de passe</h2><br>
 						Ancien mot de passe
 						<input class="form-control" id="beforePass">

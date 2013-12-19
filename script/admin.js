@@ -2,9 +2,14 @@ var listeAllCats = Array();
 var listeAllImgs = Array();
 $(document).ready(function() {
 	// gestion du compte
-	$("#account input").keydown(function(e) {
+	$("#account .passCol input").keydown(function(e) {
 		if(e.keyCode==13) {
 			$("#changePass").click();
+		}
+	});
+	$("#nameText").keydown(function(e) {
+		if(e.keyCode==13) {
+			$("#changeName").click();
 		}
 	});
 	$("#changePass").click(function() {
@@ -18,7 +23,7 @@ $(document).ready(function() {
 					'new' : $("#afterPass2").val()
 				},
 				success: function() {
-					$("#account input").val("");
+					$("#account .passCol input").val("");
 					var json = JSON.parse(requeteCat.responseText);
 					if(json[0]==true) {
 						// si le serveur n'a pas retourné d'erreur dans le fichier JSON
