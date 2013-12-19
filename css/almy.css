@@ -26,16 +26,17 @@
 	padding-bottom: 5px;
 }
 .containerAlmy a {
+	position: relative;
 	display: inline-block;
 }
-#loupe{
+.loupe{
 	display: none;
 	position: absolute;
 	width: 30px;
 	height: 30px;
 	background-image: url(../images/icon-zoom.png);
-	margin-top: -30;
-	margin-left: 120px;
+	right: 0px;
+	bottom: 0px;
 }
 .containerAlmy a img{
 	display: inline-block;
@@ -49,6 +50,11 @@
    left: 0px;
    background-color: rgba(0, 0, 0, 0.95);
    height: 100%;
+}
+#selected{
+	position: absolute;
+	background: #222;
+	height: 100%;
 }
 #categoriesMiddle{
 	position: absolute;
@@ -68,6 +74,28 @@
 	height: 15%;
 	width: 100%;
 	z-index: 3;
+}
+#clock {
+	position: absolute;
+	z-index: 1;
+	left: 10px;
+	top: 10%;
+	border-collapse:separate;
+}
+#clock td {
+	position: relative;
+}
+#clock td div:first-child{
+	position: absolute;
+	height: 11px;
+	width: 11px;
+	background-color: grey;
+	border: 3px solid #000;
+}
+#clock td div:last-child{
+	height: 11px;
+	width: 11px;
+	border: 3px solid #000;
 }
 #up{
 	position: absolute;
@@ -151,14 +179,7 @@
 	font-size: 24px;
 	cursor: pointer;
 }
-.navDirectionMosaique{
-	position: relative;
-	margin: 0;
-	padding: 0;
-	border: 0;
-	z-index: 1;
-}
-.navDirectionMosaique a{
+.navNextMosaique , .navPrevMosaique {
 	display: inline-block;
 	width: 19px;
 	height: 100%;
@@ -168,12 +189,12 @@
 	border: 0;
 	cursor: pointer;
 }
-.navDirectionMosaique .navNextMosaique{
+.navNextMosaique{
 	background-position: -21px 50%;
 	float: right;
 	margin-right: 18px;
 }
-.navDirectionMosaique .navPrevMosaique{
+.navPrevMosaique{
 	float: left;
 	background-position: 0px 50%;
 	margin-left: 18px;

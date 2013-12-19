@@ -21,10 +21,10 @@ ul {
 .id, .descr {
    display: none;
 }
-#doneChangeAccount, #errChangeAccount, #errCatAdd{
+#doneCatAdd, #doneChangeImage, #errChangeImage, #doneChangeAccount, #errChangeAccount, #errCatAdd{
    display: none;
 }
-#changeName, #changePass, .delete {
+ #btnImgUpdate, #changeName, #changePass, .delete {
    width: 100%;
    margin-top: 10px;
 }

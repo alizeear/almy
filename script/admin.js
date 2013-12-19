@@ -231,10 +231,14 @@ $(document).ready(function() {
 					$("#errCatAdd").slideUp(200, function() {
 						$(this).text("");
 					});
+					$("#doneCatAdd").text("La catégorie à correcetement été enregistré.").delay(200).slideDown(200);
 				}
 				else {
 					// sinon, affichage d'un message d'erreur
 					$("#errCatAdd").text("Il est impossible d'ajouter cette catégorie.").delay(200).slideDown(200);
+					$("#doneCatAdd").slideUp(200, function() {
+						$(this).text("");
+					});
 				}
 				if($("#idImgUpdate").length!=0) {
 					var requeteCatImg = $.ajax({
@@ -301,6 +305,20 @@ function initCat(idListe) {
 				},
 				success: function() {
 					var json = JSON.parse(requete.responseText);
+					if(json[0]==true) {
+						// si le serveur n'a pas retourné d'erreur dans le fichier JSON
+						$("#errCatAdd").slideUp(200, function() {
+							$(this).text("");
+						});
+						$("#doneCatAdd").text("La catégorie à correcetement été mise à jour.").delay(200).slideDown(200);
+					}
+					else {
+						// sinon, affichage d'un message d'erreur
+						$("#errCatAdd").text("Une erreur est survenue lors de la mise à jour de la catégorie.").delay(200).slideDown(200);
+						$("#doneCatAdd").slideUp(200, function() {
+							$(this).text("");
+						});
+					}
 					showCat(json);
 					$("#reglageCat").html("");
 					$(".tab-content .tab-pane .active").removeClass("active");
@@ -327,6 +345,20 @@ function initCat(idListe) {
 				},
 				success: function() {
 					var json = JSON.parse(requete.responseText);
+					if(json[0]==true) {
+						// si le serveur n'a pas retourné d'erreur dans le fichier JSON
+						$("#errCatAdd").slideUp(200, function() {
+							$(this).text("");
+						});
+						$("#doneCatAdd").text("La catégorie à correcetement été supprimé.").delay(200).slideDown(200);
+					}
+					else {
+						// sinon, affichage d'un message d'erreur
+						$("#errCatAdd").text("Une erreur est survenue lors de la suppression de la catégorie.").delay(200).slideDown(200);
+						$("#doneCatAdd").slideUp(200, function() {
+							$(this).text("");
+						});
+					}
 					showCat(json);
 					$("#reglageCat").html("");
 					$(".tab-content .tab-pane .active").removeClass("active");
@@ -345,16 +377,12 @@ function initImg(idListe) {
 		$(".tab-content .tab-pane .active").removeClass("active");
 		$(this).addClass("active");
 		var html = 'Titre de l\'image: \
-				  <div class="input-group"> \
-					 <input id="txtImgUpdate" type="text" class="form-control" value="'+$(this).find(".title").text()+'"> \
-					 <input id="idImgUpdate" type="hidden" value="'+$(this).find(".id").text()+'"> \
-					 <span class="input-group-btn"> \
-						<button id="btnImgUpdate" class="btn btn-default" type="button">Modifier</button> \
-					 </span> \
-				  </div> \
+				  <input id="txtImgUpdate" type="text" class="form-control" value="'+$(this).find(".title").text()+'"> \
+				  <input id="idImgUpdate" type="hidden" value="'+$(this).find(".id").text()+'"> \
 				  Description de l\'image \
 				  <textarea id="descrImgUpdate" class="form-control" rows="3">'+$(this).find(".descr").text()+'</textarea> \
 				  <ul id="catImgUpdate"></ul> \
+				  <button id="btnImgUpdate" class="btn btn-info" type="button">Modifier</button> \
 				  <button id="btnImgDelete" class="btn btn-danger btn-xs delete" type="button">Supprimer</button>';
 		$("#reglageImg").html(html);
 
@@ -398,6 +426,20 @@ function initImg(idListe) {
 				},
 				success: function() {
 					var json = JSON.parse(requete.responseText);
+					if(json[0]==true) {
+						// si le serveur n'a pas retourné d'erreur dans le fichier JSON
+						$("#errChangeImage").slideUp(200, function() {
+							$(this).text("");
+						});
+						$("#doneChangeImage").text("L'image à correcetement été mise à jour.").delay(200).slideDown(200);
+					}
+					else {
+						// sinon, affichage d'un message d'erreur
+						$("#errChangeImage").text("Une erreur est survenue lors de la mise à jour de l'image.").delay(200).slideDown(200);
+						$("#doneChangeImage").slideUp(200, function() {
+							$(this).text("");
+						});
+					}
 					showImg(json);
 					$("#reglageImg").html("");
 					$(".tab-content .tab-pane .active").removeClass("active");
@@ -424,6 +466,20 @@ function initImg(idListe) {
 				},
 				success: function() {
 					var json = JSON.parse(requete.responseText);
+					if(json[0]==true) {
+						// si le serveur n'a pas retourné d'erreur dans le fichier JSON
+						$("#errChangeImage").slideUp(200, function() {
+							$(this).text("");
+						});
+						$("#doneChangeImage").text("L'image à correcetement été supprimée.").delay(200).slideDown(200);
+					}
+					else {
+						// sinon, affichage d'un message d'erreur
+						$("#errChangeImage").text("Une erreur est survenue lors de la suppression de l'image.").delay(200).slideDown(200);
+						$("#doneChangeImage").slideUp(200, function() {
+							$(this).text("");
+						});
+					}
 					showImg(json);
 					$("#reglageImg").html("");
 					$(".tab-content .tab-pane .active").removeClass("active");
@@ -481,7 +537,22 @@ function handleReaderLoad(evt) {
 		url: 'ajax.php?do=addImage',
 		data: str,
 		success: function(data) {
-			showImg(JSON.parse(data));
+			var json = JSON.parse(data);
+			showImg(json);
+			if(json[0]==true) {
+				// si le serveur n'a pas retourné d'erreur dans le fichier JSON
+				$("#errChangeImage").slideUp(200, function() {
+					$(this).text("");
+				});
+				$("#doneChangeImage").text("L'image à correcetement été uploadée et ajoutée.").delay(200).slideDown(200);
+			}
+			else {
+				// sinon, affichage d'un message d'erreur
+				$("#errChangeImage").text("Une erreur est survenue lors de l'upload de l'image.").delay(200).slideDown(200);
+				$("#doneChangeImage").slideUp(200, function() {
+					$(this).text("");
+				});
+			}
 			initImg("listeImg");
 			loadOff();
 		}

@@ -355,11 +355,11 @@
          }
       }
       public function traitementConnexion($login, $mdp) {
-
+		 $mdp = md5($mdp);
          $req  =  'SELECT * FROM user WHERE login=:login AND pass=:pass';
 		 $sth = almyDb::$PDO->prepare($req);
 		 $sth->bindParam(':login', $login, PDO::PARAM_STR);
-		 $sth->bindParam(':pass', md5($mdp), PDO::PARAM_STR);
+		 $sth->bindParam(':pass', $mdp, PDO::PARAM_STR);
 		 $sth->execute();
 
          if($sth->rowCount() == 1) {
