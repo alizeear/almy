@@ -50,6 +50,7 @@
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="cat">
+					<div id="doneCatAdd" class="alert alert-success"></div>
 					<div id="errCatAdd" class="alert alert-danger"></div>
 					<div class="col-xs-6 col-md-4">
 						<h2>Catégories</h2>
@@ -74,6 +75,8 @@
 					</div>
 				</div>
 				<div class="tab-pane" id="img">
+					<div id="doneChangeImage" class="alert alert-info"></div>
+					<div id="errChangeImage" class="alert alert-danger"></div>
 					<div class="col-xs-6 col-md-4">
 						<h2>Images</h2>
 						Ajouter une Image:

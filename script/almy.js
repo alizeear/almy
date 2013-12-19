@@ -34,6 +34,7 @@ if (!Array.prototype.indexOf) {
 			pauseOnHover: false
 		}, params);
 		
+		var timersCooldown = Array();
 		var dateLastCat = new Date().getTime();
 		
 		var dateTime = new Date().getTime();
@@ -41,6 +42,7 @@ if (!Array.prototype.indexOf) {
 		var category = Array();
 		
 		var index = 0;
+		var timer;
 		var imagesAll 	= Array();
 		// recalcul de la taille des image au redimentionnement de la fenêtre
 		$(window).resize(function() {
@@ -56,6 +58,8 @@ if (!Array.prototype.indexOf) {
 			while(parseInt($(idAlmy).find('#mosaiqueBottom ul').css('left')) <= -5) {
 				$(idAlmy).find('#mosaiqueBottom ul').css('left', '-=15')
 			}
+			
+			moveSelected();
 		});
 		return this.each(function() {
 
@@ -87,7 +91,6 @@ if (!Array.prototype.indexOf) {
 			if(category.length != 0 && ((navigator.userAgent.toLowerCase().indexOf("msie") == -1) || (parseInt(navigator.userAgent.toLowerCase().substr(navigator.userAgent.toLowerCase().indexOf("msie")+5)) > 8))) {
 				var htmlCat = "<li><span class=\"all\">Toutes</span></li>";
 				for(var i = 0;i<category.length;i++) {
-					console.log(category[i]);
 					if(typeof  category[i] != "function")
 						htmlCat += '<li><span>'+category[i]+'</span></li>';
 				}
@@ -154,7 +157,6 @@ if (!Array.prototype.indexOf) {
 								$(this).removeClass("active");
 								animateColor($(this));
 							});
-							console.log($(".active"));
 						}
 						else {
 							if(!$(this).hasClass("active")) {
@@ -219,10 +221,10 @@ if (!Array.prototype.indexOf) {
 					'height': $(this).find('a img').height(),
 					'width': $(this).find('a img').width()
 				});
-			}).append('<div id="loupe"></div>').mouseover(function(){
-				$(this).find('#loupe').stop().fadeIn();
+			}).append('<div class="loupe"></div>').mouseover(function(){
+				$(this).find('.loupe').stop().fadeIn();
 			}).mouseout(function(){
-				$(this).find('#loupe').stop().fadeOut();
+				$(this).find('.loupe').stop().fadeOut();
 			});
 			
 			var countPerLine = Math.floor($(this).width()/parseInt(defauts.widthImage));
@@ -261,15 +263,33 @@ if (!Array.prototype.indexOf) {
 		////// Fonctions perso //////////////////////////////////
 		/////////////////////////////////////////////////////////
 		function stopSlide() {
+			$(idAlmy).find('.navPause').css('background-position', '0px 0px');
 			defauts.paused = true;
-			clearInterval(timer);
+			if(timer != '')
+				clearInterval(timer);
 			timer = '';
+			
+			for(var i in a = timersCooldown) {
+				clearInterval(a[i]);
+			}
+			timersCooldown = Array();
+			$("#clock").find("div").show();
 		}
 
 		function runSlide() {
+			var count = 0;
+			$("#clock").find("td").each(function() {
+				eval("timersCooldown["+(count+1)+"] = setTimeout(function() { $(\"#clock\").find(\"."+(count+1)+"\").find(\"div:first\").toggle(); },"+(count*(defauts.pauseTime/25))+")")
+				count++;
+			})
 			timer = setInterval(function() {
 				if(dateTime+600<new Date().getTime()) {
+					var count = 0;
 					slideSuivant();
+					$("#clock").find("td").each(function() {
+						eval("timersCooldown["+(count+1)+"] = setTimeout(function() { $(\"#clock\").find(\"."+(count+1)+"\").find(\"div:first\").toggle(); },"+(count*(defauts.pauseTime/25))+")")
+						count++;
+					})
 					dateTime = new Date().getTime();
 				}
 			}, defauts.pauseTime);
@@ -285,51 +305,7 @@ if (!Array.prototype.indexOf) {
 			
 			var imageSuivante = $('#categoriesMiddle .imgContainer > img[src=\''+infoTmp['url']+'\']'); // on stock la valeur de l'image suivante dans une variable
 			// here
-			$(idAlmy).find(".descriptionDiv  > h2").animate({
-				'opacity': 0
-			}, '300',function(){
-				$(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
-			}).animate({
-				'opacity': 1
-			}, '300');
-
-			$(idAlmy).find(".descriptionDiv  > p").animate({
-				'opacity': 0
-			}, '300',function(){
-				$(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
-			}).animate({
-				'opacity': 1
-			}, '300');
-
-
-			// $(idAlmy).find(".descriptionDiv  > p").hide(function(){
-			// 	$(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
-			// }).show();
-				
-
-			$(idAlmy).find(".descriptionDivTop").animate({
-					'top': '-100%'
-				}, 'fast', function(){
-					$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
-					$(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
-				}).animate({
-					'top': '0'
-				}, 'fast');
-			alignImg(imageSuivante); // on align l'image centre
-			var margin = ((imageSuivante.width()>$("#categoriesMiddle .imgContainer > img:visible").width()))
-				?(imageSuivante.width()-$("#categoriesMiddle .imgContainer > img:visible").width())/2
-				:($("#categoriesMiddle .imgContainer > img:visible").width()-imageSuivante.width())/2;
-			$("#categoriesMiddle .imgContainer > img:visible").stop().css("marginLeft", "0px").animate({
-				'marginLeft': margin,
-				'opacity': 0
-			},"slow", function() {
-				$(this).hide().css({
-					'opacity': 1,
-					'marginLeft': "0px"
-				});
-			}); // on cache l'image actuelle
-			
-			imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
+			changerImage(imageActuel, imageSuivante);
 			return true;
 		}
 		
@@ -340,34 +316,10 @@ if (!Array.prototype.indexOf) {
 			if(index < 0)
 				index = imagesAll.length-1;
 			var infoTmp = getInfoImage(index);
-			
 			var imagePrecedente = $('#categoriesMiddle .imgContainer > img[src=\''+infoTmp['url']+'\']'); // on stock la valeur de l'image suivante dans une variable
 			// here 
-			$(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
-			$(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
-			$(idAlmy).find(".descriptionDivTop").animate({
-					'top': '-100%'
-				}, 'fast', function(){
-					$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
-					$(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
-				}).animate({
-					'top': '0'
-				}, 'fast');
-			alignImg(imagePrecedente); // on align l'image centre
-			var margin = ((imagePrecedente.width()>$("#categoriesMiddle .imgContainer > img:visible").width()))
-				?(imagePrecedente.width()+$("#categoriesMiddle .imgContainer > img:visible").width())/2
-				:($("#categoriesMiddle .imgContainer > img:visible").width()-imagePrecedente.width())/2;
-			$("#categoriesMiddle .imgContainer > img:visible").stop().css("marginLeft", "0px").animate({
-				'marginLeft': margin,
-				'opacity': 0
-			},"slow", function() {
-				$(this).hide().css({
-					'opacity': 1,
-					'marginLeft': "0px"
-				});
-			}); // on cache l'image actuelle
-			
-			imagePrecedente.stop().fadeIn('slow'); // on affiche la nouvelle
+			changerImage(imageActuel, imagePrecedente);
+			return true;
 		}
 
 		// retourne les dimention optimal pour afficher l'image entiere sans la déformer
@@ -399,6 +351,43 @@ if (!Array.prototype.indexOf) {
 			}
 
 			return Array($W, $H);
+		}
+		
+		function changerImage(imageActuel, imageSuivante) {
+			if(timersCooldown.length != 0) {
+				for(var i in a = timersCooldown) {
+					clearInterval(a[i]);
+				}
+				timersCooldown = Array();
+			}
+			$("#clock").find("div").show();
+			var infoTmp = getInfoImage(index);
+			moveSelected();
+			$(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
+			$(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
+			$(idAlmy).find(".descriptionDivTop").animate({
+					'top': '-100%'
+				}, 'fast', function(){
+					$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
+					$(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
+				}).animate({
+					'top': '0'
+				}, 'fast');
+			alignImg(imageSuivante); // on align l'image centre
+			var margin = ((imageSuivante.width()>$(imageActuel).width()))
+				?(imageSuivante.width()+$(imageActuel).width())/2
+				:($(imageActuel).width()-imageSuivante.width())/2;
+			$(imageActuel).stop().css("marginLeft", "0px").animate({
+				'marginLeft': margin,
+				'opacity': 0
+			},"slow", function() {
+				$(this).hide().css({
+					'opacity': 1,
+					'marginLeft': "0px"
+				});
+			}); // on cache l'image actuelle
+			
+			imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
 		}
 		
 		function animateColor(element) {
@@ -503,10 +492,22 @@ if (!Array.prototype.indexOf) {
 			}
 		}
 		
+		function moveSelected() {
+			var infoTmp = getInfoImage(index);
+			var tempImgMin = $("#mosaiqueBottom ul li img[src='"+infoTmp['url_min']+"']");
+			var tempLeft = 0;
+			$("#mosaiqueBottom ul li").slice(0,index).each(function() {
+				tempLeft += $(this).outerWidth(true);
+			});
+			$("#selected").stop().animate({
+				'left': tempLeft,
+				'width': $(tempImgMin).width()+24
+			},200);
+		}
+		
 		// anime les images afin de les centrer
 		function alignImg($image) {
 			var temp = getDimMaxImg($image.width(), $image.height());
-			console.log(temp);
 			var $widthImageNext = temp[0]; // stock dans une variable la width de l'image qui arrive
 			var $heightImageNext = temp[1];
 
@@ -572,7 +573,27 @@ if (!Array.prototype.indexOf) {
 
 			if($(idAlmy).find(".background").length==0) {
 				$(idAlmy).append('<div class="background">\
-							<div id="categoriesTop"><img src="images/up.png" alt="up" id="up">'+blocDescTop+'</div>\
+							<div id="categoriesTop">\
+								<img src="images/up.png" alt="up" id="up">\
+								<table id="clock">\
+									<tr>\
+										<td class="1"></td><td class="2"></td><td class="3"></td><td class="4"></td><td class="5"></td>\
+									</tr>\
+									<tr>\
+										<td class="16"></td><td class="17"></td><td class="18"></td><td class="19"></td><td class="6"></td>\
+									</tr>\
+									<tr>\
+										<td class="15"></td><td class="24"></td><td class="25"></td><td class="20"></td><td class="7"></td>\
+									</tr>\
+									<tr>\
+										<td class="14"></td><td class="23"></td><td class="22"></td><td class="21"></td><td class="8"></td>\
+									</tr>\
+									<tr>\
+										<td class="13"></td><td class="12"></td><td class="11"></td><td class="10"></td><td class="9"></td>\
+									</tr>\
+								</table>\
+								'+blocDescTop+'\
+							</div>\
 							<div id="categoriesMiddle">\
 								<div class="imgContainer">\
 									'+listImg+'\
@@ -582,6 +603,7 @@ if (!Array.prototype.indexOf) {
 									'+blocDesc+'\
 								</div>\
 								<div id="mosaiqueBottom">\
+									<div id="selected"></div>\
 									<ul>'+listMiniatures+'</ul>\
 									<div class="navDirectionMosaique">\
 										<a class="navPrevMosaique"></a>\
@@ -590,11 +612,15 @@ if (!Array.prototype.indexOf) {
 								</div>\
 							</div>\
 						</div>');
+				$("#clock").find("td").each(function() {
+					$(this).html("<div></div><div></div>");
+				});
 				$(idAlmy).find('.background').stop().animate({
 					'top': '0'
 				}, 450).animate({'top': '-2%'}, 200).animate({'top': '0'}, 300);
 			}
-
+			moveSelected();
+				
 			/////////////////////////////////////////////////////////
 			////// Changement image clic image mosaique /////////////
 			/////////////////////////////////////////////////////////
@@ -606,32 +632,7 @@ if (!Array.prototype.indexOf) {
 				index = infoTmp['index'];
 				var imageSuivante = $('#categoriesMiddle .imgContainer > img[src=\''+infoTmp['url']+'\']'); // on stock la valeur de l'image suivante dans une variable
 				// here 
-				$(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
-				$(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
-				$(idAlmy).find(".descriptionDivTop").animate({
-					'top': '-100%'
-				}, 'fast', function(){
-					$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
-					$(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
-				}).animate({
-					'top': '0'
-				}, 'fast');
-				
-				alignImg(imageSuivante); // on align l'image centre
-				var margin = ((imageSuivante.width()>$(imageActuel).width()))
-					?(imageSuivante.width()-$(imageActuel).width())/2
-					:($(imageActuel).width()-imageSuivante.width())/2;
-				$(imageActuel).stop().css("marginLeft", "0px").animate({
-					'marginLeft': margin,
-					'opacity': 0
-				},"slow", function() {
-					$(this).hide().css({
-						'opacity': 1,
-						'marginLeft': "0px"
-					});
-				}); // on cache l'image actuelle
-				
-				imageSuivante.stop().fadeIn('slow'); // on affiche la nouvelle
+				changerImage(imageActuel, imageSuivante);
 			});
 
 
@@ -766,6 +767,8 @@ if (!Array.prototype.indexOf) {
 			// au clic sur le bouton next
 			$(idAlmy).find('.navNext').click(function() { // au clic sur next
 				if(dateTime+600<new Date().getTime()) {
+					if(timer == '')
+						stopSlide();
 					slideSuivant();
 					dateTime = new Date().getTime();
 				}
@@ -775,6 +778,8 @@ if (!Array.prototype.indexOf) {
 			// au clic sur le bouton précédent
 			$(idAlmy).find('.navPrev').click(function() { // au clic sur next
 				if(dateTime+600<new Date().getTime()) {
+					if(timer == '')
+						stopSlide();
 					slidePrecedent();
 					dateTime = new Date().getTime();
 				}
@@ -803,12 +808,16 @@ if (!Array.prototype.indexOf) {
 			
 				if(e.keyCode == 39) {
 					if(dateTime+600<new Date().getTime()) {
+						if(timer == '')
+							stopSlide();
 						slideSuivant();
 						dateTime = new Date().getTime();
 					}
 				}
 				if(e.keyCode == 37) {
 					if(dateTime+600<new Date().getTime()) {
+						if(timer == '')
+							stopSlide();
 						slidePrecedent();
 						dateTime = new Date().getTime();
 					}
@@ -816,7 +825,6 @@ if (!Array.prototype.indexOf) {
 				if(e.keyCode == 32) {
 					if(!defauts.paused) {
 						stopSlide();
-						$(idAlmy).find('.navPause').css('background-position', '0px 0px');
 					} else {
 						defauts.paused = false;
 						if(timer==''&&!defauts.paused) {
