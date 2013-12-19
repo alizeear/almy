@@ -680,7 +680,7 @@ if (!Array.prototype.indexOf) {
 			var $widthImageFirst = premiereImage.width(); // stock dans une variable la width de l'image qui arrive
 			$(idAlmy).find('.imgContainer').css({// modifie la width de la div contenant l'image pour que l'image reste bien au centre
 				width: $widthImageFirst,
-				'text-align': 'center',
+				'text-align': 'center'
 			}, 500);
 
 
