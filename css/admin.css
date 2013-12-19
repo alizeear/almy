@@ -48,9 +48,9 @@ ul {
 #textSearchImg, #listeImg {
 	margin-top: 10px;
 }
-#textSearchImg, #listeImg li{
+#textSearchCat, #textSearchImg, #listeImg li{
 	cursor: pointer;
-	margin: 5px 0px 5px 0px;
+	margin: 0px 0px 5px 0px;
 }
 #listeImg img{
 	height: 50px;

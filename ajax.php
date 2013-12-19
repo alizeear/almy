@@ -112,6 +112,7 @@
 					}
 				}
 				if(isset($_POST['name'])) {
+					$_SESSION['name'] = $_POST['name'];
 					$retour = $db->updateUser((isset($_POST['id'])? $_POST['id'] : $_SESSION['id']), Array("name" => $_POST['name']));
 				}
 				echo json_encode(array($retour));

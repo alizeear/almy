@@ -22,7 +22,6 @@ $(document).ready(function() {
 					var json = JSON.parse(requeteCat.responseText);
 					if(json[0]==true) {
 						// si le serveur n'a pas retourné d'erreur dans le fichier JSON
-						$("#txtCatAdd").val("");
 						$("#errChangeAccount").slideUp(200, function() {
 							$(this).text("");
 						});
@@ -56,15 +55,15 @@ $(document).ready(function() {
 					var json = JSON.parse(requeteCat.responseText);
 					if(json[0]==true) {
 						// si le serveur n'a pas retourné d'erreur dans le fichier JSON
-						$("#txtCatAdd").val("");
+						$("#name").text($("#nameText").val());
 						$("#errChangeAccount").slideUp(200, function() {
 							$(this).text("");
 						});
-						$("#doneChangeAccount").text("Le mot de passe a correctement été modifié.").delay(200).slideDown(200);
+						$("#doneChangeAccount").text("Votre nouveau nom a bien été pris en compte.").delay(200).slideDown(200);
 					}
 					else {
 						// sinon, affichage d'un message d'erreur
-						$("#errChangeAccount").text("L'ancien mot de passe est pas incorrect.").delay(200).slideDown(200);
+						$("#errChangeAccount").text("Une erreur s'est produite.").delay(200).slideDown(200);
 						$("#doneChangeAccount").slideUp(200, function() {
 							$(this).text("");
 						});
@@ -105,7 +104,7 @@ $(document).ready(function() {
 	});
 	$('#textSearchCat').typeahead({
 		source: function(query, process) { return listeAllCats; },
-		updater: function(item) { 
+		updater: function(item) {
 			$(this).val(item);
 			var requeteCat = $.ajax({
 				url: "ajax.php?do=searchCat",
@@ -124,7 +123,8 @@ $(document).ready(function() {
 						$("#listeSearchCat li").click();
 				}
 			});
-		}
+		},
+		autoselect: false
 	});
 	
 	var requeteImg = $.ajax({

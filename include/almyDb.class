@@ -36,12 +36,18 @@
       ** Gestion des catégories
       */
       public function getListeCategorie($search = null) {
-			if($search == null)
+			if($search == null) {
 				$sql = "SELECT * FROM category ORDER BY name ASC";
-			else
-				$sql = "SELECT * FROM category WHERE name LIKE \"%".$search."%\" ORDER BY name ASC";
-         $query = almyDb::$PDO->query($sql);
-         return $query->fetchAll();
+				$sth = almyDb::$PDO->prepare($sql);
+				$sth->execute();
+			}
+			else {
+				$sql = "SELECT * FROM category WHERE name LIKE ? ORDER BY name ASC";
+				$sth = almyDb::$PDO->prepare($sql);
+				$sth->execute(array("\"%".$search."%\""));
+				print_r($sth);
+			}
+         return $sth->fetchAll();
       }
       public function getListeIdCategorie() {
          $sql = "SELECT id FROM category ORDER BY name ASC";
@@ -280,6 +286,7 @@
              return true;
          }
          else {
+				 echo ($query->rowCount()).$req;
             return false;
          }
       }

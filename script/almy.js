@@ -50,6 +50,15 @@ if (!Array.prototype.indexOf)
 		$(window).resize(function() {
 			if($('#categoriesMiddle').length !== 0)
 				alignImg($('#categoriesMiddle img:visible')); // on align l'image centre
+			
+			var tailleUl = 0;
+			$(idAlmy).find('#mosaiqueBottom ul li').each(function(){
+				tailleUl += $(this).outerWidth(true);
+			});
+			$(idAlmy).find('#mosaiqueBottom ul').width(tailleUl);
+			while(parseInt($(idAlmy).find('#mosaiqueBottom ul').css('left')) <= -5) {
+				$(idAlmy).find('#mosaiqueBottom ul').css('left', '-=15')
+			}
 		});
 		return this.each(function() {
 
