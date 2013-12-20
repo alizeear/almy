@@ -34,6 +34,8 @@ if (!Array.prototype.indexOf) {
 			navBar: true,
 			controlKey: false,
 			animationDesc: 'fade',
+			barreTop: false,
+			classNavigationCat: 'classNavigationCat',
 			pauseOnHover: false
 		}, params);
 		
@@ -88,14 +90,14 @@ if (!Array.prototype.indexOf) {
 				width: defauts.width,
 				position: 'relative'
 			});
-		   $(this).css("border", "1px solid #333");
+		   // $(this).css("border", "1px solid #333");
 		   
 		   // affichage des catégories
 			if(category.length != 0 && ((navigator.userAgent.toLowerCase().indexOf("msie") == -1) || (parseInt(navigator.userAgent.toLowerCase().substr(navigator.userAgent.toLowerCase().indexOf("msie")+5)) > 8))) {
-				var htmlCat = "<li><span class=\"all\">Toutes</span></li>";
+				var htmlCat = "<li class='"+defauts.classNavigationCat+"'><span class=\"all\">Toutes</span></li>";
 				for(var i = 0;i<category.length;i++) {
 					if(typeof  category[i] != "function")
-						htmlCat += '<li><span>'+category[i]+'</span></li>';
+						htmlCat += '<li class="'+defauts.classNavigationCat+'"><span>'+category[i]+'</span></li>';
 				}
 				$(this).prepend('<div class="almyListCat"><ul>'+htmlCat+'</ul></div>');
 				$(".almyListCat").find("li").width($(this).find(".almyListCat").width()/$(".almyListCat").find("li").length);
@@ -594,6 +596,7 @@ if (!Array.prototype.indexOf) {
 
 			if($(idAlmy).find(".background").length==0) {
 				$(idAlmy).append('<div class="background">\
+						'+((defauts.barreTop)?'\
 							<div id="categoriesTop">\
 								<img src="images/up.png" alt="up" id="up">\
 								<table id="clock">\
@@ -615,6 +618,7 @@ if (!Array.prototype.indexOf) {
 								</table>\
 								'+blocDescTop+'\
 							</div>\
+						':'')+'\
 							<div id="categoriesMiddle">\
 								<div class="imgContainer">\
 									'+listImg+'\
@@ -635,6 +639,10 @@ if (!Array.prototype.indexOf) {
 								</div>\
 							</div>\
 						</div>');
+
+				
+				
+				
 
 				$(idAlmy).find(".navPrevMosaique, .navNextMosaique").height($(idAlmy).find("#mosaiqueBottom").height());
 				$("#clock").find("td").each(function() {

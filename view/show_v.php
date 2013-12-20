@@ -28,7 +28,8 @@
 
         $('#divAlmy').almy({
             width        : '1052px',
-            widthImage   : '150px'
+            widthImage   : '150px',
+            classNavigationCat : 'titleCat'
         });
 
     });
