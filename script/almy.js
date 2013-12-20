@@ -58,7 +58,7 @@ if (!Array.prototype.indexOf) {
 			while(parseInt($(idAlmy).find('#mosaiqueBottom ul').css('left')) <= -5) {
 				$(idAlmy).find('#mosaiqueBottom ul').css('left', '-=15')
 			}
-			
+			$(idAlmy).find(".navPrevMosaique, .navNextMosaique").height($(idAlmy).find("#mosaiqueBottom").height());
 			moveSelected();
 		});
 		return this.each(function() {
@@ -612,6 +612,7 @@ if (!Array.prototype.indexOf) {
 								</div>\
 							</div>\
 						</div>');
+				$(idAlmy).find(".navPrevMosaique, .navNextMosaique").height($(idAlmy).find("#mosaiqueBottom").height());
 				$("#clock").find("td").each(function() {
 					$(this).html("<div></div><div></div>");
 				});
