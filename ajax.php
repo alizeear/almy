@@ -55,6 +55,9 @@
 				echo json_encode(array($retour, $list));
 				break;
 			case "updateImg":
+				// echo "/*";
+				// print_r($_POST);
+				// echo "*/";
 				$retour2 = $db->updateImage($_POST['id'], array(
 					'title'=>$_POST['title'],
 					'descr'=>$_POST['descr']
@@ -115,6 +118,47 @@
 					$retour = $db->updateUser((isset($_POST['id'])? $_POST['id'] : $_SESSION['id']), Array("name" => $_POST['name']));
 				}
 				echo json_encode(array($retour));
+				break;
+			case "getOptions": 
+				$list = $db->getOption();
+				echo json_encode($list);
+				break;
+			case "updateOption": 
+				if(isset($_POST['id'])) {
+					$retour = $db->updateOption($_POST['id'], $_POST['attribut'], $_POST['value'], $_POST['active']);
+				}
+				else {
+					$retour = false;
+				}
+				$list = $db->getOption();
+				echo json_encode(array($retour, $list));
+				break;
+			case "deleteOption": 
+				if(isset($_POST['id'])) {
+					$retour = $db->deleteOption($_POST['id']);
+				}
+				else {
+					$retour = false;
+				}
+				$list = $db->getOption();
+				echo json_encode(array($retour, $list));
+				break;
+			case "addOption": 
+				$retour = $db->addOption($_POST['attribut'], $_POST['value'], $_POST['active']);
+				$list = $db->getOption();
+				echo json_encode(array($retour, $list));
+				break;
+			case "updateOptions": 
+				$retour = true;
+				$opts = json_decode($_POST['options']);
+				foreach($opts as $opt) {
+					if($opt->id == -1) 
+						$db->addOption($opt->attribut, $opt->value, $opt->active);
+					else 
+						$db->updateOption($opt->id, $opt->attribut, $opt->value, $opt->active);
+				}
+				$list = $db->getOption();
+				echo json_encode(array($retour, $list));
 				break;
 		}
 	}

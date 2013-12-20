@@ -798,7 +798,8 @@ if (!Array.prototype.indexOf) {
 						'top': '-101%'
 					}, 450, function(e) {
 						$(this).remove();
-					})
+					});
+					stopSlide();
 				});
 			// appuye sur la touche Echap
 			$(document).keydown(function(e) {
@@ -808,6 +809,7 @@ if (!Array.prototype.indexOf) {
 					}, 450, function(e) {
 						$(this).remove();
 					});
+					stopSlide();
 				}
 			
 				if(e.keyCode == 39) {

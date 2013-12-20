@@ -8,4 +8,6 @@
             }
             $images[$i]['cat'] = $temp;
         }
+	
+	$options = $db->getOption();
 ?>

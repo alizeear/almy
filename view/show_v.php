@@ -27,8 +27,17 @@
     $(window).load(function() {
 
         $('#divAlmy').almy({
-            width        : '1052px',
-            widthImage   : '150px'
+			<?php
+				$count = 0;
+				foreach($options as $option) {
+					if($option['active'] == 1) {
+						if($count != 0)
+							echo ", ";
+						echo $option['attribut'].": '".$option['value']."'\n";
+						$count++;
+					}
+				}
+			?>
         });
 
     });

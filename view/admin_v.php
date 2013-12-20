@@ -131,7 +131,12 @@
 						<button type="button" class="btn btn-info" id="changeName">Valider</button>
 					</div>
 				</div>
-				<div class="tab-pane" id="settings">Options</div>
+				<div class="tab-pane" id="settings">
+					<div id="doneChangeSettings" class="alert alert-success"></div>
+					<div id="errChangeSettings" class="alert alert-danger"></div>
+					<div id="listeOptions">
+					</div>
+				</div>
 			</div>
 
 			<div id="load"></div>

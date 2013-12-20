@@ -146,6 +146,18 @@ $(document).ready(function() {
 		autoselect: false
 	});
 	
+	loadOn();
+	var requeteOption = $.ajax({
+		url: "ajax.php?do=getOptions",
+		type: "post",
+		success: function() {
+			var json = JSON.parse(requeteOption.responseText);
+			showOption({1:json});
+			initOptions();
+			loadOff();
+		}
+	});
+	
 	var requeteImg = $.ajax({
 		url: "ajax.php?do=getImg",
 		type: "post",
@@ -517,6 +529,158 @@ function showImg(json) {
 		listeAllImgs.push(a[i]['title']);
 		$("#listeImg ul").append("<li><img src=\""+a[i]['url_min']+"\"><span class=\"title\">"+((a[i]['title']!=null) ? a[i]['title'] : "")+"</span><span class=\"id\">"+a[i]['id']+"</span><span class=\"descr\">"+((a[i]['descr']!=null) ? a[i]['descr'] : "")+"</span></li>");
 	}
+}
+
+function showOption(json) {
+	$("#listeOptions").html("");
+	$("#listeOptions").append('<div class=\"headItemOption\"><div class="col-xs-6 col-md-4 passCol">Options</div><div class="col-xs-6 col-md-4 passCol">Valeur</div><div class="col-xs-6 col-md-4 passCol">Active</div><div style="clear: both;"></div>');
+	for(var i in a = json[1]) {
+		$("#listeOptions").append('<div class=\"itemOption\"><span class="id">'+a[i]['id']+'</span><div class="col-xs-6 col-md-4 passCol"><input type="text" value="'+a[i]['attribut']+'" class="form-control attribut"></div><div class="col-xs-6 col-md-4 passCol"><input type="text" value="'+a[i]['value']+'" class="form-control value"></div><div class="col-xs-6 col-md-4 passCol"><input class="form-control" type="checkbox" '+((a[i]['active'] != 0)?'checked':'')+'><img src="images/validate.png" alt="valider" class="validOption"><img src="images/delete.png" alt="Supprimer" class="supprOption"></div><div style="clear: both;"></div>');
+	}
+	$("#listeOptions").append('<div class=\"footerItemOption\"><div class="col-xs-6 col-md-4 passCol"></div><div class="col-xs-6 col-md-4 passCol"></div><div class="col-xs-6 col-md-4 passCol"><img src="images/add.png" alt="ajouter une option" id="addRowOption"><button type="button" class="btn btn-info">Tout sauvegarder</button></div><div style="clear: both;"></div>');
+}
+function initOptions() {
+	$(".footerItemOption button").click(function() {
+		loadOn();
+		var opts = Array();
+		$(".itemOption").each(function() {
+			opts.push({
+				'id' 	   : $(this).find(".id").text(),
+				'attribut' : $(this).find(".attribut").val(),
+				'value'    : $(this).find(".value").val(),
+				'active'   : (($(this).find("input[type=\"checkbox\"]").is(':checked'))?1:0)
+			});
+		});
+		opts = JSON.stringify(opts);
+		var requeteUpdateOption = $.ajax({
+			type: 'POST',
+			url: 'ajax.php?do=updateOptions',
+			data: {
+				options: opts
+			},
+			success: function() {
+				var json = JSON.parse(requeteUpdateOption.responseText);
+				if(json[0]==true) {
+					// si le serveur n'a pas retourné d'erreur dans le fichier JSON
+					$("#errChangeSettings").slideUp(200, function() {
+						$(this).text("");
+					});
+					$("#doneChangeSettings").text("Les options ont correctement été modifiées.").delay(200).slideDown(200);
+				}
+				else {
+					// sinon, affichage d'un message d'erreur
+					$("#errChangeSettings").text("Une erreur est survenue lors de l'enregistrement des options.").delay(200).slideDown(200);
+					$("#doneChangeSettings").slideUp(200, function() {
+						$(this).text("");
+					});
+				}
+				showOption(json);
+				initOptions();
+				loadOff();
+			}
+		});
+	});
+	$("#addRowOption").click(function() {
+		$('<div class=\"itemOption\"><span class="id">-1</span><div class="col-xs-6 col-md-4 passCol"><input type="text" value="" class="form-control attribut"></div><div class="col-xs-6 col-md-4 passCol"><input type="text" value="" class="form-control value"></div><div class="col-xs-6 col-md-4 passCol"><input class="form-control" type="checkbox" checked><img src="images/add.png" alt="valider" class="addOption"><img src="images/delete.png" alt="Supprimer" class="supprOption"></div><div style="clear: both;"></div>').insertBefore(".footerItemOption");
+		$(".addOption").unbind("click");
+		$(".addOption").click(function() {
+			loadOn();
+			var requeteUpdateOption = $.ajax({
+				type: 'POST',
+				url: 'ajax.php?do=addOption',
+				data: {
+					attribut : $(this).parents(".itemOption:first").find(".attribut").val(),
+					value 	 : $(this).parents(".itemOption:first").find(".value").val(),
+					active	 : (($(this).parents(".itemOption:first").find("input[type=\"checkbox\"]").is(':checked'))?1:0)
+				},
+				success: function() {
+					var json = JSON.parse(requeteUpdateOption.responseText);
+					if(json[0]==true) {
+						// si le serveur n'a pas retourné d'erreur dans le fichier JSON
+						$("#errChangeSettings").slideUp(200, function() {
+							$(this).text("");
+						});
+						$("#doneChangeSettings").text("L'option a correctement été ajoutée.").delay(200).slideDown(200);
+					}
+					else {
+						// sinon, affichage d'un message d'erreur
+						$("#errChangeSettings").text("Une erreur est survenue lors de l'enregistrement de l'option.").delay(200).slideDown(200);
+						$("#doneChangeSettings").slideUp(200, function() {
+							$(this).text("");
+						});
+					}
+					showOption(json);
+					initOptions();
+					loadOff();
+				}
+			});
+		});
+	});
+	$(".itemOption").each(function() {
+		$(this).find(".validOption").click(function() {
+			loadOn();
+			var requeteUpdateOption = $.ajax({
+				type: 'POST',
+				url: 'ajax.php?do=updateOption',
+				data: {
+					id 		 : $(this).parents(".itemOption:first").find(".id").text(),
+					attribut : $(this).parents(".itemOption:first").find(".attribut").val(),
+					value 	 : $(this).parents(".itemOption:first").find(".value").val(),
+					active	 : (($(this).parents(".itemOption:first").find("input[type=\"checkbox\"]").is(':checked'))?1:0)
+				},
+				success: function() {
+					var json = JSON.parse(requeteUpdateOption.responseText);
+					if(json[0]==true) {
+						// si le serveur n'a pas retourné d'erreur dans le fichier JSON
+						$("#errChangeSettings").slideUp(200, function() {
+							$(this).text("");
+						});
+						$("#doneChangeSettings").text("L'option a correctement été modifiée.").delay(200).slideDown(200);
+					}
+					else {
+						// sinon, affichage d'un message d'erreur
+						$("#errChangeSettings").text("Une erreur est survenue lors de l'enregistrement l'option.").delay(200).slideDown(200);
+						$("#doneChangeSettings").slideUp(200, function() {
+							$(this).text("");
+						});
+					}
+					showOption(json);
+					initOptions();
+					loadOff();
+				}
+			});
+		});
+		$(this).find(".supprOption").click(function() {
+			loadOn();
+			var requeteUpdateOption = $.ajax({
+				type: 'POST',
+				url: 'ajax.php?do=deleteOption',
+				data: {
+					id : $(this).parents(".itemOption:first").find(".id").text()
+				},
+				success: function() {
+					var json = JSON.parse(requeteUpdateOption.responseText);
+					if(json[0]==true) {
+						// si le serveur n'a pas retourné d'erreur dans le fichier JSON
+						$("#errChangeSettings").slideUp(200, function() {
+							$(this).text("");
+						});
+						$("#doneChangeSettings").text("L'options a correctement été supprimée.").delay(200).slideDown(200);
+					}
+					else {
+						// sinon, affichage d'un message d'erreur
+						$("#errChangeSettings").text("Une erreur est survenue lors de la suppression de l'option.").delay(200).slideDown(200);
+						$("#doneChangeSettings").slideUp(200, function() {
+							$(this).text("");
+						});
+					}
+					showOption(json);
+					initOptions();
+					loadOff();
+				}
+			});
+		});
+	});
 }
 
 // fonction utilisé pour l'upload des fichier avec le drag'N drop

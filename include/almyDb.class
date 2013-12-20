@@ -252,18 +252,46 @@
 		public function updateImage($id, $arg) {
 			$set = "";
 			$count = 0;
-			foreach ($arg as $field => $value) {
+			if(isset($arg['title'])) {
 				if($count != 0)
 					$set .= ", ";
-				$set .= (($value == "NULL")?$field." = NULL":$field." = :".$field);
+				$set .= "title=".(($arg['title'] == "NULL")? "NULL":":title");
+                $count++;
+			}
+			if(isset($arg['descr'])) {
+				if($count != 0)
+					$set .= ", ";
+				$set .= "descr=".(($arg['descr'] == "NULL")? "NULL":":descr");
+                $count++;
+			}
+			if(isset($arg['url'])) {
+				if($count != 0)
+					$set .= ", ";
+				$set .= "url=".(($arg['url'] == "NULL")? "NULL":":url");
+                $count++;
+			}
+			if(isset($arg['url_min'])) {
+				if($count != 0)
+					$set .= ", ";
+				$set .= "url_min=".(($arg['url_min'] == "NULL")? "NULL":":url_min");
                 $count++;
 			}
 			$sql = "UPDATE image SET ".$set." WHERE id = :id;";
+			// echo $sql;
 			$sth = almyDb::$PDO->prepare($sql);
-			$sth->bindParam(':id', $id, PDO::PARAM_STR);
-			$count = 0;
-			foreach ($arg as $field => $value) {
-				$sth->bindParam(':'.$field, $value, PDO::PARAM_STR);
+			$sth->bindParam(':id', $id, PDO::PARAM_INT);
+			
+			if(isset($arg['title'])) {
+				$sth->bindParam(':title', $arg['title'], PDO::PARAM_STR);
+			}
+			if(isset($arg['descr'])) {
+				$sth->bindParam(':descr', $arg['descr'], PDO::PARAM_STR);
+			}
+			if(isset($arg['url'])) {
+				$sth->bindParam(':url', $arg['url'], PDO::PARAM_STR);
+			}
+			if(isset($arg['url_min'])) {
+				$sth->bindParam(':url_min', $arg['url_min'], PDO::PARAM_STR);
 			}
 			$sth->execute();
 			
@@ -314,7 +342,73 @@
 			}
         }
                 
+		/**
+		* Gestion des options du plugins
+		*/
+		function getOption($id = null) {
+		 $req = 'SELECT * FROM options'.(($id != null)?' WHERE id=:id': '').' ORDER BY attribut';
+		 $sth = almyDb::$PDO->prepare($req);
+		 if($id != null)
+			$sth->bindParam(':id', $id, PDO::PARAM_INT);
+		 $sth->execute();
+		 if($id == null)
+			return $sth->fetchAll();
+		 else
+			return $sth->fetch();
+		}
+		
+		function updateOption($id, $attr, $val, $active) {
+			if($active != 0) {
+				$active = 1;
+			}
+			$req = "UPDATE options SET attribut = :attr, value = :val, active = :active WHERE  id = :id";
+			$sth = almyDb::$PDO->prepare($req);
+			$sth->bindParam(':id', $id, PDO::PARAM_INT);
+			$sth->bindParam(':attr', $attr, PDO::PARAM_STR);
+			$sth->bindParam(':val', $val, PDO::PARAM_STR);
+			$sth->bindParam(':active', $active, PDO::PARAM_INT);
+			
+			$sth->execute();
+			 if($sth->rowCount() == 1) {
+				 return true;
+			 }
+			 else {
+				return false;
+			 }
+		}
+		
+		function deleteOption($id) {
+			$req = "DELETE FROM options WHERE id = :id";
+			$sth = almyDb::$PDO->prepare($req);
+			$sth->bindParam(':id', $id, PDO::PARAM_INT);
+			
+			$sth->execute();
+			 if($sth->rowCount() == 1) {
+				 return true;
+			 }
+			 else {
+				return false;
+			 }
+		}
                 
+		function addOption($attr, $val, $active) {
+			if($active != 0) {
+				$active = 1;
+			}
+			$req = "INSERT INTO options (id, attribut, value, active) VALUES (NULL, :attr, :val, :active);";
+			$sth = almyDb::$PDO->prepare($req);
+			$sth->bindParam(':attr', $attr, PDO::PARAM_STR);
+			$sth->bindParam(':val', $val, PDO::PARAM_STR);
+			$sth->bindParam(':active', $active, PDO::PARAM_INT);
+			
+			$sth->execute();
+			 if($sth->rowCount() == 1) {
+				 return true;
+			 }
+			 else {
+				return false;
+			 }
+		}
                 /**
                  * Autre
                  */
