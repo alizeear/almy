@@ -32,9 +32,9 @@ if (!Array.prototype.indexOf) {
 			paused: true,
 			pauseTime: 3000,
 			navBar: true,
-			controlKey: false,
+			controlKey: true,
 			animationDesc: 'fade',
-			barreTop: false,
+			barreTop: true,
 			classNavigationCat: 'classNavigationCat',
 			pauseOnHover: false
 		}, params);
@@ -49,6 +49,12 @@ if (!Array.prototype.indexOf) {
 		var index = 0;
 		var timer;
 		var imagesAll 	= Array();
+
+		// affichage d'un message pour prévenir que le plugin ne fonctionne pas bien sous ie7
+		if(!((navigator.userAgent.toLowerCase().indexOf("msie") == -1) || (parseInt(navigator.userAgent.toLowerCase().substr(navigator.userAgent.toLowerCase().indexOf("msie")+5)) > 7))) {
+			alert("Attention, votre navigateur n'est pas compatible avec ce plugin !");
+		}
+
 		// recalcul de la taille des image au redimentionnement de la fenêtre
 		$(window).resize(function() {
 			if($('#categoriesMiddle').length !== 0)
@@ -388,10 +394,6 @@ if (!Array.prototype.indexOf) {
 					$(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
 				}).fadeIn('fast');
 			}
-			
-
-				
-
 
 			alignImg(imageSuivante); // on align l'image centre
 			var margin = ((imageSuivante.width()>$(imageActuel).width()))
