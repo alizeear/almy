@@ -25,6 +25,14 @@
       <!--[if IE]>
          <script src="script/html5.js"></script>
       <![endif]-->   
+	  <?php if(isset($_SESSION['upload']) && ($_SESSION['upload'] != 0)) { ?>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$("#doneChangeImage").text("L'image à correcetement été uploadée.").delay(200).slideDown(200);
+				$("a[href=\"#img\"]").click();
+			});
+		</script>
+	  <?php  $_SESSION['upload'] = 0; } ?>
    </head>
    <body>
       <nav class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
@@ -75,13 +83,22 @@
 					</div>
 				</div>
 				<div class="tab-pane" id="img">
-					<div id="doneChangeImage" class="alert alert-info"></div>
+					<div id="doneChangeImage" class="alert alert-success"></div>
 					<div id="errChangeImage" class="alert alert-danger"></div>
 					<div class="col-xs-6 col-md-4">
 						<h2>Images</h2>
 						Ajouter une Image:
 						<div id="errImgAdd"></div>
-						<div id="dropfile">Glissez / Déposez des images ici</div>
+						<div id="uploadContain">
+							<div id="uploadContainIn">
+								<div id="uploadDown"></div>
+								<div id="dropfile">Glissez / Déposez des images ici</div>
+								<div id="uploadUp"></div>
+								<form method="post" action="?upload" enctype="multipart/form-data">
+									<input name="file" type="file" id="inputFileUploadImg" class="form-control" >
+								</form>
+							</div>
+						</div>
 						<div id="listeImg"></div>
 					</div>
 					<div class="col-xs-6 col-md-4">

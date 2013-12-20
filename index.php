@@ -1,6 +1,7 @@
 <?php
 	session_start();
 	include "include/almyDb.class";
+	include "include/function.php";
 	$db =  almyDb::getDB();  
 	
 	// si l'user est pas connecté, et qu'il n'y a pas de requette de connexion, la page d'accueil est affiché

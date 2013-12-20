@@ -1,6 +1,20 @@
 var listeAllCats = Array();
 var listeAllImgs = Array();
 $(document).ready(function() {
+	// gestion de l'affichage des 2 moyen d'upload
+	$("#uploadDown").click(function() {
+		$("#uploadContainIn").animate({
+			'top': '-34px'
+		}, 100);
+	});
+	$("#uploadUp").click(function() {
+		$("#uploadContainIn").animate({
+			'top': '0px'
+		}, 100);
+	});
+	$("#inputFileUploadImg").change(function() {
+		$(this).parents("form:first").submit();
+	});
 	// gestion du compte
 	$("#account .passCol input").keydown(function(e) {
 		if(e.keyCode==13) {
@@ -284,13 +298,9 @@ function initCat(idListe) {
 		$(this).addClass("active");
 		// code HTML affiché dans la colonne de droite (Reglages)
 		var html = 'Nom de la Catégorie: \
-				  <div class="input-group"> \
-					 <input id="txtCatUpdate" type="text" class="form-control" value="'+$(this).find(".title").text()+'"> \
-					 <input id="idCatUpdate" type="hidden" value="'+$(this).find(".id").text()+'"> \
-					 <span class="input-group-btn"> \
-						<button id="btnCatUpdate" class="btn btn-default" type="button">Modifier</button> \
-					 </span> \
-				  </div> \
+				  <input id="txtCatUpdate" type="text" class="form-control" value="'+$(this).find(".title").text()+'"> \
+				  <input id="idCatUpdate" type="hidden" value="'+$(this).find(".id").text()+'"> \
+				  <button id="btnCatUpdate" class="btn btn-info" type="button">Modifier</button> \
 				  <button id="btnCatDelete" class="btn btn-danger btn-xs delete" type="button">Supprimer</button>';
 		$("#reglageCat").html(html);
 		//envoye de la requette AJAX de modification de la catégorie

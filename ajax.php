@@ -50,7 +50,6 @@
 			case "addImage":
 				$targetpath = add_picture($_POST['file']);
 				$retour = $db->addImage($targetpath, createMin($targetpath));
-				$db->checkAllLink();
 
 				$list = $db->getListeImage();
 				echo json_encode(array($retour, $list));
