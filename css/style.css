@@ -50,3 +50,14 @@
 .form-signin .colorRedText{
    color: red;
 }
+.titleCat{
+  background-color: #fff!important;
+  display: inline-block;
+  height: 36px;
+  text-align: center;
+  cursor: pointer; 
+}
+.containerAlmy .titleCat span {
+  background-color: #fff!important;
+  color: #333!important;
+}
