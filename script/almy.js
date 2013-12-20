@@ -31,6 +31,9 @@ if (!Array.prototype.indexOf) {
 			running: true,
 			paused: true,
 			pauseTime: 3000,
+			navBar: true,
+			controlKey: false,
+			animationDesc: 'fade',
 			pauseOnHover: false
 		}, params);
 		
@@ -365,7 +368,11 @@ if (!Array.prototype.indexOf) {
 			moveSelected();
 			$(idAlmy).find(".descriptionDiv > h2").text(infoTmp['title']);
 			$(idAlmy).find(".descriptionDiv > p").text(infoTmp['desc']);
-			$(idAlmy).find(".descriptionDivTop").animate({
+
+			
+
+			if(defauts.animationDesc == 'slideUp'){
+				$(idAlmy).find(".descriptionDivTop").animate({
 					'top': '-100%'
 				}, 'fast', function(){
 					$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
@@ -373,6 +380,17 @@ if (!Array.prototype.indexOf) {
 				}).animate({
 					'top': '0'
 				}, 'fast');
+			}else if(defauts.animationDesc == 'fade'){
+				$(idAlmy).find(".descriptionDivTop").fadeOut('fast', function(){
+					$(idAlmy).find(".descriptionDivTop > h2").text(infoTmp['title']);
+					$(idAlmy).find(".descriptionDivTop > p").text(infoTmp['desc']);
+				}).fadeIn('fast');
+			}
+			
+
+				
+
+
 			alignImg(imageSuivante); // on align l'image centre
 			var margin = ((imageSuivante.width()>$(imageActuel).width()))
 				?(imageSuivante.width()+$(imageActuel).width())/2
@@ -597,9 +615,11 @@ if (!Array.prototype.indexOf) {
 							<div id="categoriesMiddle">\
 								<div class="imgContainer">\
 									'+listImg+'\
-									<div class="navDirection">\
-										<ul><li><a class="navPrev"></a></li><li><a class="navPause"></a></li><li><a class="navNext"></a></li></ul>\
-									</div>\
+									'+((defauts.navBar)?'\
+											<div class="navDirection">\
+												<ul><li><a class="navPrev"></a></li><li><a class="navPause"></a></li><li><a class="navNext"></a></li></ul>\
+											</div>\
+											':'')+'\
 									'+blocDesc+'\
 								</div>\
 								<div id="mosaiqueBottom">\
@@ -612,6 +632,7 @@ if (!Array.prototype.indexOf) {
 								</div>\
 							</div>\
 						</div>');
+
 				$(idAlmy).find(".navPrevMosaique, .navNextMosaique").height($(idAlmy).find("#mosaiqueBottom").height());
 				$("#clock").find("td").each(function() {
 					$(this).html("<div></div><div></div>");
@@ -656,22 +677,6 @@ if (!Array.prototype.indexOf) {
 				'text-align': defauts.textAlignInfoImgTop
 			});
 
-
-			///////////////////////////////////////////////////////// 
-			////// Affichage catégories dessus slider /////////////// 
-			/////////////////////////////////////////////////////////
-
-			$(idAlmy).find("#categoriesTop #listCategoriesSlider").mouseover(function() {
-				$(this).stop().animate({
-						'opacity': 0.5
-						},"fast");
-			}).mouseout(function() {
-				$(this).stop().animate({
-						'opacity': 1
-						},"fast");
-			});
-
-
 			/////////////////////////////////////////////////////////
 			////// Initialisation du slider /////////////////////////
 			///////////////////////////////////////////////////////// 
@@ -707,8 +712,7 @@ if (!Array.prototype.indexOf) {
 			/////////////////////////////////////////////////////////
 
 			// initialisation du timer du slider
-			var timer = 0;
-			
+			var timer = 0;	
 			// mise en route auto du slider
 			if(defauts.running&&!defauts.paused) {
 				runSlide();
@@ -721,7 +725,7 @@ if (!Array.prototype.indexOf) {
 
 
 			// Hover de la souris sur l'image si le slider n'est pas en pause par défaut
-			if(!defauts.paused) {
+			if(!defauts.paused&&defauts.running) {
 				if(defauts.pauseOnHover) {
 					$(idAlmy).find('#categoriesMiddle img, .navNext, .navPrev, .descriptionDiv').hover(function() {
 						stopSlide();
@@ -797,45 +801,47 @@ if (!Array.prototype.indexOf) {
 						$(this).remove();
 					})
 				});
-			// appuye sur la touche Echap
-			$(document).keydown(function(e) {
-				if(e.keyCode == 27) {
-					$(idAlmy).find(".background").stop().animate({
-						'top': '-101%'
-					}, 450, function(e) {
-						$(this).remove();
-					});
-				}
-			
-				if(e.keyCode == 39) {
-					if(dateTime+600<new Date().getTime()) {
-						if(timer == '')
-							stopSlide();
-						slideSuivant();
-						dateTime = new Date().getTime();
-					}
-				}
-				if(e.keyCode == 37) {
-					if(dateTime+600<new Date().getTime()) {
-						if(timer == '')
-							stopSlide();
-						slidePrecedent();
-						dateTime = new Date().getTime();
-					}
-				}
-				if(e.keyCode == 32) {
-					if(!defauts.paused) {
-						stopSlide();
-					} else {
-						defauts.paused = false;
-						if(timer==''&&!defauts.paused) {
-							runSlide();
-						}
-						$(idAlmy).find('.navPause').css('background-position', '-30px 0px');
-					}
-				}
-			});
 
+			if(defauts.controlKey){
+			// appuye sur la touche Echap
+				$(document).keydown(function(e) {
+					if(e.keyCode == 27) {
+						$(idAlmy).find(".background").stop().animate({
+							'top': '-101%'
+						}, 450, function(e) {
+							$(this).remove();
+						});
+					}
+				
+					if(e.keyCode == 39) {
+						if(dateTime+600<new Date().getTime()) {
+							if(timer == '')
+								stopSlide();
+							slideSuivant();
+							dateTime = new Date().getTime();
+						}
+					}
+					if(e.keyCode == 37) {
+						if(dateTime+600<new Date().getTime()) {
+							if(timer == '')
+								stopSlide();
+							slidePrecedent();
+							dateTime = new Date().getTime();
+						}
+					}
+					if(e.keyCode == 32) {
+						if(!defauts.paused) {
+							stopSlide();
+						} else {
+							defauts.paused = false;
+							if(timer==''&&!defauts.paused) {
+								runSlide();
+							}
+							$(idAlmy).find('.navPause').css('background-position', '-30px 0px');
+						}
+					}
+				});
+			}
 
 			/////////////////////////////////////////////////////////
 			////// Controle mosaique ////////////////////////////////
